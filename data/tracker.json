@@ -1,11 +1,911 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-11T22:17:24Z",
+  "generatedAt": "2026-08-11T22:44:36Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
+    "akame": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "Akame",
+        "rank": 177,
+        "score": 30852233,
+        "scoreBase": 30800000,
+        "scoreNext": 31000000,
+        "kills": 425048,
+        "deaths": 294379,
+        "crystals": 33909027,
+        "golds": 1354,
+        "efficiency": 8876768,
+        "efficiencyPosition": 49027,
+        "totalTimeMs": 16504873267,
+        "gearScore": 9999,
+        "premium": false,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Wasp",
+              "timeMs": 3526074500,
+              "score": 2050079,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 2837766243,
+              "score": 12134464,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 2120808090,
+              "score": 856819,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 2093086736,
+              "score": 615592,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 1804336927,
+              "score": 999862,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 1142537067,
+              "score": 268202,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 1107875895,
+              "score": 2474276,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Crusader",
+              "timeMs": 921406121,
+              "score": 6650078,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 759475554,
+              "score": 784679,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 165593317,
+              "score": 429240,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 25912817,
+              "score": 179260,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Shaft",
+              "timeMs": 3673683315,
+              "score": 13963883,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 2414269558,
+              "score": 1194489,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 1909559589,
+              "score": 481643,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 1374635111,
+              "score": 1127915,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 1177527601,
+              "score": 2331625,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 1040098073,
+              "score": 2521416,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 997229887,
+              "score": 1594122,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 898143003,
+              "score": 336244,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 611701688,
+              "score": 393242,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 579085469,
+              "score": 234883,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 444851063,
+              "score": 185138,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 420690215,
+              "score": 604718,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 407060761,
+              "score": 392180,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Striker",
+              "timeMs": 340395790,
+              "score": 221707,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 101476064,
+              "score": 692706,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 95119278,
+              "score": 585309,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 11171393,
+              "score": 7530,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Crisis",
+              "timeMs": 2252203131,
+              "score": 8648559,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 213946250,
+              "score": 722052,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 105280783,
+              "score": 355576,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            },
+            {
+              "name": "Hyperion",
+              "timeMs": 80933448,
+              "score": 422742,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Defender",
+              "timeMs": 70903083,
+              "score": 22937,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 28504456,
+              "score": 169306,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 2987258,
+              "score": 1260,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 2583199,
+              "score": 1087,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 8971671168,
+              "score": 5281392,
+              "image": null
+            },
+            {
+              "name": "Capture The Flag",
+              "timeMs": 3068743363,
+              "score": 10689852,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 687136701,
+              "score": 1760512,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 515141429,
+              "score": 1975486,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 491320540,
+              "score": 2170544,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 393953256,
+              "score": 1824633,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 386172166,
+              "score": 1953052,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 83953772,
+              "score": 230221,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 82784171,
+              "score": 262960,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 425048,
+          "d": 294379,
+          "c": 33909027,
+          "s": 30852233,
+          "g": 1354,
+          "e": 8876768,
+          "r": 177,
+          "t": 16504873267
+        }
+      ]
+    },
+    "alone": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "Alone",
+        "rank": 165,
+        "score": 28560144,
+        "scoreBase": 28400000,
+        "scoreNext": 28600000,
+        "kills": 392624,
+        "deaths": 169694,
+        "crystals": 35064280,
+        "golds": 2641,
+        "efficiency": 9021573,
+        "efficiencyPosition": 17921,
+        "totalTimeMs": 8054092811,
+        "gearScore": 9999,
+        "premium": true,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Crusader",
+              "timeMs": 5588280027,
+              "score": 18865309,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 550654445,
+              "score": 1353603,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 531486852,
+              "score": 1801017,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 442514926,
+              "score": 2567133,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 322561622,
+              "score": 973340,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 246170980,
+              "score": 789123,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 174261759,
+              "score": 469882,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 146055377,
+              "score": 427569,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 27338373,
+              "score": 34276,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 18888217,
+              "score": 31541,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 5880233,
+              "score": 6806,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Striker",
+              "timeMs": 3391633298,
+              "score": 14020352,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 828537418,
+              "score": 2265451,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 578474542,
+              "score": 1855546,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 495259163,
+              "score": 1088961,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 491032361,
+              "score": 1279791,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 360944270,
+              "score": 1588576,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 359827677,
+              "score": 1196881,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 316437043,
+              "score": 748325,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 265559308,
+              "score": 854249,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 206121444,
+              "score": 875788,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 175561196,
+              "score": 311963,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 166714020,
+              "score": 461777,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 160623503,
+              "score": 242551,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 83752309,
+              "score": 174243,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 82318048,
+              "score": 156061,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 46016888,
+              "score": 69166,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 43191585,
+              "score": 91726,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Defender",
+              "timeMs": 2769111656,
+              "score": 9938948,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 1623750177,
+              "score": 5228812,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Hyperion",
+              "timeMs": 1059908451,
+              "score": 2483134,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 893205783,
+              "score": 3073157,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 480943710,
+              "score": 1457291,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 462135829,
+              "score": 1111481,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 33835903,
+              "score": 72942,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 8751112,
+              "score": 1913,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 2153780543,
+              "score": 5937187,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 1024038568,
+              "score": 2674932,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 884891034,
+              "score": 3180267,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 867689373,
+              "score": 5292633,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 802798120,
+              "score": 2621507,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 618745249,
+              "score": 1840906,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 612697879,
+              "score": 1701595,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 591970573,
+              "score": 1560834,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 432957935,
+              "score": 2354832,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 392624,
+          "d": 169694,
+          "c": 35064280,
+          "s": 28560144,
+          "g": 2641,
+          "e": 9021573,
+          "r": 165,
+          "t": 8054092811
+        }
+      ]
+    },
+    "arkoanl": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "ARKOANL",
+        "rank": 27,
+        "score": 1021137,
+        "scoreBase": 1000000,
+        "scoreNext": 1122000,
+        "kills": 15614,
+        "deaths": 6426,
+        "crystals": 643879,
+        "golds": 100,
+        "efficiency": 7430179,
+        "efficiencyPosition": 279703,
+        "totalTimeMs": 339288998,
+        "gearScore": 7374,
+        "premium": false,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Viking",
+              "timeMs": 90209747,
+              "score": 335814,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 85531175,
+              "score": 158975,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 71962950,
+              "score": 190370,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 26403521,
+              "score": 93334,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 25979590,
+              "score": 59162,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 16390521,
+              "score": 54100,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Crusader",
+              "timeMs": 10421176,
+              "score": 14795,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 8418593,
+              "score": 31170,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 310765,
+              "score": 243,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 251435,
+              "score": 180,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 0,
+              "score": 0,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Hammer",
+              "timeMs": 56961552,
+              "score": 183750,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Striker",
+              "timeMs": 53047827,
+              "score": 100650,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 47314910,
+              "score": 126237,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 29993389,
+              "score": 99344,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 29662611,
+              "score": 91460,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 23578482,
+              "score": 80068,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 23261378,
+              "score": 77060,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 19881344,
+              "score": 46005,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 15942648,
+              "score": 43890,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 12471790,
+              "score": 21960,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 8474913,
+              "score": 31341,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 6146993,
+              "score": 25380,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 4584071,
+              "score": 13660,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 4410434,
+              "score": 8509,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 2478636,
+              "score": 0,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 1078020,
+              "score": 2229,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 0,
+              "score": 0,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Crisis",
+              "timeMs": 135834774,
+              "score": 336001,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 2038038,
+              "score": 4980,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 65267901,
+              "score": 113864,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 58304229,
+              "score": 172270,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 45987610,
+              "score": 162629,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 34234829,
+              "score": 92080,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 32175313,
+              "score": 94839,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 31385861,
+              "score": 90272,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 30667075,
+              "score": 48370,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 4318127,
+              "score": 10590,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 4093494,
+              "score": 5914,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 15614,
+          "d": 6426,
+          "c": 643879,
+          "s": 1021137,
+          "g": 100,
+          "e": 7430179,
+          "r": 27,
+          "t": 339288998
+        }
+      ]
+    },
     "borz": {
       "current": {
-        "at": "2026-08-11T22:17:24Z",
+        "at": "2026-08-11T22:44:36Z",
         "name": "Borz",
         "rank": 31,
         "score": 1605845,
@@ -290,11 +1190,2205 @@
           "t": 1004328421
         }
       ]
+    },
+    "dlli": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "dlli",
+        "rank": 97,
+        "score": 14846053,
+        "scoreBase": 14800000,
+        "scoreNext": 15000000,
+        "kills": 248208,
+        "deaths": 142385,
+        "crystals": 13546693,
+        "golds": 944,
+        "efficiency": 8716484,
+        "efficiencyPosition": 84902,
+        "totalTimeMs": 6794473440,
+        "gearScore": 9999,
+        "premium": false,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Hunter",
+              "timeMs": 2252042601,
+              "score": 3956679,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 1237378801,
+              "score": 2982961,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Crusader",
+              "timeMs": 1221789623,
+              "score": 2424110,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 900179615,
+              "score": 2295858,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 705060667,
+              "score": 1524311,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 287315083,
+              "score": 469915,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 63869346,
+              "score": 172594,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 52145362,
+              "score": 64457,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 29449094,
+              "score": 43550,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 19585709,
+              "score": 32876,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 16301234,
+              "score": 16152,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Striker",
+              "timeMs": 2578014187,
+              "score": 4925712,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 930474982,
+              "score": 2160399,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 602574704,
+              "score": 1086839,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 529604193,
+              "score": 1031379,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 513438878,
+              "score": 1198474,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 344165062,
+              "score": 1139174,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 329748606,
+              "score": 629321,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 256159743,
+              "score": 576404,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 226272285,
+              "score": 344284,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 106200787,
+              "score": 289351,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 101042554,
+              "score": 135848,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 81718360,
+              "score": 140062,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 76185602,
+              "score": 146934,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 64529201,
+              "score": 115866,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 28150969,
+              "score": 45921,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 19821982,
+              "score": 23679,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 6371345,
+              "score": 7428,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Brutus",
+              "timeMs": 1817979061,
+              "score": 3505698,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            },
+            {
+              "name": "Hyperion",
+              "timeMs": 1581875796,
+              "score": 3680059,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 591940868,
+              "score": 947500,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Defender",
+              "timeMs": 369087494,
+              "score": 497489,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 260819748,
+              "score": 470220,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 157949355,
+              "score": 261073,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 145530262,
+              "score": 215881,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 1763579074,
+              "score": 3340820,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 1502729515,
+              "score": 2935052,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 935238561,
+              "score": 1972037,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 642997787,
+              "score": 1505891,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 439770523,
+              "score": 727875,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 412482643,
+              "score": 892872,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 333012871,
+              "score": 970308,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 311310462,
+              "score": 537718,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 282739972,
+              "score": 682522,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 248208,
+          "d": 142385,
+          "c": 13546693,
+          "s": 14846053,
+          "g": 944,
+          "e": 8716484,
+          "r": 97,
+          "t": 6794473440
+        }
+      ]
+    },
+    "game": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "Game",
+        "rank": 60,
+        "score": 7549970,
+        "scoreBase": 7400000,
+        "scoreNext": 7600000,
+        "kills": 166492,
+        "deaths": 55192,
+        "crystals": 17255430,
+        "golds": 563,
+        "efficiency": 9414621,
+        "efficiencyPosition": 41,
+        "totalTimeMs": 3297645366,
+        "gearScore": 9999,
+        "premium": true,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Crusader",
+              "timeMs": 961814326,
+              "score": 2274477,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 574653603,
+              "score": 1197538,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 408395888,
+              "score": 725724,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 346401883,
+              "score": 883093,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 301291720,
+              "score": 645038,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 297254892,
+              "score": 629553,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 209354678,
+              "score": 375071,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 141431008,
+              "score": 115029,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 20996453,
+              "score": 18326,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 8072959,
+              "score": 5656,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 8069968,
+              "score": 12390,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Tsunami",
+              "timeMs": 1050030111,
+              "score": 2489823,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 725401009,
+              "score": 1302260,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 349142044,
+              "score": 728894,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 261837198,
+              "score": 541868,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 186824367,
+              "score": 385671,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 101817208,
+              "score": 235525,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 101188067,
+              "score": 204050,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 96966305,
+              "score": 244286,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 73156971,
+              "score": 128288,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 66460808,
+              "score": 88154,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 66040019,
+              "score": 133227,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 45060707,
+              "score": 116668,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 41472904,
+              "score": 106727,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 35714046,
+              "score": 36107,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 33055729,
+              "score": 66795,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Striker",
+              "timeMs": 30666329,
+              "score": 44359,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 12459266,
+              "score": 13510,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Defender",
+              "timeMs": 986843162,
+              "score": 2235386,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 758008231,
+              "score": 1790436,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Hyperion",
+              "timeMs": 577984944,
+              "score": 1074899,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 385010341,
+              "score": 882202,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 290982197,
+              "score": 620586,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 67272364,
+              "score": 86501,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 16343977,
+              "score": 30087,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 5471095,
+              "score": 3503,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 988041355,
+              "score": 1912852,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 672673977,
+              "score": 1349299,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 348577947,
+              "score": 580902,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 342285748,
+              "score": 657128,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 310128270,
+              "score": 743973,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 256541687,
+              "score": 509703,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 193651602,
+              "score": 863049,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 140377259,
+              "score": 268058,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 45367521,
+              "score": 232280,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 166492,
+          "d": 55192,
+          "c": 17255430,
+          "s": 7549970,
+          "g": 563,
+          "e": 9414621,
+          "r": 60,
+          "t": 3297645366
+        }
+      ]
+    },
+    "integer": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "integer",
+        "rank": 53,
+        "score": 6100114,
+        "scoreBase": 6000000,
+        "scoreNext": 6200000,
+        "kills": 99181,
+        "deaths": 70175,
+        "crystals": 5891349,
+        "golds": 1354,
+        "efficiency": 8728125,
+        "efficiencyPosition": 82464,
+        "totalTimeMs": 3080144820,
+        "gearScore": 9999,
+        "premium": false,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Crusader",
+              "timeMs": 1283003788,
+              "score": 3110669,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 675013670,
+              "score": 1360022,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 273314868,
+              "score": 208265,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 149606689,
+              "score": 41835,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 140774757,
+              "score": 121282,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 102323492,
+              "score": 92758,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 88089219,
+              "score": 100648,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 81536307,
+              "score": 56475,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 79270658,
+              "score": 17127,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 77000693,
+              "score": 57890,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 42714709,
+              "score": 28575,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Striker",
+              "timeMs": 1001004197,
+              "score": 2716201,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 254540120,
+              "score": 119465,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 247590675,
+              "score": 193351,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 223105879,
+              "score": 270618,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 199920452,
+              "score": 208309,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 178906354,
+              "score": 312633,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 145169080,
+              "score": 272156,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 134146228,
+              "score": 91129,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 82491592,
+              "score": 111923,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 77669992,
+              "score": 111245,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 76143060,
+              "score": 85308,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 75854627,
+              "score": 49897,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 75331717,
+              "score": 111993,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 73549104,
+              "score": 68487,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 51964433,
+              "score": 142057,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 29850909,
+              "score": 32895,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 28820455,
+              "score": 53327,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Brutus",
+              "timeMs": 684341346,
+              "score": 1733593,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            },
+            {
+              "name": "Defender",
+              "timeMs": 598899038,
+              "score": 1221359,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 536058174,
+              "score": 799410,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 297512778,
+              "score": 412788,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Hyperion",
+              "timeMs": 149154560,
+              "score": 299630,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Oracle",
+              "timeMs": 32062115,
+              "score": 78530,
+              "image": "https://s.eu.tankionline.com/544/14142/324/330/27006221753744/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 10095771,
+              "score": 10295,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 3819223,
+              "score": 2157,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 2942258,
+              "score": 6505,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 916906156,
+              "score": 938851,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 658264664,
+              "score": 2441809,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 468370910,
+              "score": 206479,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 307857587,
+              "score": 469829,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 197392785,
+              "score": 355185,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 183360950,
+              "score": 258971,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 131771171,
+              "score": 528465,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 125813677,
+              "score": 178743,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 90406920,
+              "score": 134755,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 99181,
+          "d": 70175,
+          "c": 5891349,
+          "s": 6100114,
+          "g": 1354,
+          "e": 8728125,
+          "r": 53,
+          "t": 3080144820
+        }
+      ]
+    },
+    "mantish": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "Mantish",
+        "rank": 83,
+        "score": 12197470,
+        "scoreBase": 12000000,
+        "scoreNext": 12200000,
+        "kills": 221797,
+        "deaths": 129403,
+        "crystals": 11213005,
+        "golds": 1471,
+        "efficiency": 8717885,
+        "efficiencyPosition": 84583,
+        "totalTimeMs": 6516356376,
+        "gearScore": 9999,
+        "premium": false,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Crusader",
+              "timeMs": 1633100942,
+              "score": 3050636,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 1582306895,
+              "score": 2164702,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 630290202,
+              "score": 820544,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 615721386,
+              "score": 1393720,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 556831049,
+              "score": 1193525,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 547895341,
+              "score": 1560993,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 353158460,
+              "score": 536771,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 284922036,
+              "score": 287413,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 228630827,
+              "score": 385860,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 60194615,
+              "score": 37733,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 12369835,
+              "score": 9389,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Railgun",
+              "timeMs": 1638537233,
+              "score": 2114011,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Striker",
+              "timeMs": 648586997,
+              "score": 1143190,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 559655548,
+              "score": 1030341,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 521843170,
+              "score": 967000,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 503195813,
+              "score": 949573,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 334767840,
+              "score": 810009,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 322715111,
+              "score": 640138,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 281035013,
+              "score": 506787,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 273408433,
+              "score": 594929,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 249994231,
+              "score": 446683,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 240580363,
+              "score": 512786,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 237805774,
+              "score": 432592,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 204193869,
+              "score": 360554,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 177772581,
+              "score": 373753,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 174870010,
+              "score": 336834,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 105781831,
+              "score": 216015,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 41612559,
+              "score": 55409,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Hyperion",
+              "timeMs": 1602796127,
+              "score": 3451421,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 1163107483,
+              "score": 1997077,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 644590342,
+              "score": 1431441,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 279718129,
+              "score": 519610,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Defender",
+              "timeMs": 263327901,
+              "score": 387013,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 99852805,
+              "score": 183049,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 65524028,
+              "score": 95922,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 6218544,
+              "score": 9238,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 1668446710,
+              "score": 2288231,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 1337554231,
+              "score": 1729815,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 718674857,
+              "score": 2043471,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 497712535,
+              "score": 913476,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 391243702,
+              "score": 1000895,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 383017940,
+              "score": 769090,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 347002017,
+              "score": 818666,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 312305328,
+              "score": 687241,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 261364595,
+              "score": 579583,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 221797,
+          "d": 129403,
+          "c": 11213005,
+          "s": 12197470,
+          "g": 1471,
+          "e": 8717885,
+          "r": 83,
+          "t": 6516356376
+        }
+      ]
+    },
+    "tesl4": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "TESL4",
+        "rank": 302,
+        "score": 55819992,
+        "scoreBase": 55800000,
+        "scoreNext": 56000000,
+        "kills": 522548,
+        "deaths": 227057,
+        "crystals": 50924851,
+        "golds": 2454,
+        "efficiency": 8783176,
+        "efficiencyPosition": 70474,
+        "totalTimeMs": 10586781129,
+        "gearScore": 9999,
+        "premium": false,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Viking",
+              "timeMs": 2841669606,
+              "score": 9617335,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Crusader",
+              "timeMs": 1821186382,
+              "score": 11566412,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 1627992806,
+              "score": 9866186,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 890787572,
+              "score": 9140462,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 829371788,
+              "score": 1570962,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 779811924,
+              "score": 2565153,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 679701335,
+              "score": 2609337,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 460471993,
+              "score": 2501346,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 394727364,
+              "score": 1344874,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 132676932,
+              "score": 579757,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 126502464,
+              "score": 585336,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Ricochet",
+              "timeMs": 1762054126,
+              "score": 5055672,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 886070036,
+              "score": 2691674,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Striker",
+              "timeMs": 835016086,
+              "score": 3460084,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 778100971,
+              "score": 7199298,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 771007754,
+              "score": 2677301,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 762233182,
+              "score": 5085037,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 709864520,
+              "score": 5005249,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 622676219,
+              "score": 3209852,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 608445585,
+              "score": 2309073,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 585636265,
+              "score": 2908409,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 566536416,
+              "score": 3315385,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 528749956,
+              "score": 3022148,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 356963915,
+              "score": 1248265,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 274188756,
+              "score": 1529364,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 274054376,
+              "score": 2301932,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 245464678,
+              "score": 895051,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 19718288,
+              "score": 36160,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Crisis",
+              "timeMs": 2113528502,
+              "score": 12546587,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Hyperion",
+              "timeMs": 1130174150,
+              "score": 6392806,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Defender",
+              "timeMs": 757930691,
+              "score": 5107850,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 150051181,
+              "score": 679504,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 57873813,
+              "score": 175956,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 35713303,
+              "score": 104020,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 33902982,
+              "score": 307918,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 1647760,
+              "score": 3240,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 5331368031,
+              "score": 32615090,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 1498762777,
+              "score": 2929241,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 646312232,
+              "score": 2047616,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 582781165,
+              "score": 1555453,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 500455185,
+              "score": 1422592,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 374728678,
+              "score": 1524962,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 272755214,
+              "score": 1471134,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 145579974,
+              "score": 509211,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 118098992,
+              "score": 389150,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 522548,
+          "d": 227057,
+          "c": 50924851,
+          "s": 55819992,
+          "g": 2454,
+          "e": 8783176,
+          "r": 302,
+          "t": 10586781129
+        }
+      ]
+    },
+    "what": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "What",
+        "rank": 56,
+        "score": 6794080,
+        "scoreBase": 6600000,
+        "scoreNext": 6800000,
+        "kills": 132340,
+        "deaths": 78461,
+        "crystals": 11820838,
+        "golds": 621,
+        "efficiency": 9203218,
+        "efficiencyPosition": 1436,
+        "totalTimeMs": 3549447842,
+        "gearScore": 9999,
+        "premium": false,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Hopper",
+              "timeMs": 1830559329,
+              "score": 3058675,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Crusader",
+              "timeMs": 444602491,
+              "score": 721189,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 390324806,
+              "score": 1107841,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 306489274,
+              "score": 351673,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 183859863,
+              "score": 237185,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 130779476,
+              "score": 198736,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 122448226,
+              "score": 99927,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 59315970,
+              "score": 90497,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 47145813,
+              "score": 43218,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 17754122,
+              "score": 22761,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 5875697,
+              "score": 4824,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Hammer",
+              "timeMs": 1092298288,
+              "score": 1703207,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 549208122,
+              "score": 680200,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 373585598,
+              "score": 1166614,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 298170612,
+              "score": 481285,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 230965000,
+              "score": 483919,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 154526317,
+              "score": 188873,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 136101394,
+              "score": 160100,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 88049546,
+              "score": 155482,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 86988933,
+              "score": 118716,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 82194503,
+              "score": 109300,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 71564744,
+              "score": 116783,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 69742375,
+              "score": 90433,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 69584995,
+              "score": 100278,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Striker",
+              "timeMs": 68178798,
+              "score": 103467,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 62851775,
+              "score": 106054,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 60297115,
+              "score": 84302,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 42941273,
+              "score": 81617,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Hyperion",
+              "timeMs": 1486165071,
+              "score": 2850100,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 712511793,
+              "score": 792050,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Defender",
+              "timeMs": 427974509,
+              "score": 684464,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 377365355,
+              "score": 612003,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 17117030,
+              "score": 64780,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 16853076,
+              "score": 21098,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 1987979,
+              "score": 2726,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 0,
+              "score": 0,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 1389168355,
+              "score": 1916245,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 532766034,
+              "score": 899851,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 352873476,
+              "score": 507906,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 337891824,
+              "score": 521419,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 304728404,
+              "score": 673872,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 213326879,
+              "score": 373862,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 208727345,
+              "score": 606592,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 144240912,
+              "score": 269523,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 65724613,
+              "score": 231144,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 132340,
+          "d": 78461,
+          "c": 11820838,
+          "s": 6794080,
+          "g": 621,
+          "e": 9203218,
+          "r": 56,
+          "t": 3549447842
+        }
+      ]
+    },
+    "ziam": {
+      "current": {
+        "at": "2026-08-11T22:44:36Z",
+        "name": "Ziam",
+        "rank": 124,
+        "score": 20299118,
+        "scoreBase": 20200000,
+        "scoreNext": 20400000,
+        "kills": 343826,
+        "deaths": 145592,
+        "crystals": 23492727,
+        "golds": 1369,
+        "efficiency": 8967537,
+        "efficiencyPosition": 28390,
+        "totalTimeMs": 8368120598,
+        "gearScore": 9999,
+        "premium": true,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Crusader",
+              "timeMs": 4841270769,
+              "score": 10584108,
+              "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
+            },
+            {
+              "name": "Viking",
+              "timeMs": 2709572101,
+              "score": 6837342,
+              "image": "https://s.eu.tankionline.com/571/121327/171/265/27464265736706/image.tnk"
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 359763284,
+              "score": 945084,
+              "image": "https://s.eu.tankionline.com/573/71447/126/60/27602130071361/image.tnk"
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 328135020,
+              "score": 969882,
+              "image": "https://s.eu.tankionline.com/564/5207/367/317/27221401743427/image.tnk"
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 61201418,
+              "score": 112609,
+              "image": "https://s.eu.tankionline.com/602/61754/171/47/30114373154622/image.tnk"
+            },
+            {
+              "name": "Ares",
+              "timeMs": 43212149,
+              "score": 89983,
+              "image": "https://s.eu.tankionline.com/562/161140/123/251/27157463264311/image.tnk"
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 10103718,
+              "score": 13927,
+              "image": "https://s.eu.tankionline.com/566/70102/323/360/27316026215470/image.tnk"
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 9449959,
+              "score": 3670,
+              "image": "https://s.eu.tankionline.com/574/114025/235/321/27623005403276/image.tnk"
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 4160345,
+              "score": 6651,
+              "image": "https://s.eu.tankionline.com/567/167060/364/47/27375614310446/image.tnk"
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 940626,
+              "score": 80,
+              "image": "https://s.eu.tankionline.com/600/67532/1/65/30015726400661/image.tnk"
+            },
+            {
+              "name": "Titan",
+              "timeMs": 311209,
+              "score": 20,
+              "image": "https://s.eu.tankionline.com/606/26070/125/145/30305416163507/image.tnk"
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Shaft",
+              "timeMs": 1190998597,
+              "score": 2107313,
+              "image": "https://s.eu.tankionline.com/622/43505/151/101/31110721265007/image.tnk"
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 1147078712,
+              "score": 2855642,
+              "image": "https://s.eu.tankionline.com/611/147301/37/346/30471660553063/image.tnk"
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 994721573,
+              "score": 2852583,
+              "image": "https://s.eu.tankionline.com/622/115017/367/224/31123203774154/image.tnk"
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 934637200,
+              "score": 2149455,
+              "image": "https://s.eu.tankionline.com/601/112676/250/233/30062557707304/image.tnk"
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 680336874,
+              "score": 1553458,
+              "image": "https://s.eu.tankionline.com/566/114246/64/16/27323052543056/image.tnk"
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 601848916,
+              "score": 1605186,
+              "image": "https://s.eu.tankionline.com/575/156205/46/235/27673441764603/image.tnk"
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 561441116,
+              "score": 1561595,
+              "image": "https://s.eu.tankionline.com/632/23036/322/273/31504607631061/image.tnk"
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 416964096,
+              "score": 1023302,
+              "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 353785622,
+              "score": 490981,
+              "image": "https://s.eu.tankionline.com/567/105205/202/144/27361241363510/image.tnk"
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 318523122,
+              "score": 1097925,
+              "image": "https://s.eu.tankionline.com/571/164753/344/273/31254566614710/image.tnk"
+            },
+            {
+              "name": "Isida",
+              "timeMs": 296266696,
+              "score": 527265,
+              "image": "https://s.eu.tankionline.com/605/12650/335/51/30242554322574/image.tnk"
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 239296138,
+              "score": 302565,
+              "image": "https://s.eu.tankionline.com/611/61722/256/267/30454367266373/image.tnk"
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 205703559,
+              "score": 606287,
+              "image": "https://s.eu.tankionline.com/603/146215/116/130/30171443247472/image.tnk"
+            },
+            {
+              "name": "Striker",
+              "timeMs": 138215675,
+              "score": 227855,
+              "image": "https://s.eu.tankionline.com/626/176502/177/71/31337521147306/image.tnk"
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 125908316,
+              "score": 403372,
+              "image": "https://s.eu.tankionline.com/0/114/134/163/27571212744112/image.tnk"
+            },
+            {
+              "name": "Twins",
+              "timeMs": 58721065,
+              "score": 122564,
+              "image": "https://s.eu.tankionline.com/575/72153/171/306/27656433310704/image.tnk"
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 30348099,
+              "score": 37455,
+              "image": "https://s.eu.tankionline.com/601/17263/233/51/30043654742567/image.tnk"
+            }
+          ],
+          "drones": [
+            {
+              "name": "Hyperion",
+              "timeMs": 1781760646,
+              "score": 3700270,
+              "image": "https://s.eu.tankionline.com/556/126336/65/363/27006221224752/image.tnk"
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 1626410598,
+              "score": 4228951,
+              "image": "https://s.eu.tankionline.com/553/11117/5/346/27006221750136/image.tnk"
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 1216668175,
+              "score": 2418131,
+              "image": "https://s.eu.tankionline.com/562/50132/163/114/27112026542552/image.tnk"
+            },
+            {
+              "name": "Defender",
+              "timeMs": 1209851515,
+              "score": 2921103,
+              "image": "https://s.eu.tankionline.com/546/7655/210/24/27006221276075/image.tnk"
+            },
+            {
+              "name": "Booster",
+              "timeMs": 872461212,
+              "score": 2065637,
+              "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 738937432,
+              "score": 1681440,
+              "image": "https://s.eu.tankionline.com/546/63741/312/327/27006222525254/image.tnk"
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 1509301,
+              "score": 1800,
+              "image": "https://s.eu.tankionline.com/546/63741/324/26/27006221601376/image.tnk"
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 0,
+              "score": 0,
+              "image": "https://s.eu.tankionline.com/543/130431/306/142/27006221447003/image.tnk"
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 2470013764,
+              "score": 4945899,
+              "image": null
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 967353293,
+              "score": 1937727,
+              "image": null
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 823030319,
+              "score": 1729404,
+              "image": null
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 774738487,
+              "score": 1881003,
+              "image": null
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 707213933,
+              "score": 1396087,
+              "image": null
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 703335373,
+              "score": 2881473,
+              "image": null
+            },
+            {
+              "name": "Siege",
+              "timeMs": 665319315,
+              "score": 1236801,
+              "image": null
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 530757049,
+              "score": 1605153,
+              "image": null
+            },
+            {
+              "name": "Assault",
+              "timeMs": 524027499,
+              "score": 1148445,
+              "image": null
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-11T22:44:36Z",
+          "k": 343826,
+          "d": 145592,
+          "c": 23492727,
+          "s": 20299118,
+          "g": 1369,
+          "e": 8967537,
+          "r": 124,
+          "t": 8368120598
+        }
+      ]
     }
   },
   "errors": {},
   "configuredPlayers": [
-    "borz"
+    "akame",
+    "alone",
+    "arkoanl",
+    "borz",
+    "dlli",
+    "game",
+    "integer",
+    "mantish",
+    "tesl4",
+    "what",
+    "ziam"
   ],
-  "lastAttemptAt": "2026-08-11T22:17:24Z"
+  "lastAttemptAt": "2026-08-11T22:44:36Z"
 }

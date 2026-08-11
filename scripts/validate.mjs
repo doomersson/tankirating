@@ -1,0 +1,48 @@
+import { readFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { resolve } from "node:path";
+
+const root = resolve(import.meta.dirname, "..");
+const read = (path) => readFile(resolve(root, path), "utf8");
+const [html, css, tokens, app, tracker, players] = await Promise.all([
+  read("index.html"),
+  read("assets/styles.css"),
+  read("tokens.css"),
+  read("assets/app.js"),
+  read("data/tracker.json").then(JSON.parse),
+  read("data/players.json").then(JSON.parse),
+]);
+
+const failures = [];
+const check = (condition, message) => { if (!condition) failures.push(message); };
+
+check(html.includes('name="viewport"'), "viewport metadata is missing");
+check(html.includes("viewport-fit=cover"), "safe-area viewport support is missing");
+check(html.includes('href="./tokens.css"'), "token stylesheet is not linked relatively");
+check(html.includes('src="./assets/app.js"'), "application script is not linked relatively");
+check(!/href="\//.test(html) && !/src="\//.test(html), "root-absolute assets break project GitHub Pages sites");
+check(css.includes("overflow-x: clip"), "horizontal overflow clipping is missing");
+check(!/overflow-x\s*:\s*hidden/.test(css), "overflow-x hidden can break sticky positioning");
+check(!/transition\s*:\s*all/.test(css), "transition-all behavior is forbidden");
+check(!/width\s*:\s*100vw/.test(css), "100vw can create desktop overflow");
+check(!/background-clip\s*:\s*text/.test(css), "gradient text is forbidden");
+check(!/(?:#[0-9a-f]{3,8}|rgba?\(|hsla?\(|oklch\()/i.test(css), "component styles must consume color tokens");
+check(css.includes("prefers-reduced-motion"), "reduced-motion support is missing");
+check((css.match(/font-family:\s*var\(--font-outlier\)/g) || []).length <= 2, "outlier typography is used in more than two roles");
+check(css.includes("line-height: 1;"), "intrinsic controls need compact line-height");
+check(tokens.includes("--color-accent-ink"), "accent contrast token is missing");
+check(tokens.includes("--font-display") && tokens.includes("--font-body"), "font pairing tokens are missing");
+check(app.includes("indexedDB"), "local import persistence is missing");
+check(app.includes("Export tracker JSON") || html.includes("Export tracker JSON"), "JSON export control is missing");
+check(tracker.schemaVersion === 1 && tracker.players && typeof tracker.players === "object", "tracker.json schema is invalid");
+check(Array.isArray(players.players) && players.players.length <= 100, "players.json must contain no more than 100 players");
+
+const syntax = spawnSync(process.execPath, ["--check", resolve(root, "assets/app.js")], { encoding: "utf8" });
+check(syntax.status === 0, syntax.stderr || "app.js syntax check failed");
+
+if (failures.length) {
+  console.error(failures.map((failure) => `FAIL: ${failure}`).join("\n"));
+  process.exit(1);
+}
+
+console.log(`Validated ${Object.keys(tracker.players).length} tracked player record(s) and static site invariants.`);

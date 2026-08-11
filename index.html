@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="midnight">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#101317" />
+    <meta
+      name="description"
+      content="A lightweight community tracker for Tanki Online player statistics."
+    />
+    <title>Tanki Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script defer src="./assets/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to player statistics</a>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="#profile" aria-label="Tanki Tracker home">
+          <span class="brand-mark" aria-hidden="true">T//</span>
+          <span>Tanki Tracker</span>
+        </a>
+
+        <button class="search-trigger" id="search-trigger" type="button" aria-label="Search tracked players">
+          <span class="search-icon" aria-hidden="true"></span>
+          <span class="search-copy">Find a player</span>
+          <span class="key-hint" aria-hidden="true">Ctrl K</span>
+        </button>
+
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <button class="nav-button is-active" data-view="profile" type="button">Profile</button>
+          <button class="nav-button" data-view="leaderboard" type="button">Leaders</button>
+          <button class="nav-button" data-view="compare" type="button">Compare</button>
+        </nav>
+
+        <button class="icon-button tools-trigger" id="tools-trigger" type="button" aria-label="Open data tools">
+          <span aria-hidden="true">•••</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="page-shell" tabindex="-1">
+      <div class="data-notice" id="data-notice" role="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="data-notice-text">Loading tracker data…</span>
+        <button class="quiet-button is-hidden" id="use-site-data" type="button">Use site data</button>
+      </div>
+
+      <section class="view is-active" id="profile-view" data-view-panel="profile" aria-labelledby="profile-title">
+        <div class="profile-head">
+          <div class="identity-block">
+            <div class="rank-token" id="rank-token" aria-hidden="true">—</div>
+            <div>
+              <p class="context-line" id="profile-context">Tracked player</p>
+              <h1 id="profile-title">Loading…</h1>
+              <p class="player-meta" id="player-meta">Waiting for the first snapshot.</p>
+            </div>
+          </div>
+          <div class="efficiency-block">
+            <span class="metric-label">Efficiency</span>
+            <strong id="hero-efficiency">—</strong>
+            <span class="metric-detail" id="hero-position">Position unavailable</span>
+          </div>
+        </div>
+
+        <div class="profile-toolbar" aria-label="Profile period and actions">
+          <div class="segmented-control" id="period-control" role="group" aria-label="Statistics period">
+            <button type="button" data-period="1">24h</button>
+            <button type="button" data-period="7" class="is-active">7d</button>
+            <button type="button" data-period="30">30d</button>
+            <button type="button" data-period="all">All</button>
+          </div>
+          <button class="quiet-button" id="profile-csv" type="button">Export profile CSV</button>
+        </div>
+
+        <section class="time-led" aria-labelledby="time-heading">
+          <div>
+            <p class="metric-label" id="time-heading">Exact battle time</p>
+            <p class="time-figure" id="total-time">—</p>
+          </div>
+          <div class="time-aside">
+            <span id="period-time">— during selected period</span>
+            <span id="activity-state">No activity history yet</span>
+          </div>
+        </section>
+
+        <section class="stat-strip" aria-label="Player performance statistics">
+          <article>
+            <span class="metric-label">Kills</span>
+            <strong id="stat-kills">—</strong>
+            <span id="delta-kills">— selected period</span>
+          </article>
+          <article>
+            <span class="metric-label">K/D</span>
+            <strong id="stat-kd">—</strong>
+            <span id="period-kd">— selected period</span>
+          </article>
+          <article>
+            <span class="metric-label">Kills / 13 min</span>
+            <strong id="stat-k13">—</strong>
+            <span id="period-k13">Lifetime rate</span>
+          </article>
+          <article>
+            <span class="metric-label">Crystals / 13 min</span>
+            <strong id="stat-c13">—</strong>
+            <span id="period-crystals">— selected period</span>
+          </article>
+          <article>
+            <span class="metric-label">Score / 13 min</span>
+            <strong id="stat-s13">—</strong>
+            <span id="period-score">— selected period</span>
+          </article>
+        </section>
+
+        <section class="chart-panel" aria-labelledby="trend-heading">
+          <div class="panel-heading">
+            <div>
+              <h2 id="trend-heading">Progress over time</h2>
+              <p id="trend-summary">Changes appear after the second active snapshot.</p>
+            </div>
+            <div class="metric-switcher" id="metric-switcher" role="group" aria-label="Chart metric">
+              <button type="button" data-metric="score" class="is-active">Score</button>
+              <button type="button" data-metric="crystals">Crystals</button>
+              <button type="button" data-metric="kills">Kills</button>
+              <button type="button" data-metric="time">Time</button>
+            </div>
+          </div>
+          <div class="chart-wrap" id="trend-chart" role="img" aria-label="Player progress chart"></div>
+        </section>
+
+        <div class="analysis-grid">
+          <section class="usage-panel" aria-labelledby="equipment-heading">
+            <div class="panel-heading compact">
+              <div>
+                <h2 id="equipment-heading">Most played equipment</h2>
+                <p>Lifetime usage reported by Tanki Ratings.</p>
+              </div>
+            </div>
+            <div id="equipment-summary" class="equipment-summary"></div>
+            <div class="equipment-tabs" id="equipment-tabs" role="tablist" aria-label="Equipment category">
+              <button type="button" role="tab" aria-selected="true" data-equipment="hulls">Hulls</button>
+              <button type="button" role="tab" aria-selected="false" data-equipment="turrets">Turrets</button>
+              <button type="button" role="tab" aria-selected="false" data-equipment="drones">Drones</button>
+              <button type="button" role="tab" aria-selected="false" data-equipment="modes">Modes</button>
+            </div>
+            <div id="equipment-list" class="usage-list" role="tabpanel"></div>
+          </section>
+
+          <section class="activity-panel" aria-labelledby="activity-heading">
+            <div class="panel-heading compact">
+              <div>
+                <h2 id="activity-heading">Recent activity</h2>
+                <p>Battle-time change grouped by collection day.</p>
+              </div>
+            </div>
+            <div id="activity-chart" class="activity-chart" role="img" aria-label="Recent daily play time"></div>
+            <dl class="detail-list" id="account-details"></dl>
+          </section>
+        </div>
+      </section>
+
+      <section class="view" id="leaderboard-view" data-view-panel="leaderboard" aria-labelledby="leaderboard-title" hidden>
+        <div class="section-intro">
+          <div>
+            <p class="context-line">All tracked accounts</p>
+            <h1 id="leaderboard-title">Leaderboard</h1>
+          </div>
+          <p>Sort the group by lifetime statistics or recent activity. No official global rank is implied.</p>
+        </div>
+        <div class="table-toolbar">
+          <label for="leaderboard-sort">Sort players by</label>
+          <select id="leaderboard-sort">
+            <option value="efficiency">Efficiency</option>
+            <option value="score">Score</option>
+            <option value="kd">K/D</option>
+            <option value="kills13">Kills / 13 min</option>
+            <option value="time">Battle time</option>
+          </select>
+        </div>
+        <div class="leaderboard-list" id="leaderboard-list"></div>
+      </section>
+
+      <section class="view" id="compare-view" data-view-panel="compare" aria-labelledby="compare-title" hidden>
+        <div class="section-intro">
+          <div>
+            <p class="context-line">Up to four accounts</p>
+            <h1 id="compare-title">Compare players</h1>
+          </div>
+          <p>Pick accounts, then compare lifetime output and the selected period without hiding the raw values.</p>
+        </div>
+        <div class="compare-picker" id="compare-picker" aria-label="Players to compare"></div>
+        <div class="compare-empty" id="compare-empty">
+          <p>Select at least two players.</p>
+          <span>The comparison table will appear here.</span>
+        </div>
+        <div class="comparison" id="comparison" hidden></div>
+      </section>
+
+      <section class="empty-state is-hidden" id="global-empty" aria-labelledby="empty-title">
+        <span class="empty-mark" aria-hidden="true">T//</span>
+        <h1 id="empty-title">No snapshots yet</h1>
+        <p>Run the “Track players” workflow once. The site will populate from Tanki’s public ratings API.</p>
+      </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button class="is-active" data-view="profile" type="button">Profile</button>
+      <button data-view="leaderboard" type="button">Leaders</button>
+      <button data-view="compare" type="button">Compare</button>
+      <button id="mobile-search" type="button">Search</button>
+    </nav>
+
+    <footer class="site-footer">
+      <p><span>Tanki Tracker</span><span aria-hidden="true">·</span><span>Community statistics</span><span aria-hidden="true">·</span><span id="footer-sync">Awaiting data</span></p>
+      <p>Not affiliated with Tanki Online.</p>
+    </footer>
+
+    <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-dialog-title">
+      <div class="dialog-field">
+        <span class="search-icon" aria-hidden="true"></span>
+        <label class="sr-only" for="player-search">Search tracked players</label>
+        <input id="player-search" type="search" autocomplete="off" placeholder="Search tracked players" />
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Close search">Esc</button>
+      </div>
+      <h2 class="sr-only" id="search-dialog-title">Player search</h2>
+      <div class="search-results" id="search-results" role="listbox" aria-label="Player results"></div>
+      <div class="dialog-hints" aria-hidden="true"><span>↑ ↓ navigate</span><span>Enter open</span><span>Esc close</span></div>
+    </dialog>
+
+    <dialog class="tools-dialog" id="tools-dialog" aria-labelledby="tools-title">
+      <div class="dialog-heading">
+        <div>
+          <h2 id="tools-title">Data tools</h2>
+          <p>Back up the full tracker or inspect an earlier export locally.</p>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close data tools">×</button>
+      </div>
+      <div class="tool-actions">
+        <button class="primary-button" id="export-data" type="button">Export tracker JSON</button>
+        <button class="secondary-button" id="import-trigger" type="button">Import tracker JSON</button>
+        <input id="import-data" type="file" accept="application/json,.json" />
+      </div>
+      <p class="tool-note">
+        Imports stay in this browser. To restore the public tracker permanently, replace
+        <code>data/tracker.json</code> in the repository with the exported file and commit it.
+      </p>
+      <div class="import-status" id="import-status" role="status" aria-live="polite"></div>
+    </dialog>
+
+    <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>

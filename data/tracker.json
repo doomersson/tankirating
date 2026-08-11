@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-11T22:44:36Z",
+  "generatedAt": "2026-08-11T23:04:53Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "akame": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "Akame",
         "rank": 177,
         "score": 30852233,
@@ -317,14 +317,14 @@
     },
     "alone": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "Alone",
         "rank": 165,
-        "score": 28560144,
+        "score": 28560384,
         "scoreBase": 28400000,
         "scoreNext": 28600000,
-        "kills": 392624,
-        "deaths": 169694,
+        "kills": 392631,
+        "deaths": 169695,
         "crystals": 35064280,
         "golds": 2641,
         "efficiency": 9021573,
@@ -624,12 +624,23 @@
           "e": 9021573,
           "r": 165,
           "t": 8054092811
+        },
+        {
+          "at": "2026-08-11T23:04:53Z",
+          "k": 392631,
+          "d": 169695,
+          "c": 35064280,
+          "s": 28560384,
+          "g": 2641,
+          "e": 9021573,
+          "r": 165,
+          "t": 8054092811
         }
       ]
     },
     "arkoanl": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "ARKOANL",
         "rank": 27,
         "score": 1021137,
@@ -905,7 +916,7 @@
     },
     "borz": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "Borz",
         "rank": 31,
         "score": 1605845,
@@ -1193,7 +1204,7 @@
     },
     "dlli": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "dlli",
         "rank": 97,
         "score": 14846053,
@@ -1499,27 +1510,27 @@
     },
     "game": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "Game",
         "rank": 60,
-        "score": 7549970,
+        "score": 7552100,
         "scoreBase": 7400000,
         "scoreNext": 7600000,
-        "kills": 166492,
-        "deaths": 55192,
-        "crystals": 17255430,
+        "kills": 166556,
+        "deaths": 55207,
+        "crystals": 17263886,
         "golds": 563,
-        "efficiency": 9414621,
+        "efficiency": 9414691,
         "efficiencyPosition": 41,
-        "totalTimeMs": 3297645366,
+        "totalTimeMs": 3298662437,
         "gearScore": 9999,
         "premium": true,
         "equipment": {
           "hulls": [
             {
               "name": "Crusader",
-              "timeMs": 961814326,
-              "score": 2274477,
+              "timeMs": 962831397,
+              "score": 2277537,
               "image": "https://s.eu.tankionline.com/566/43504/240/22/27310721145267/image.tnk"
             },
             {
@@ -1586,8 +1597,8 @@
           "turrets": [
             {
               "name": "Tsunami",
-              "timeMs": 1050030111,
-              "score": 2489823,
+              "timeMs": 1051047182,
+              "score": 2492883,
               "image": "https://s.eu.tankionline.com/633/142777/142/76/31570600103535/image.tnk"
             },
             {
@@ -1696,8 +1707,8 @@
             },
             {
               "name": "Booster",
-              "timeMs": 758008231,
-              "score": 1790436,
+              "timeMs": 759025302,
+              "score": 1793496,
               "image": "https://s.eu.tankionline.com/546/7646/23/57/27006221365647/image.tnk"
             },
             {
@@ -1764,14 +1775,14 @@
             },
             {
               "name": "Control Points",
-              "timeMs": 310128270,
-              "score": 743973,
+              "timeMs": 310373431,
+              "score": 745023,
               "image": null
             },
             {
               "name": "Siege",
-              "timeMs": 256541687,
-              "score": 509703,
+              "timeMs": 257313597,
+              "score": 511713,
               "image": null
             },
             {
@@ -1806,12 +1817,23 @@
           "e": 9414621,
           "r": 60,
           "t": 3297645366
+        },
+        {
+          "at": "2026-08-11T23:04:53Z",
+          "k": 166556,
+          "d": 55207,
+          "c": 17263886,
+          "s": 7552100,
+          "g": 563,
+          "e": 9414691,
+          "r": 60,
+          "t": 3298662437
         }
       ]
     },
     "integer": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "integer",
         "rank": 53,
         "score": 6100114,
@@ -2129,7 +2151,7 @@
     },
     "mantish": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "Mantish",
         "rank": 83,
         "score": 12197470,
@@ -2441,7 +2463,7 @@
     },
     "tesl4": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "TESL4",
         "rank": 302,
         "score": 55819992,
@@ -2753,7 +2775,7 @@
     },
     "what": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "What",
         "rank": 56,
         "score": 6794080,
@@ -3065,7 +3087,7 @@
     },
     "ziam": {
       "current": {
-        "at": "2026-08-11T22:44:36Z",
+        "at": "2026-08-11T23:04:53Z",
         "name": "Ziam",
         "rank": 124,
         "score": 20299118,
@@ -3390,5 +3412,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-11T22:44:36Z"
+  "lastAttemptAt": "2026-08-11T23:04:53Z"
 }

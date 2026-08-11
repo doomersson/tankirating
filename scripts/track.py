@@ -23,6 +23,10 @@ SCHEMA_VERSION = 1
 USER_AGENT = "TankiTrackerPages/1.0 (+GitHub Actions; community statistics)"
 
 
+class ProfileNotFoundError(ValueError):
+    """The ratings API reports that a profile is private or does not exist."""
+
+
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
@@ -111,8 +115,14 @@ def fetch_profile(username: str, region: str, language: str) -> dict[str, Any]:
             profile = payload.get("response") if isinstance(payload, dict) else None
             if not isinstance(profile, dict) or not profile.get("name"):
                 response_type = payload.get("responseType") if isinstance(payload, dict) else None
+                if response_type == "NOT_FOUND":
+                    raise ProfileNotFoundError(
+                        f"{username} is private or does not exist (Tanki Ratings returned NOT_FOUND)."
+                    )
                 raise ValueError(f"No profile returned ({response_type or 'unknown response'}).")
             return profile
+        except ProfileNotFoundError:
+            raise
         except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, json.JSONDecodeError, ValueError) as error:
             last_error = error
             if attempt < 2:
@@ -135,14 +145,22 @@ def aggregate_usage(items: Any) -> list[dict[str, Any]]:
                 "name": name,
                 "timeMs": 0,
                 "score": 0,
-                "image": raw.get("imageUrl") or None,
             },
         )
         item["timeMs"] += max(0, number_value(raw.get("timePlayed")))
         item["score"] += max(0, number_value(raw.get("scoreEarned")))
-        if not item.get("image") and raw.get("imageUrl"):
-            item["image"] = raw["imageUrl"]
     return sorted(grouped.values(), key=lambda item: (-item["timeMs"], item["name"].casefold()))
+
+
+def strip_legacy_images(value: Any) -> None:
+    """Remove equipment image fields left by earlier tracker versions in place."""
+    if isinstance(value, dict):
+        value.pop("image", None)
+        for child in value.values():
+            strip_legacy_images(child)
+    elif isinstance(value, list):
+        for child in value:
+            strip_legacy_images(child)
 
 
 def normalize_profile(profile: dict[str, Any], collected_at: str) -> dict[str, Any]:
@@ -286,6 +304,7 @@ def main() -> int:
     if successes:
         tracker["generatedAt"] = collected_at
 
+    strip_legacy_images(tracker)
     write_json_atomic(TRACKER_PATH, tracker)
     print(f"Completed: {successes}/{len(config['players'])} profiles updated.")
     return 0 if successes or not config["players"] else 1

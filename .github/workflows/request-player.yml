@@ -1,0 +1,65 @@
+name: Request player
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: tanki-player-tracking
+  cancel-in-progress: false
+
+jobs:
+  request:
+    if: startsWith(github.event.issue.title, '[Track player] ') || startsWith(github.event.issue.title, '[Refresh player] ')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Validate request and collect player
+        id: request
+        continue-on-error: true
+        env:
+          REQUEST_TITLE: ${{ github.event.issue.title }}
+        run: python scripts/request_player.py
+
+      - name: Save changed player data
+        if: steps.request.outcome == 'success'
+        run: |
+          if git diff --quiet -- data/players.json data/tracker.json; then
+            echo "No player data changed."
+            exit 0
+          fi
+          git config user.name "tanki-tracker-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/players.json data/tracker.json
+          git commit -m "data: handle player request"
+          git push
+
+      - name: Reply to and close request
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          if [ ! -f request-message.txt ]; then
+            echo "The request workflow ended before it could produce a result." > request-message.txt
+          fi
+          gh issue comment "$ISSUE_NUMBER" --body-file request-message.txt
+          gh issue close "$ISSUE_NUMBER" --reason completed
+
+      - name: Mark rejected or failed request
+        if: steps.request.outcome != 'success'
+        run: exit 1

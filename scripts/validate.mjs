@@ -4,13 +4,16 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const read = (path) => readFile(resolve(root, path), "utf8");
-const [html, css, tokens, app, tracker, players] = await Promise.all([
+const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow, rankGuide] = await Promise.all([
   read("index.html"),
   read("assets/styles.css"),
   read("tokens.css"),
   read("assets/app.js"),
   read("data/tracker.json").then(JSON.parse),
   read("data/players.json").then(JSON.parse),
+  read(".github/workflows/track.yml"),
+  read(".github/workflows/request-player.yml"),
+  read("assets/ranks/README.md"),
 ]);
 
 const failures = [];
@@ -20,6 +23,8 @@ check(html.includes('name="viewport"'), "viewport metadata is missing");
 check(html.includes("viewport-fit=cover"), "safe-area viewport support is missing");
 check(html.includes('href="./tokens.css"'), "token stylesheet is not linked relatively");
 check(html.includes('src="./assets/app.js"'), "application script is not linked relatively");
+check(html.includes('class="view is-active" id="leaderboard-view"'), "leaderboard must be the landing view");
+check(!html.includes('id="leaderboard-sort"'), "leaderboard must not use a metric select menu");
 check(!/href="\//.test(html) && !/src="\//.test(html), "root-absolute assets break project GitHub Pages sites");
 check(css.includes("overflow-x: clip"), "horizontal overflow clipping is missing");
 check(!/overflow-x\s*:\s*hidden/.test(css), "overflow-x hidden can break sticky positioning");
@@ -34,7 +39,14 @@ check(tokens.includes("--color-accent-ink"), "accent contrast token is missing")
 check(tokens.includes("--font-display") && tokens.includes("--font-body"), "font pairing tokens are missing");
 check(app.includes("indexedDB"), "local import persistence is missing");
 check(app.includes("Export tracker JSON") || html.includes("Export tracker JSON"), "JSON export control is missing");
+check(app.includes('["Legend", 1600000]') && app.includes("legendProgress / 200000"), "unlimited Legend rank progression is missing");
+check(app.includes("Efficiency rank #") && app.includes("formatDayMonth"), "efficiency position or date-labelled activity is missing");
+check(app.includes("issues/new?title=") && requestWorkflow.includes("issues:"), "GitHub player request flow is missing");
+check(trackWorkflow.includes('cron: "17 */3 * * *"'), "collector must run every three hours");
+check(trackWorkflow.includes("actions/checkout@v5") && trackWorkflow.includes("actions/setup-python@v6"), "collector actions must use Node 24-compatible releases");
+check(rankGuide.includes("31.png") && rankGuide.includes("Legend"), "rank icon upload guide is missing");
 check(tracker.schemaVersion === 1 && tracker.players && typeof tracker.players === "object", "tracker.json schema is invalid");
+check(!JSON.stringify(tracker).includes('"image"'), "tracker.json still contains legacy equipment images");
 check(Array.isArray(players.players) && players.players.length <= 100, "players.json must contain no more than 100 players");
 
 const syntax = spawnSync(process.execPath, ["--check", resolve(root, "assets/app.js")], { encoding: "utf8" });

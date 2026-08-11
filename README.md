@@ -1,6 +1,6 @@
 # Tanki Tracker — free GitHub Pages edition
 
-A static community statistics tracker for up to 100 Tanki Online accounts. It uses GitHub Actions as the hourly collector and GitHub Pages as the website, so it does not require a server or database.
+A static community statistics tracker for up to 100 Tanki Online accounts. GitHub Actions collects public profiles every three hours, stores compact history in the repository, and publishes the interface with GitHub Pages. There is no paid server or database.
 
 The collector reads Tanki’s public profile response from:
 
@@ -8,34 +8,49 @@ The collector reads Tanki’s public profile response from:
 https://ratings.tankionline.com/api/eu/profile/?user=USERNAME&lang=en
 ```
 
-The public API does not currently send a browser CORS header, so the website cannot safely collect profiles itself. The scheduled GitHub workflow performs that request and commits compact snapshots into `data/tracker.json`.
+The API does not currently send the browser CORS header needed for direct collection from GitHub Pages. Collection therefore happens in GitHub Actions and the site reads the generated `data/tracker.json` file.
 
 ## What is tracked
 
-- Exact accumulated battle time, formatted as days, hours and minutes.
-- Kills, deaths, lifetime K/D, period K/D and kills per 13 minutes.
-- Score, earned crystals, gold boxes, efficiency and official efficiency position.
+- Exact accumulated battle time, with Exact, Hours, and Days display modes.
+- Kills, deaths, lifetime and period K/D, and kills per 13 minutes.
+- Score, earned crystals, gold boxes, gear score, efficiency value, and official efficiency position.
 - Score and crystals per 13 minutes.
-- Rank progress and gear score.
-- Most-played hull, turret, drone and battle mode.
-- Hourly changed snapshots, trend charts and a 14-day activity view.
-- Player leaderboard and up-to-four-player comparison.
+- Rank and EXP progress, including unlimited Legend levels every 200,000 EXP.
+- Most-played hull, turret, drone, and battle mode.
+- Changed snapshots, trend charts, and a recent activity view labelled by date.
+- A sortable all-player landing leaderboard and up-to-four-player comparison.
 - Full JSON backup import/export and per-profile CSV export.
+
+Equipment entries keep only `name`, `timeMs`, and `score`. Remote equipment image URLs are not stored.
 
 ## First deployment
 
-1. Create a GitHub repository. Use `YOURNAME.github.io` for a root site, or any other repository name for `YOURNAME.github.io/REPOSITORY/`.
-2. Upload **the contents of this folder** to the repository root. `index.html`, `data`, `scripts` and `.github` must be visible at the root.
-3. Open the repository’s **Settings → Actions → General** page. Under “Workflow permissions”, choose **Read and write permissions**, then save.
-4. Open **Settings → Pages**. Under “Build and deployment”, select **GitHub Actions**.
-5. Open **Actions → Track players → Run workflow**. The first run fills `data/tracker.json` with Borz’s current profile.
-6. Open **Actions → Deploy GitHub Pages** and run it once if deployment did not start automatically.
+1. Put these files at the root of the `doomersson/tankirating` repository.
+2. Open **Settings → General → Features** and make sure **Issues** is enabled. Public player requests use Issues.
+3. Open **Settings → Actions → General**. Under **Workflow permissions**, choose **Read and write permissions**, then save.
+4. Open **Settings → Pages**. Under **Build and deployment**, select **GitHub Actions**.
+5. Open the repository’s **Actions** tab, choose **Track players**, and select **Run workflow** once.
+6. The site will publish at `https://doomersson.github.io/tankirating/`. Run **Deploy GitHub Pages** manually once only if the first deployment did not start automatically.
 
-The tracking workflow runs at minute 17 of every hour. GitHub may start scheduled workflows a little late during busy periods.
+The scheduled collector runs at minute 17 every three hours. GitHub can start scheduled workflows a little late during busy periods.
 
-## Add or remove accounts
+## Public player requests and refreshes
 
-Edit `data/players.json` on GitHub:
+The search box finds existing players. For an exact username that is not tracked, it offers a **Request tracking** link. A profile’s **Request refresh** button uses the same flow:
+
+1. The visitor signs in to GitHub and submits the prefilled Issue.
+2. The **Request player** workflow validates the issue title and calls Tanki Ratings.
+3. A valid public profile is added or refreshed and committed.
+4. The Action replies to the Issue, closes it, and redeploys the site.
+
+If Tanki returns `{"response":null,"responseType":"NOT_FOUND"}`, the request is rejected because the account is private or does not exist.
+
+GitHub sign-in and GitHub’s own abuse controls are the free anti-bot gate. A CAPTCHA cannot safely write to a repository from a browser-only GitHub Pages site: its secret must live on a server. If fully anonymous in-page requests are needed later, the small free option is a Cloudflare Worker with Turnstile that validates the CAPTCHA and dispatches the workflow.
+
+## Add or remove accounts manually
+
+Edit `data/players.json`:
 
 ```json
 {
@@ -51,36 +66,40 @@ Edit `data/players.json` on GitHub:
 }
 ```
 
-Commit the edit, then manually run **Track players** once. After that, hourly collection continues automatically.
+Commit the edit, then run **Track players** once. The script accepts at most 100 unique accounts. Removing a name stops new collection but intentionally keeps its history in `tracker.json` so an accidental edit is recoverable.
 
-The script accepts at most 100 unique accounts. Use exact Tanki usernames. Removing a name from `players.json` stops new collection but intentionally keeps its existing history in `tracker.json`, protecting against accidental edits.
+## Add rank icons
+
+Create or use the existing `assets/ranks` folder and upload 31 square transparent PNG files:
+
+```text
+assets/ranks/01.png  Recruit
+assets/ranks/02.png  Private
+...
+assets/ranks/30.png  Generalissimo
+assets/ranks/31.png  Legend
+```
+
+`31.png` is reused for Legend, Legend 2, Legend 3, and every later Legend level. Images at least 80×80 px are recommended. Until an icon exists, the interface automatically falls back to the numeric rank.
+
+Using GitHub’s website: open `assets/ranks`, choose **Add file → Upload files**, drag the 31 PNGs in, and commit. Filenames must keep the leading zero and lowercase `.png` extension.
 
 ## Back up and restore
 
-On the website, open **Data tools → Export tracker JSON**. Keep that file somewhere safe.
+Open **Data tools → Export tracker JSON** on the site and keep the downloaded file somewhere safe.
 
-There are two ways to import it:
-
-- **Temporary/local inspection:** choose **Import tracker JSON** on the website. The backup is saved in that browser’s IndexedDB and does not change the public repository.
-- **Permanent public restore:** upload the exported file over `data/tracker.json` in GitHub, commit it, then run **Track players** and **Deploy GitHub Pages**.
-
-The collector continues from the restored history instead of starting over.
+- **Temporary/local inspection:** choose **Import tracker JSON**. It is stored in that browser’s IndexedDB and does not change the public repository.
+- **Permanent public restore:** upload the exported file over `data/tracker.json`, commit it, then run **Track players**. The collector continues from the restored history.
 
 ## Storage behavior
 
-To keep the repository small, the collector stores:
-
-- One compact history point whenever cumulative statistics change.
-- One heartbeat snapshot after roughly 23 hours without a changed snapshot.
-- Only normalized current equipment totals, excluding the large paint and module inventories.
-- Two years of history by default; change `retentionDays` if needed.
-
-For approximately 100 lightly or moderately active accounts, this is substantially smaller than storing every full API response every hour.
+To keep the repository small, the collector stores one compact point when cumulative statistics change, one heartbeat after roughly 23 unchanged hours, normalized equipment totals, and two years of history by default. For up to 100 accounts, this is much smaller than saving full API responses every three hours.
 
 ## Limitations
 
 - GitHub scheduled workflows are not real-time and occasionally start late.
-- Playtime inside an hourly interval is known, but the exact minute within that interval is not. The activity chart attributes the change to the collection day.
-- Historical charts begin when this tracker begins. Tanki’s profile endpoint supplies cumulative totals, not earlier snapshots.
-- If the Tanki profile response changes, `scripts/track.py` might need an update.
+- A requested refresh normally takes a few minutes for collection and deployment; it is not an immediate browser-side API call.
+- Playtime inside a three-hour interval is known, but the exact minute inside that interval is not. Activity is attributed to the collection date.
+- Historical charts begin when this tracker starts. Tanki’s endpoint supplies cumulative totals, not older snapshots.
+- If the Tanki profile response changes, `scripts/track.py` may need an update.
 - This is a community project and is not affiliated with Tanki Online.

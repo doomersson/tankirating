@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-11T23:58:26Z",
+  "generatedAt": "2026-08-12T00:13:05Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "akame": {
@@ -2663,7 +2663,7 @@
     },
     "ziam": {
       "current": {
-        "at": "2026-08-11T23:58:26Z",
+        "at": "2026-08-12T00:13:05Z",
         "name": "Ziam",
         "rank": 124,
         "score": 20299118,
@@ -2675,14 +2675,14 @@
         "golds": 1369,
         "efficiency": 8967537,
         "efficiencyPosition": 28389,
-        "totalTimeMs": 8368120598,
+        "totalTimeMs": 8368121929,
         "gearScore": 9999,
         "premium": true,
         "equipment": {
           "hulls": [
             {
               "name": "Crusader",
-              "timeMs": 4841270769,
+              "timeMs": 4841272100,
               "score": 10584108
             },
             {
@@ -2749,7 +2749,7 @@
             },
             {
               "name": "Vulcan",
-              "timeMs": 994721573,
+              "timeMs": 994722904,
               "score": 2852583
             },
             {
@@ -2841,7 +2841,7 @@
             },
             {
               "name": "Defender",
-              "timeMs": 1209851515,
+              "timeMs": 1209852846,
               "score": 2921103
             },
             {
@@ -2873,7 +2873,7 @@
             },
             {
               "name": "Team Deathmatch",
-              "timeMs": 967353293,
+              "timeMs": 967354624,
               "score": 1937727
             },
             {
@@ -2925,6 +2925,17 @@
           "e": 8967537,
           "r": 124,
           "t": 8368120598
+        },
+        {
+          "at": "2026-08-12T00:13:05Z",
+          "k": 343826,
+          "d": 145592,
+          "c": 23492727,
+          "s": 20299118,
+          "g": 1369,
+          "e": 8967537,
+          "r": 124,
+          "t": 8368121929
         }
       ]
     }
@@ -2943,5 +2954,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-11T23:58:26Z"
+  "lastAttemptAt": "2026-08-12T00:13:05Z"
 }

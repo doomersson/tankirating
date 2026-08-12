@@ -167,10 +167,10 @@
             </div>
             <div id="equipment-summary" class="equipment-summary"></div>
             <div class="equipment-tabs" id="equipment-tabs" role="tablist" aria-label="Equipment category">
-              <button type="button" role="tab" aria-selected="true" data-equipment="hulls">Hulls</button>
-              <button type="button" role="tab" aria-selected="false" data-equipment="turrets">Turrets</button>
-              <button type="button" role="tab" aria-selected="false" data-equipment="drones">Drones</button>
-              <button type="button" role="tab" aria-selected="false" data-equipment="modes">Modes</button>
+              <button type="button" role="tab" aria-selected="true" data-equipment="hulls"><span class="equipment-icon equipment-icon--hulls" aria-hidden="true"></span><span>Hulls</span></button>
+              <button type="button" role="tab" aria-selected="false" data-equipment="turrets"><span class="equipment-icon equipment-icon--turrets" aria-hidden="true"></span><span>Turrets</span></button>
+              <button type="button" role="tab" aria-selected="false" data-equipment="drones"><svg class="equipment-tab-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 10h6v4H9zM7 8 4.5 5.5M17 8l2.5-2.5M7 16l-2.5 2.5M17 16l2.5 2.5M3 4h3v3H3zM18 4h3v3h-3zM3 17h3v3H3zM18 17h3v3h-3z" /></svg><span>Drones</span></button>
+              <button type="button" role="tab" aria-selected="false" data-equipment="modes"><span class="equipment-icon equipment-icon--modes" aria-hidden="true"></span><span>Modes</span></button>
             </div>
             <div id="equipment-list" class="usage-list" role="tabpanel"></div>
           </section>
@@ -197,11 +197,11 @@
           </div>
         </div>
         <div class="leaderboard-controls">
-          <p>No official global leaderboard position is implied. Efficiency rank is Tanki’s official position.</p>
-          <div class="segmented-control" role="group" aria-label="Leaderboard time display">
-            <button type="button" data-time-unit="exact" class="is-active">Exact</button>
-            <button type="button" data-time-unit="hours">Hours</button>
-            <button type="button" data-time-unit="days">Days</button>
+          <p>Day and Week show gains between collected snapshots. Efficiency rank remains Tanki’s latest official position.</p>
+          <div class="segmented-control" id="leaderboard-period-control" role="group" aria-label="Leaderboard statistics period">
+            <button type="button" data-leaderboard-period="1" class="is-active" aria-pressed="true">Day</button>
+            <button type="button" data-leaderboard-period="7" aria-pressed="false">Week</button>
+            <button type="button" data-leaderboard-period="all" aria-pressed="false">All time</button>
           </div>
         </div>
         <div class="leaderboard-sort-strip" id="leaderboard-sort-strip" aria-label="Sort leaderboard"></div>
@@ -214,7 +214,15 @@
             <p class="context-line">Up to four accounts</p>
             <h1 id="compare-title">Compare players</h1>
           </div>
-          <p>Pick accounts, then compare lifetime output and the selected period without hiding the raw values.</p>
+          <p>Search and select up to four tracked accounts. The picker grows into additional rows as more players are added.</p>
+        </div>
+        <div class="compare-tools">
+          <label for="compare-search">Find a tracked player</label>
+          <div class="compare-search-field">
+            <span class="search-icon" aria-hidden="true"></span>
+            <input id="compare-search" type="search" autocomplete="off" placeholder="Search player names" aria-controls="compare-picker" aria-describedby="compare-picker-status" />
+          </div>
+          <span class="compare-picker-status" id="compare-picker-status" role="status" aria-live="polite"></span>
         </div>
         <div class="compare-picker" id="compare-picker" aria-label="Players to compare"></div>
         <div class="compare-empty" id="compare-empty">

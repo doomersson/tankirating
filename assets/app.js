@@ -36,8 +36,10 @@
     metric: "score",
     equipment: "hulls",
     compare: [],
+    compareQuery: "",
     searchIndex: 0,
     leaderboardSort: "efficiency",
+    leaderboardPeriod: 1,
     timeUnit: "exact"
   };
 
@@ -76,7 +78,8 @@
       "period-time", "activity-state", "stat-kills", "delta-kills", "stat-kd", "period-kd",
       "stat-k13", "period-k13", "stat-c13", "period-crystals", "stat-s13", "period-score",
       "trend-summary", "trend-chart", "equipment-summary", "equipment-list", "activity-chart",
-      "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list", "compare-picker", "compare-empty",
+      "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list", "compare-search", "compare-picker-status",
+      "compare-picker", "compare-empty",
       "comparison", "global-empty", "footer-sync", "search-trigger", "mobile-search", "search-dialog",
       "player-search", "search-results", "search-request-area", "tools-trigger", "tools-dialog", "export-data", "import-data",
       "import-trigger", "import-status", "profile-csv", "refresh-player", "toast-region"
@@ -106,6 +109,14 @@
       renderTrend();
     });
 
+    document.getElementById("leaderboard-period-control").addEventListener("click", function (event) {
+      var button = event.target.closest("button[data-leaderboard-period]");
+      if (!button) return;
+      state.leaderboardPeriod = button.dataset.leaderboardPeriod === "all" ? "all" : Number(button.dataset.leaderboardPeriod);
+      setActiveButton(event.currentTarget, button, ".is-active");
+      renderLeaderboard();
+    });
+
     document.getElementById("equipment-tabs").addEventListener("click", function (event) {
       var button = event.target.closest("button[data-equipment]");
       if (!button) return;
@@ -121,7 +132,16 @@
     });
     document.addEventListener("error", function (event) {
       var image = event.target;
-      if (!image || image.tagName !== "IMG" || image.src.indexOf("/assets/ranks/") < 0) return;
+      if (!image || image.tagName !== "IMG") return;
+      if (image.dataset.fallbackIcon) {
+        if (image.dataset.fallbackApplied === "true") image.remove();
+        else {
+          image.dataset.fallbackApplied = "true";
+          image.src = image.dataset.fallbackIcon;
+        }
+        return;
+      }
+      if (image.src.indexOf("/assets/ranks/") < 0) return;
       if (image.id === "rank-icon") image.hidden = true;
       else image.remove();
     }, true);
@@ -150,6 +170,10 @@
     elements["leaderboard-sort-strip"].addEventListener("click", function (event) {
       var button = event.target.closest("button[data-sort]");
       if (button) setLeaderboardSort(button.dataset.sort);
+    });
+    elements["compare-search"].addEventListener("input", function (event) {
+      state.compareQuery = event.currentTarget.value.trim().toLowerCase();
+      renderComparePicker();
     });
     elements["compare-picker"].addEventListener("click", handleComparePick);
     elements["export-data"].addEventListener("click", exportTracker);
@@ -300,7 +324,11 @@
   }
 
   function calculatePeriod(player) {
-    var points = periodPoints(player);
+    return calculatePeriodFor(player, state.period);
+  }
+
+  function calculatePeriodFor(player, period) {
+    var points = periodPointsFor(player, period);
     if (points.length < 2) return null;
     var first = points[0];
     var last = points[points.length - 1];
@@ -309,6 +337,7 @@
       first: first,
       last: last,
       delta: {
+        efficiency: Number(last.e || 0) - Number(first.e || 0),
         kills: Math.max(0, positive(last.k) - positive(first.k)),
         deaths: Math.max(0, positive(last.d) - positive(first.d)),
         crystals: Math.max(0, positive(last.c) - positive(first.c)),
@@ -320,13 +349,17 @@
   }
 
   function periodPoints(player) {
+    return periodPointsFor(player, state.period);
+  }
+
+  function periodPointsFor(player, period) {
     var history = Array.isArray(player.history) ? player.history.slice() : [];
     var currentPoint = pointFromCurrent(player.current);
     if (!history.length || history[history.length - 1].at !== currentPoint.at) history.push(currentPoint);
     history.sort(function (a, b) { return new Date(a.at) - new Date(b.at); });
-    if (state.period === "all" || !history.length) return history;
+    if (period === "all" || !history.length) return history;
     var end = parseDate(history[history.length - 1].at);
-    var cutoff = end.getTime() - Number(state.period) * DAY_MS;
+    var cutoff = end.getTime() - Number(period) * DAY_MS;
     var firstBefore = null;
     var filtered = history.filter(function (point) {
       var time = parseDate(point.at).getTime();
@@ -415,7 +448,7 @@
     ];
     elements["equipment-summary"].innerHTML = categories.map(function (entry) {
       var favorite = favoriteItem(equipment[entry[0]]);
-      return '<div class="favorite-item"><span>' + entry[1] + '</span><strong title="' + escapeAttr(favorite ? favorite.name : "No usage") + '">' +
+      return '<div class="favorite-item"><span class="favorite-label">' + equipmentIconMarkup(entry[0], favorite && favorite.name) + '<span>' + entry[1] + '</span></span><strong title="' + escapeAttr(favorite ? favorite.name : "No usage") + '">' +
         escapeHtml(favorite ? favorite.name : "—") + '</strong><span>' + (favorite ? escapeHtml(formatDurationDisplay(favorite.timeMs)) : "No data") + '</span></div>';
     }).join("");
   }
@@ -430,10 +463,22 @@
     var max = positive(items[0].timeMs) || 1;
     elements["equipment-list"].innerHTML = items.map(function (item) {
       var width = Math.max(0.5, positive(item.timeMs) / max * 100);
-      return '<div class="usage-row"><span class="usage-name" title="' + escapeAttr(item.name) + '">' + escapeHtml(item.name) + '</span>' +
+      return '<div class="usage-row"><span class="usage-identity">' + equipmentIconMarkup(state.equipment, item.name) + '<span class="usage-name" title="' + escapeAttr(item.name) + '">' + escapeHtml(item.name) + '</span></span>' +
         '<span class="usage-bar" aria-hidden="true"><span style="transform:scaleX(' + (width / 100).toFixed(4) + ')"></span></span>' +
         '<span class="usage-meta">' + escapeHtml(formatDurationDisplay(item.timeMs)) + '</span></div>';
     }).join("");
+  }
+
+  function equipmentIconMarkup(category, itemName) {
+    if (category === "drones" || !itemName) return "";
+    var fallback = { hulls: "hull", turrets: "turret", modes: "mode" }[category];
+    if (!fallback) return "";
+    var source = "./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg";
+    return '<img class="equipment-item-icon" src="' + escapeAttr(source) + '" data-fallback-icon="./assets/icons/' + fallback + '.svg" alt="" width="20" height="20">';
+  }
+
+  function equipmentIconSlug(name) {
+    return String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   }
 
   function renderActivity(player) {
@@ -464,11 +509,7 @@
   }
 
   function periodPointsForDays(player, days) {
-    var savedPeriod = state.period;
-    state.period = days;
-    var points = periodPoints(player);
-    state.period = savedPeriod;
-    return points;
+    return periodPointsFor(player, days);
   }
 
   function renderAccountDetails(player) {
@@ -490,9 +531,19 @@
   function renderLeaderboard() {
     if (!state.data) return;
     var sort = state.leaderboardSort;
-    var players = getPlayerIds().map(function (id) { return { id: id, player: state.data.players[id] }; });
-    players.sort(function (a, b) { return sortValue(b.player, sort) - sortValue(a.player, sort) || a.player.current.name.localeCompare(b.player.current.name); });
+    var players = getPlayerIds().map(function (id) {
+      var player = state.data.players[id];
+      return { id: id, player: player, metrics: leaderboardMetrics(player) };
+    });
+    players.sort(function (a, b) {
+      var aValue = sortValue(a.metrics, sort);
+      var bValue = sortValue(b.metrics, sort);
+      if (aValue === bValue) return a.player.current.name.localeCompare(b.player.current.name);
+      return bValue > aValue ? 1 : -1;
+    });
     var columns = leaderboardColumns();
+    var allTime = state.leaderboardPeriod === "all";
+    var periodLabel = leaderboardPeriodLabel();
     elements["leaderboard-count"].textContent = formatInteger(players.length);
     elements["leaderboard-sort-strip"].innerHTML = columns.map(function (column) {
       return '<button type="button" data-sort="' + column.key + '" class="' + (sort === column.key ? "is-active" : "") + '" aria-pressed="' + (sort === column.key) + '">' + escapeHtml(column.shortLabel || column.label) + '</button>';
@@ -504,36 +555,72 @@
     }).join("");
     var rows = players.map(function (entry, index) {
       var current = entry.player.current;
+      var metrics = entry.metrics;
       var rank = rankInfo(current.score);
       return '<tr><td class="leaderboard-order" data-label="Group #">' + (index + 1) + '</td>' +
         '<td class="leaderboard-player-cell" data-label="Player"><button class="leaderboard-player" type="button" data-player-id="' + escapeAttr(entry.id) + '">' + rankBadgeMarkup(rank) + '<span><strong>' + escapeHtml(current.name) + '</strong><small>' + escapeHtml(rank.name) + '</small></span></button></td>' +
-        '<td data-label="Efficiency"><strong>' + escapeHtml(formatInteger(current.efficiency)) + '</strong><small>' + (current.efficiencyPosition > 0 ? "#" + escapeHtml(formatInteger(current.efficiencyPosition)) : "Unranked") + '</small></td>' +
-        '<td data-label="Score">' + escapeHtml(formatInteger(current.score)) + '</td>' +
-        '<td data-label="K/D">' + escapeHtml(formatRate(safeDivide(current.kills, current.deaths))) + '</td>' +
-        '<td data-label="Kills / 13m">' + escapeHtml(formatRate(rate13(current.kills, current.totalTimeMs))) + '</td>' +
-        '<td data-label="Kills">' + escapeHtml(formatInteger(current.kills)) + '</td>' +
-        '<td data-label="Deaths">' + escapeHtml(formatInteger(current.deaths)) + '</td>' +
-        '<td data-label="Crystals">' + escapeHtml(formatInteger(current.crystals)) + '</td>' +
-        '<td data-label="Golds">' + escapeHtml(formatInteger(current.golds)) + '</td>' +
-        '<td data-label="Gear">' + escapeHtml(formatInteger(current.gearScore)) + '</td>' +
-        '<td data-label="Battle time" title="' + escapeAttr(formatExactDuration(current.totalTimeMs)) + '">' + escapeHtml(formatDurationDisplay(current.totalTimeMs)) + '</td></tr>';
+        '<td data-label="Efficiency"><span class="leaderboard-efficiency"><strong>' + escapeHtml(formatLeaderboardInteger(metrics.efficiency, allTime)) + '</strong><small>' + (current.efficiencyPosition > 0 ? "#" + escapeHtml(formatInteger(current.efficiencyPosition)) : "Unranked") + '</small></span></td>' +
+        '<td data-label="Score">' + escapeHtml(formatLeaderboardInteger(metrics.score, allTime)) + '</td>' +
+        '<td data-label="Crystals">' + escapeHtml(formatLeaderboardInteger(metrics.crystals, allTime)) + '</td>' +
+        '<td data-label="Kills / 13m">' + escapeHtml(formatRate(metrics.kills13)) + '</td>' +
+        '<td data-label="Kills">' + escapeHtml(formatLeaderboardInteger(metrics.kills, allTime)) + '</td>' +
+        '<td data-label="Deaths">' + escapeHtml(formatLeaderboardInteger(metrics.deaths, allTime)) + '</td>' +
+        '<td data-label="K/D">' + escapeHtml(formatRate(metrics.kd)) + '</td>' +
+        '<td data-label="Golds">' + escapeHtml(formatLeaderboardInteger(metrics.golds, allTime)) + '</td>' +
+        '<td data-label="Hours Played"' + (Number.isFinite(metrics.time) ? ' title="' + escapeAttr(formatExactDuration(metrics.time)) + '"' : "") + '>' + escapeHtml(formatHoursPlayed(metrics.time)) + '</td></tr>';
     }).join("");
-    elements["leaderboard-list"].innerHTML = '<div class="leaderboard-table-wrap"><table><thead><tr><th scope="col">#</th><th scope="col">Player</th>' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+    elements["leaderboard-list"].innerHTML = '<div class="leaderboard-table-wrap"><table><caption class="sr-only">Tracked player statistics for ' + escapeHtml(periodLabel) + ', sorted by ' + escapeHtml(columns.find(function (column) { return column.key === sort; }).label) + ' from highest to lowest.</caption><thead><tr><th scope="col">#</th><th scope="col">Player</th>' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
 
   function leaderboardColumns() {
     return [
       { key: "efficiency", label: "Efficiency" },
       { key: "score", label: "Score" },
-      { key: "kd", label: "K/D" },
+      { key: "crystals", label: "Crystals" },
       { key: "kills13", label: "Kills / 13m", shortLabel: "K/13m" },
       { key: "kills", label: "Kills" },
       { key: "deaths", label: "Deaths" },
-      { key: "crystals", label: "Crystals" },
+      { key: "kd", label: "K/D" },
       { key: "golds", label: "Golds" },
-      { key: "gearScore", label: "Gear" },
-      { key: "time", label: "Battle time", shortLabel: "Time" }
+      { key: "time", label: "Hours Played", shortLabel: "Hours" }
     ];
+  }
+
+  function leaderboardMetrics(player) {
+    var current = player.current;
+    if (state.leaderboardPeriod === "all") {
+      return {
+        efficiency: positive(current.efficiency),
+        score: positive(current.score),
+        crystals: positive(current.crystals),
+        kills13: rate13(current.kills, current.totalTimeMs),
+        kills: positive(current.kills),
+        deaths: positive(current.deaths),
+        kd: safeDivide(current.kills, current.deaths),
+        golds: positive(current.golds),
+        time: positive(current.totalTimeMs)
+      };
+    }
+    var period = calculatePeriodFor(player, state.leaderboardPeriod);
+    if (!period) {
+      return { efficiency: NaN, score: NaN, crystals: NaN, kills13: NaN, kills: NaN, deaths: NaN, kd: NaN, golds: NaN, time: NaN };
+    }
+    return {
+      efficiency: period.delta.efficiency,
+      score: period.delta.score,
+      crystals: period.delta.crystals,
+      kills13: rate13(period.delta.kills, period.delta.time),
+      kills: period.delta.kills,
+      deaths: period.delta.deaths,
+      kd: safeDivide(period.delta.kills, period.delta.deaths),
+      golds: period.delta.golds,
+      time: period.delta.time
+    };
+  }
+
+  function leaderboardPeriodLabel() {
+    if (state.leaderboardPeriod === "all") return "all time";
+    return state.leaderboardPeriod === 1 ? "the last day" : "the last week";
   }
 
   function setLeaderboardSort(sort) {
@@ -542,23 +629,25 @@
     renderLeaderboard();
   }
 
-  function sortValue(player, sort) {
-    var current = player.current;
-    if (sort === "score") return positive(current.score);
-    if (sort === "kd") return safeDivide(current.kills, current.deaths);
-    if (sort === "kills13") return rate13(current.kills, current.totalTimeMs);
-    if (sort === "kills") return positive(current.kills);
-    if (sort === "deaths") return positive(current.deaths);
-    if (sort === "crystals") return positive(current.crystals);
-    if (sort === "golds") return positive(current.golds);
-    if (sort === "gearScore") return positive(current.gearScore);
-    if (sort === "time") return positive(current.totalTimeMs);
-    return positive(current.efficiency);
+  function sortValue(metrics, sort) {
+    var value = metrics[sort];
+    return Number.isNaN(value) ? -Infinity : value;
   }
 
   function renderComparePicker() {
     if (!state.data) return;
-    elements["compare-picker"].innerHTML = getPlayerIds().map(function (id) {
+    var ids = getPlayerIds();
+    var visible = ids.filter(function (id) {
+      var selected = state.compare.indexOf(id) >= 0;
+      var name = state.data.players[id].current.name.toLowerCase();
+      return selected || !state.compareQuery || name.indexOf(state.compareQuery) >= 0;
+    });
+    elements["compare-picker-status"].textContent = visible.length + " shown · " + state.compare.length + " selected";
+    if (!visible.length) {
+      elements["compare-picker"].innerHTML = '<p class="compare-no-results">No tracked player matches that search.</p>';
+      return;
+    }
+    elements["compare-picker"].innerHTML = visible.map(function (id) {
       var selected = state.compare.indexOf(id) >= 0;
       var disabled = !selected && state.compare.length >= 4;
       return '<button class="compare-chip' + (selected ? " is-selected" : "") + '" type="button" data-player-id="' + escapeAttr(id) + '" aria-pressed="' + selected + '"' + (disabled ? " disabled" : "") + '>' + escapeHtml(state.data.players[id].current.name) + '</button>';
@@ -590,7 +679,7 @@
       metricRow("Efficiency", players, function (p) { return positive(p.current.efficiency); }, formatInteger),
       metricRow("K/D", players, function (p) { return safeDivide(p.current.kills, p.current.deaths); }, formatRate),
       metricRow("Kills / 13 min", players, function (p) { return rate13(p.current.kills, p.current.totalTimeMs); }, formatRate),
-      metricRow("Battle time", players, function (p) { return positive(p.current.totalTimeMs); }, formatDurationDisplay),
+      metricRow("Hours Played", players, function (p) { return positive(p.current.totalTimeMs); }, formatHoursPlayed),
       metricRow("Score", players, function (p) { return positive(p.current.score); }, formatInteger),
       metricRow("Crystals", players, function (p) { return positive(p.current.crystals); }, formatInteger),
       textRow("Favorite hull", players, function (p) { var item = favoriteItem((p.current.equipment || {}).hulls); return item ? item.name : "—"; }),
@@ -858,7 +947,10 @@
   }
 
   function setActiveButton(container, active, selector) {
-    container.querySelectorAll("button").forEach(function (button) { button.classList.remove(selector.replace(".", "")); });
+    container.querySelectorAll("button").forEach(function (button) {
+      button.classList.remove(selector.replace(".", ""));
+      button.setAttribute("aria-pressed", button === active ? "true" : "false");
+    });
     active.classList.add(selector.replace(".", ""));
   }
 
@@ -877,8 +969,6 @@
     try { window.localStorage.setItem("tanki-time-unit", unit); } catch (_) { /* preference remains tab-local */ }
     syncTimeUnitControls();
     renderProfile();
-    renderLeaderboard();
-    renderComparison();
   }
 
   function syncTimeUnitControls() {
@@ -958,6 +1048,11 @@
     return Number.isFinite(Number(value)) ? number.format(Number(value)) : "—";
   }
 
+  function formatLeaderboardInteger(value, allTime) {
+    if (!Number.isFinite(Number(value))) return "—";
+    return allTime ? formatInteger(value) : signed(value);
+  }
+
   function formatRate(value) {
     if (value === Infinity) return "∞";
     return Number.isFinite(Number(value)) ? decimal.format(Number(value)) : "—";
@@ -973,6 +1068,10 @@
     if (state.timeUnit === "hours") return decimal.format(ms / 3600000) + " hours";
     if (state.timeUnit === "days") return decimal.format(ms / DAY_MS) + " days";
     return formatDurationWords(ms);
+  }
+
+  function formatHoursPlayed(ms) {
+    return Number.isFinite(Number(ms)) ? decimal.format(Math.max(0, Number(ms)) / 3600000) + " h" : "—";
   }
 
   function formatDurationWords(ms) {

@@ -12,17 +12,20 @@ The API does not currently send the browser CORS header needed for direct collec
 
 ## What is tracked
 
-- Exact accumulated battle time, with Exact, Hours, and Days display modes.
+- Exact accumulated play time on profiles, with Exact, Hours, and Days display modes.
 - Kills, deaths, lifetime and period K/D, and kills per 13 minutes.
 - Score, earned crystals, gold boxes, gear score, efficiency value, and official efficiency position.
 - Score and crystals per 13 minutes.
 - Rank and EXP progress, including unlimited Legend levels every 200,000 EXP.
 - Most-played hull, turret, drone, and battle mode.
 - Changed snapshots, trend charts, and a recent activity view labelled by date.
-- A sortable all-player landing leaderboard and up-to-four-player comparison.
+- A sortable all-player landing leaderboard with Day, Week, and All time gains and an Hours Played column.
+- A searchable, vertically expanding picker for up-to-four-player comparisons.
 - Full JSON backup import/export and per-profile CSV export.
 
 Equipment entries keep only `name`, `timeMs`, and `score`. Remote equipment image URLs are not stored.
+
+The interface includes lightweight placeholder SVGs for hulls, turrets, and battle modes. Drone rows intentionally have no per-item icon; only the Drone category button has a generic icon.
 
 ## First deployment
 
@@ -83,6 +86,21 @@ assets/ranks/31.png  Legend
 `31.png` is reused for Legend, Legend 2, Legend 3, and every later Legend level. Images at least 80×80 px are recommended. Until an icon exists, the interface automatically falls back to the numeric rank.
 
 Using GitHub’s website: open `assets/ranks`, choose **Add file → Upload files**, drag the 31 PNGs in, and commit. Filenames must keep the leading zero and lowercase `.png` extension.
+
+## Replace equipment icons
+
+The generic category artwork lives in:
+
+```text
+assets/icons/hull.svg
+assets/icons/turret.svg
+assets/icons/mode.svg
+assets/icons/hulls/wasp.svg
+assets/icons/turrets/railgun.svg
+assets/icons/modes/capture-the-flag.svg
+```
+
+The three top-level files are generic category fallbacks. Each known item also has its own lowercase, hyphenated file in the matching plural folder. You can replace those item files later while keeping the same filenames and preferably a `0 0 24 24` view box. New items automatically fall back to the generic category icon until you add their individual file. The Drone button icon is inline in `index.html`; drone rows intentionally have no icon, and equipment data does not contain or require remote image URLs.
 
 ## Back up and restore
 

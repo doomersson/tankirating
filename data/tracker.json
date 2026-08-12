@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-12T08:46:21Z",
+  "generatedAt": "2026-08-12T09:10:22Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "akame": {
@@ -2721,6 +2721,298 @@
         }
       ]
     },
+    "opex-rah": {
+      "current": {
+        "at": "2026-08-12T09:10:22Z",
+        "name": "Opex-Rah",
+        "rank": 62,
+        "score": 7830232,
+        "scoreBase": 7800000,
+        "scoreNext": 8000000,
+        "kills": 171690,
+        "deaths": 90132,
+        "crystals": 8498948,
+        "golds": 71,
+        "efficiency": 8873859,
+        "efficiencyPosition": 49691,
+        "totalTimeMs": 2214580155,
+        "gearScore": 9999,
+        "premium": true,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Viking",
+              "timeMs": 1737327489,
+              "score": 4834365
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 97440317,
+              "score": 233044
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 97183594,
+              "score": 332751
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 68234523,
+              "score": 89364
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 61840628,
+              "score": 269656
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 60609194,
+              "score": 263820
+            },
+            {
+              "name": "Crusader",
+              "timeMs": 44177013,
+              "score": 229470
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 34592078,
+              "score": 175158
+            },
+            {
+              "name": "Ares",
+              "timeMs": 6906991,
+              "score": 44640
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 4614625,
+              "score": 15687
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 1318986,
+              "score": 4440
+            },
+            {
+              "name": "Titan",
+              "timeMs": 334717,
+              "score": 0
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Striker",
+              "timeMs": 259086184,
+              "score": 646822
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 248303624,
+              "score": 724335
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 206585526,
+              "score": 741739
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 191636960,
+              "score": 583428
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 175774360,
+              "score": 640792
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 165789310,
+              "score": 362880
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 148288480,
+              "score": 537143
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 143124026,
+              "score": 226635
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 127220443,
+              "score": 321999
+            },
+            {
+              "name": "Twins",
+              "timeMs": 111314740,
+              "score": 358833
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 96826994,
+              "score": 273298
+            },
+            {
+              "name": "Terminator",
+              "timeMs": 73116808,
+              "score": 98059
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 65900523,
+              "score": 305963
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 53112268,
+              "score": 185118
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 49295952,
+              "score": 178531
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 45280345,
+              "score": 154445
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 27937090,
+              "score": 39539
+            },
+            {
+              "name": "Isida",
+              "timeMs": 22588662,
+              "score": 44612
+            }
+          ],
+          "drones": [
+            {
+              "name": "Hyperion",
+              "timeMs": 878045269,
+              "score": 2168855
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 9873736,
+              "score": 29406
+            },
+            {
+              "name": "Defender",
+              "timeMs": 7594373,
+              "score": 17010
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 6148443,
+              "score": 11310
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 5409000,
+              "score": 23939
+            },
+            {
+              "name": "Booster",
+              "timeMs": 3838973,
+              "score": 8699
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 2225508,
+              "score": 1140
+            },
+            {
+              "name": "Hyperion XT",
+              "timeMs": 974426,
+              "score": 0
+            },
+            {
+              "name": "Default",
+              "timeMs": 366896,
+              "score": 570
+            },
+            {
+              "name": "Crisis XT",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 0,
+              "score": 0
+            }
+          ],
+          "modes": [
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 495356900,
+              "score": 1379054
+            },
+            {
+              "name": "Capture The Flag",
+              "timeMs": 459813281,
+              "score": 1326684
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 238713452,
+              "score": 826790
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 189953675,
+              "score": 627689
+            },
+            {
+              "name": "Assault",
+              "timeMs": 189290500,
+              "score": 750282
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 175562597,
+              "score": 694342
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 168480241,
+              "score": 483002
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 73846847,
+              "score": 154469
+            },
+            {
+              "name": "Siege",
+              "timeMs": 61002460,
+              "score": 150801
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-12T09:10:22Z",
+          "k": 171690,
+          "d": 90132,
+          "c": 8498948,
+          "s": 7830232,
+          "g": 71,
+          "e": 8873859,
+          "r": 62,
+          "t": 2214580155
+        }
+      ]
+    },
     "tesl4": {
       "current": {
         "at": "2026-08-12T08:41:24Z",
@@ -3835,10 +4127,11 @@
     "integer",
     "kaspersky",
     "mantish",
+    "opex-rah",
     "tesl4",
     "vortec",
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-12T08:46:21Z"
+  "lastAttemptAt": "2026-08-12T09:10:22Z"
 }

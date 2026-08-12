@@ -3,6 +3,9 @@
 
   var MS_13_MINUTES = 13 * 60 * 1000;
   var DAY_MS = 24 * 60 * 60 * 1000;
+  var HOUR_MS = 60 * 60 * 1000;
+  var RATING_TIME_ZONE = "Europe/Stockholm";
+  var RATING_RESET_HOUR = 4;
   var DATA_URL = "./data/tracker.json";
   var REPOSITORY = "doomersson/tankirating";
   var DB_NAME = "tanki-tracker-backups";
@@ -11,6 +14,17 @@
   var decimal = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   var dateTime = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" });
   var shortDate = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
+  var ratingDate = new Intl.DateTimeFormat(undefined, { timeZone: RATING_TIME_ZONE, year: "numeric", month: "short", day: "numeric" });
+  var stockholmClock = new Intl.DateTimeFormat("en-GB", {
+    timeZone: RATING_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  });
 
   var rankThresholds = [
     ["Recruit", 0], ["Private", 100], ["Gefreiter", 500], ["Corporal", 1500],
@@ -31,7 +45,8 @@
     localMode: false,
     currentPlayerId: null,
     view: "leaderboard",
-    period: 7,
+    period: "day",
+    selectedRatingDate: null,
     equipment: "hulls",
     compare: [],
     compareQuery: "",
@@ -76,6 +91,9 @@
       "time-heading",
       "period-time", "activity-state", "stat-kills", "delta-kills", "stat-kd", "period-kd",
       "stat-k13", "period-k13", "stat-c13", "period-crystals", "stat-s13", "period-score",
+      "rating-date", "rating-reset-note", "range-kd-label", "stat-range-kd", "range-kd-detail",
+      "stat-kills-hour", "kills-hour-detail", "stat-crystals-hour", "crystals-hour-detail",
+      "stat-score-hour", "score-hour-detail",
       "equipment-summary", "equipment-list", "activity-chart",
       "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list", "compare-search", "compare-picker-status",
       "compare-picker", "compare-empty",
@@ -94,8 +112,17 @@
     document.getElementById("period-control").addEventListener("click", function (event) {
       var button = event.target.closest("button[data-period]");
       if (!button) return;
-      state.period = button.dataset.period === "all" ? "all" : Number(button.dataset.period);
-      setActiveButton(event.currentTarget, button, ".is-active");
+      state.period = button.dataset.period === "30" ? 30 : button.dataset.period;
+      syncProfilePeriodControls();
+      renderProfile();
+      renderComparison();
+    });
+
+    elements["rating-date"].addEventListener("change", function (event) {
+      if (!validDateKey(event.currentTarget.value)) return;
+      state.selectedRatingDate = event.currentTarget.value;
+      state.period = "day";
+      syncProfilePeriodControls();
       renderProfile();
       renderComparison();
     });
@@ -270,7 +297,10 @@
     var player = getCurrentPlayer();
     if (!player) return;
     var current = player.current;
+    configureRatingCalendar(player);
     var period = calculatePeriod(player);
+    var periodName = profilePeriodName();
+    var periodCopy = period ? periodName.toLowerCase() : "selected rating period";
     var lifetimeTime = positive(current.totalTimeMs);
     var lifetimeKd = safeDivide(current.kills, current.deaths);
     var lifetimeK13 = rate13(current.kills, lifetimeTime);
@@ -294,18 +324,19 @@
     elements["time-heading"].textContent = "Hours Played";
     elements["total-time"].textContent = formatDurationDisplay(lifetimeTime);
     elements["total-time"].title = formatExactDuration(lifetimeTime);
-    elements["period-time"].textContent = period ? formatDurationDisplay(period.delta.time) + " during selected period" : "Period rate begins after another active snapshot";
+    elements["period-time"].textContent = period ? formatDurationDisplay(period.delta.time) + " during " + periodCopy : "This date needs two collected snapshots";
     elements["activity-state"].textContent = activityLabel(player);
     elements["stat-kills"].textContent = formatInteger(current.kills);
-    elements["delta-kills"].textContent = period ? signed(period.delta.kills) + " selected period" : "— selected period";
+    elements["delta-kills"].textContent = period ? signed(period.delta.kills) + " during " + periodCopy : "— " + periodCopy;
     elements["stat-kd"].textContent = formatRate(lifetimeKd);
-    elements["period-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) + " selected period" : "— selected period";
+    elements["period-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) + " during " + periodCopy : "— " + periodCopy;
     elements["stat-k13"].textContent = formatRate(lifetimeK13);
-    elements["period-k13"].textContent = period && period.delta.time > 0 ? formatRate(rate13(period.delta.kills, period.delta.time)) + " selected period" : "Lifetime rate";
+    elements["period-k13"].textContent = period && period.delta.time > 0 ? formatRate(rate13(period.delta.kills, period.delta.time)) + " during " + periodCopy : "Lifetime rate";
     elements["stat-c13"].textContent = formatRate(lifetimeC13);
-    elements["period-crystals"].textContent = period ? signed(period.delta.crystals) + " selected period" : "— selected period";
+    elements["period-crystals"].textContent = period ? signed(period.delta.crystals) + " during " + periodCopy : "— " + periodCopy;
     elements["stat-s13"].textContent = formatRate(lifetimeS13);
-    elements["period-score"].textContent = period ? signed(period.delta.score) + " selected period" : "— selected period";
+    elements["period-score"].textContent = period ? signed(period.delta.score) + " during " + periodCopy : "— " + periodCopy;
+    renderPeriodRates(period, periodName);
 
     renderEquipmentSummary(player);
     renderEquipmentList(player);
@@ -314,15 +345,65 @@
   }
 
   function calculatePeriod(player) {
-    return calculatePeriodFor(player, state.period);
+    if (state.period === "all") return calculatePeriodFor(player, "all");
+    var currentKey = state.selectedRatingDate || currentRatingDateKey(player);
+    var startKey;
+    var endKey;
+    if (state.period === "day") {
+      startKey = state.selectedRatingDate || currentKey;
+      endKey = shiftDateKey(startKey, 1);
+    } else if (state.period === "week") {
+      startKey = mondayDateKey(currentKey);
+      endKey = shiftDateKey(startKey, 7);
+    } else {
+      startKey = shiftDateKey(currentKey, -29);
+      endKey = shiftDateKey(currentKey, 1);
+    }
+    return calculatePeriodBetween(player, stockholmBoundaryMs(startKey), stockholmBoundaryMs(endKey));
   }
 
-  function calculatePeriodFor(player, period) {
-    var points = periodPointsFor(player, period);
-    if (points.length < 2) return null;
-    var first = points[0];
-    var last = points[points.length - 1];
-    if (first.at === last.at) return null;
+  function renderPeriodRates(period, periodName) {
+    var hasTime = period && period.delta.time > 0;
+    var rateDetail = period ? formatDurationDisplay(period.delta.time) + " played" : "No complete snapshot range";
+    elements["range-kd-label"].textContent = periodName + " K/D";
+    elements["stat-range-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) : "—";
+    elements["range-kd-detail"].textContent = period ? formatInteger(period.delta.kills) + " K · " + formatInteger(period.delta.deaths) + " D" : rateDetail;
+    elements["stat-kills-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.kills, period.delta.time)) : "—";
+    elements["kills-hour-detail"].textContent = rateDetail;
+    elements["stat-crystals-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.crystals, period.delta.time)) : "—";
+    elements["crystals-hour-detail"].textContent = rateDetail;
+    elements["stat-score-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.score, period.delta.time)) : "—";
+    elements["score-hour-detail"].textContent = rateDetail;
+  }
+
+  function calculatePeriodBetween(player, startMs, endMs) {
+    var points = allPlayerPoints(player);
+    if (points.length < 2 || !Number.isFinite(startMs) || !Number.isFinite(endMs)) return null;
+    var latestMs = parseDate(points[points.length - 1].at).getTime();
+    var effectiveEnd = Math.min(endMs, latestMs);
+    if (effectiveEnd <= startMs) return null;
+    var first = nearestPoint(points, startMs, effectiveEnd, 90 * 60 * 1000);
+    var last = endMs > latestMs ? points[points.length - 1] : nearestPoint(points, endMs, Infinity, 90 * 60 * 1000);
+    if (!first || !last || parseDate(last.at).getTime() <= parseDate(first.at).getTime()) return null;
+    return periodDelta(first, last);
+  }
+
+  function nearestPoint(points, targetMs, maximumMs, maximumDistanceMs) {
+    var nearest = null;
+    var nearestDistance = Infinity;
+    points.forEach(function (point) {
+      var time = parseDate(point.at);
+      if (!time || time.getTime() > maximumMs) return;
+      var distance = Math.abs(time.getTime() - targetMs);
+      if (distance < nearestDistance) {
+        nearest = point;
+        nearestDistance = distance;
+      }
+    });
+    return nearestDistance <= maximumDistanceMs ? nearest : null;
+  }
+
+  function periodDelta(first, last) {
     return {
       first: first,
       last: last,
@@ -338,15 +419,29 @@
     };
   }
 
+  function calculatePeriodFor(player, period) {
+    var points = periodPointsFor(player, period);
+    if (points.length < 2) return null;
+    var first = points[0];
+    var last = points[points.length - 1];
+    if (first.at === last.at) return null;
+    return periodDelta(first, last);
+  }
+
   function periodPoints(player) {
-    return periodPointsFor(player, state.period);
+    if (state.period === "all") return allPlayerPoints(player);
+    var period = calculatePeriod(player);
+    if (!period) return [];
+    var firstMs = parseDate(period.first.at).getTime();
+    var lastMs = parseDate(period.last.at).getTime();
+    return allPlayerPoints(player).filter(function (point) {
+      var pointMs = parseDate(point.at).getTime();
+      return pointMs >= firstMs && pointMs <= lastMs;
+    });
   }
 
   function periodPointsFor(player, period) {
-    var history = Array.isArray(player.history) ? player.history.slice() : [];
-    var currentPoint = pointFromCurrent(player.current);
-    if (!history.length || history[history.length - 1].at !== currentPoint.at) history.push(currentPoint);
-    history.sort(function (a, b) { return new Date(a.at) - new Date(b.at); });
+    var history = allPlayerPoints(player);
     if (period === "all" || !history.length) return history;
     var end = parseDate(history[history.length - 1].at);
     var cutoff = end.getTime() - Number(period) * DAY_MS;
@@ -358,6 +453,13 @@
     });
     if (firstBefore) filtered.unshift(firstBefore);
     return filtered;
+  }
+
+  function allPlayerPoints(player) {
+    var history = Array.isArray(player.history) ? player.history.slice() : [];
+    var currentPoint = pointFromCurrent(player.current);
+    if (!history.length || history[history.length - 1].at !== currentPoint.at) history.push(currentPoint);
+    return history.filter(function (point) { return parseDate(point.at); }).sort(function (a, b) { return parseDate(a.at) - parseDate(b.at); });
   }
 
   function pointFromCurrent(current) {
@@ -426,18 +528,17 @@
     var daily = {};
     for (var i = 1; i < points.length; i += 1) {
       var deltaTime = Math.max(0, positive(points[i].t) - positive(points[i - 1].t));
-      var key = localDateKey(points[i].at);
+      var key = ratingDateKeyForInstant(points[i].at);
       daily[key] = (daily[key] || 0) + deltaTime;
     }
     var days = [];
-    var end = parseDate(player.current.at) || new Date();
+    var endKey = currentRatingDateKey(player);
     for (var offset = 13; offset >= 0; offset -= 1) {
-      var date = new Date(end.getFullYear(), end.getMonth(), end.getDate() - offset);
-      var dayKey = localDateKey(date.toISOString());
-      days.push({ date: date, value: daily[dayKey] || 0 });
+      var dayKey = shiftDateKey(endKey, -offset);
+      days.push({ key: dayKey, value: daily[dayKey] || 0 });
     }
     elements["activity-chart"].innerHTML = days.map(function (day) {
-      var dateLabel = formatDayMonth(day.date);
+      var dateLabel = formatDateKeyDayMonth(day.key);
       return '<div class="activity-day" title="' + escapeAttr(dateLabel + " · " + formatDurationDisplay(day.value)) + '">' +
         '<span class="activity-bar-wrap" aria-hidden="true">' + activitySlicesMarkup(day.value) + '</span>' +
         '<span class="bar-label">' + escapeHtml(dateLabel) + '</span></div>';
@@ -913,6 +1014,52 @@
     active.classList.add(selector.replace(".", ""));
   }
 
+  function syncProfilePeriodControls() {
+    document.querySelectorAll("#period-control button[data-period]").forEach(function (button) {
+      var value = button.dataset.period === "30" ? 30 : button.dataset.period;
+      var active = value === state.period;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+  }
+
+  function configureRatingCalendar(player) {
+    var points = allPlayerPoints(player);
+    var minimum = points.length ? ratingDateKeyForInstant(points[0].at) : currentRatingDateKey(player);
+    var maximum = currentRatingDateKey(player);
+    if (!validDateKey(state.selectedRatingDate) || state.selectedRatingDate < minimum || state.selectedRatingDate > maximum) {
+      state.selectedRatingDate = maximum;
+    }
+    elements["rating-date"].min = minimum;
+    elements["rating-date"].max = maximum;
+    elements["rating-date"].value = state.selectedRatingDate;
+    elements["rating-date"].disabled = points.length < 2;
+    elements["rating-reset-note"].textContent = ratingRangeNote(player);
+    syncProfilePeriodControls();
+  }
+
+  function ratingRangeNote(player) {
+    var currentKey = state.selectedRatingDate || currentRatingDateKey(player);
+    if (state.period === "day") {
+      return formatRatingDateKey(state.selectedRatingDate || currentKey) + " · 04:00–04:00 Stockholm · closest hourly snapshots";
+    }
+    if (state.period === "week") {
+      var monday = mondayDateKey(currentKey);
+      return "Mon " + formatRatingDateKey(monday) + " 04:00 – Mon " + formatRatingDateKey(shiftDateKey(monday, 7)) + " 04:00 Stockholm · closest hourly snapshots";
+    }
+    if (state.period === 30) {
+      return formatRatingDateKey(shiftDateKey(currentKey, -29)) + " – " + formatRatingDateKey(currentKey) + " · 04:00 Stockholm · closest hourly snapshots";
+    }
+    return "All collected snapshots · Stockholm reset boundaries · hourly resolution";
+  }
+
+  function profilePeriodName() {
+    if (state.period === "day") return "Daily";
+    if (state.period === "week") return "Weekly";
+    if (state.period === 30) return "30-day";
+    return "All-time";
+  }
+
   function readTimeUnit() {
     try {
       var saved = window.localStorage.getItem("tanki-time-unit");
@@ -1060,6 +1207,17 @@
     return date ? date.getDate() + "/" + (date.getMonth() + 1) : "—";
   }
 
+  function formatDateKeyDayMonth(key) {
+    if (!validDateKey(key)) return "—";
+    var parts = key.split("-");
+    return Number(parts[2]) + "/" + Number(parts[1]);
+  }
+
+  function formatRatingDateKey(key) {
+    if (!validDateKey(key)) return "—";
+    return ratingDate.format(new Date(stockholmBoundaryMs(key)));
+  }
+
   function formatRelativeTime(value) {
     var date = parseDate(value);
     if (!date) return "at an unknown time";
@@ -1078,15 +1236,71 @@
     return Number.isNaN(date.getTime()) ? null : date;
   }
 
-  function localDateKey(value) {
-    var date = parseDate(value);
-    if (!date) return "unknown";
-    return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+  function stockholmParts(value) {
+    var date = value instanceof Date ? value : parseDate(value);
+    if (!date) return null;
+    var result = {};
+    stockholmClock.formatToParts(date).forEach(function (part) {
+      if (part.type !== "literal") result[part.type] = Number(part.value);
+    });
+    return result;
+  }
+
+  function stockholmOffsetMs(date) {
+    var parts = stockholmParts(date);
+    if (!parts) return 0;
+    var zonedAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+    return zonedAsUtc - Math.floor(date.getTime() / 1000) * 1000;
+  }
+
+  function stockholmBoundaryMs(key) {
+    if (!validDateKey(key)) return NaN;
+    var parts = key.split("-").map(Number);
+    var wallClockUtc = Date.UTC(parts[0], parts[1] - 1, parts[2], RATING_RESET_HOUR);
+    var candidate = wallClockUtc - stockholmOffsetMs(new Date(wallClockUtc));
+    return wallClockUtc - stockholmOffsetMs(new Date(candidate));
+  }
+
+  function ratingDateKeyForInstant(value) {
+    var parts = stockholmParts(value);
+    if (!parts) return "unknown";
+    var key = parts.year + "-" + String(parts.month).padStart(2, "0") + "-" + String(parts.day).padStart(2, "0");
+    return parts.hour < RATING_RESET_HOUR ? shiftDateKey(key, -1) : key;
+  }
+
+  function currentRatingDateKey(player) {
+    return ratingDateKeyForInstant(player && player.current && player.current.at ? player.current.at : new Date());
+  }
+
+  function shiftDateKey(key, days) {
+    if (!validDateKey(key)) return "unknown";
+    var parts = key.split("-").map(Number);
+    var date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2] + days, 12));
+    return date.getUTCFullYear() + "-" + String(date.getUTCMonth() + 1).padStart(2, "0") + "-" + String(date.getUTCDate()).padStart(2, "0");
+  }
+
+  function mondayDateKey(key) {
+    if (!validDateKey(key)) return key;
+    var parts = key.split("-").map(Number);
+    var weekday = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 12)).getUTCDay();
+    return shiftDateKey(key, -((weekday + 6) % 7));
+  }
+
+  function validDateKey(key) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(key || ""))) return false;
+    var parts = key.split("-").map(Number);
+    var date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 12));
+    return date.getUTCFullYear() === parts[0] && date.getUTCMonth() + 1 === parts[1] && date.getUTCDate() === parts[2];
   }
 
   function rate13(amount, timeMs) {
     timeMs = positive(timeMs);
     return timeMs > 0 ? positive(amount) * MS_13_MINUTES / timeMs : NaN;
+  }
+
+  function rateHour(amount, timeMs) {
+    timeMs = positive(timeMs);
+    return timeMs > 0 ? positive(amount) * HOUR_MS / timeMs : NaN;
   }
 
   function safeDivide(a, b) {

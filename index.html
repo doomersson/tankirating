@@ -85,16 +85,21 @@
         <div class="profile-toolbar" aria-label="Profile period and actions">
           <div class="toolbar-groups">
             <div class="segmented-control" id="period-control" role="group" aria-label="Statistics period">
-              <button type="button" data-period="1">24h</button>
-              <button type="button" data-period="7" class="is-active">7d</button>
+              <button type="button" data-period="day" class="is-active" aria-pressed="true">Day</button>
+              <button type="button" data-period="week" aria-pressed="false">Week</button>
               <button type="button" data-period="30">30d</button>
               <button type="button" data-period="all">All</button>
             </div>
+            <label class="rating-date-control" for="rating-date">
+              <span>Rating date</span>
+              <input id="rating-date" type="date" aria-describedby="rating-reset-note" />
+            </label>
             <div class="segmented-control" role="group" aria-label="Time display">
               <button type="button" data-time-unit="exact" class="is-active">Exact</button>
               <button type="button" data-time-unit="hours">Hours</button>
               <button type="button" data-time-unit="days">Days</button>
             </div>
+            <span class="rating-reset-note" id="rating-reset-note">Days reset at 04:00 Europe/Stockholm.</span>
           </div>
           <div class="profile-actions">
             <a class="quiet-button action-link" id="refresh-player" target="_blank" rel="noopener">Request refresh</a>
@@ -141,6 +146,29 @@
           </article>
         </section>
 
+        <section class="stat-strip stat-strip--rates" aria-label="Selected rating period rates">
+          <article>
+            <span class="metric-label" id="range-kd-label">Daily K/D</span>
+            <strong id="stat-range-kd">—</strong>
+            <span id="range-kd-detail">Select a tracked date</span>
+          </article>
+          <article>
+            <span class="metric-label">Kills / hour</span>
+            <strong id="stat-kills-hour">—</strong>
+            <span id="kills-hour-detail">Selected rating period</span>
+          </article>
+          <article>
+            <span class="metric-label">Crystals / hour</span>
+            <strong id="stat-crystals-hour">—</strong>
+            <span id="crystals-hour-detail">Selected rating period</span>
+          </article>
+          <article>
+            <span class="metric-label">Score / hour</span>
+            <strong id="stat-score-hour">—</strong>
+            <span id="score-hour-detail">Selected rating period</span>
+          </article>
+        </section>
+
         <div class="analysis-grid">
           <section class="usage-panel" aria-labelledby="equipment-heading">
             <div class="panel-heading compact">
@@ -163,7 +191,7 @@
             <div class="panel-heading compact">
               <div>
                 <h2 id="activity-heading">Recent activity</h2>
-                <p>Hours-played change grouped by collection day.</p>
+                <p>Hours played by Tanki rating day, resetting at 04:00 Stockholm time.</p>
               </div>
             </div>
             <div id="activity-chart" class="activity-chart" role="img" aria-label="Recent daily play time"></div>

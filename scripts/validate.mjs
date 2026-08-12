@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const read = (path) => readFile(resolve(root, path), "utf8");
-const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow, rankGuide, droneIcon] = await Promise.all([
+const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow, rankGuide, droneIcon, trackScript] = await Promise.all([
   read("index.html"),
   read("assets/styles.css"),
   read("tokens.css"),
@@ -15,6 +15,7 @@ const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow,
   read(".github/workflows/request-player.yml"),
   read("assets/ranks/README.md"),
   read("assets/icons/drone.svg"),
+  read("scripts/track.py"),
 ]);
 
 const failures = [];
@@ -30,6 +31,8 @@ check(html.includes('id="leaderboard-period-control"') && html.includes('data-le
 check(!/<section[^>]+id="leaderboard-view"[\s\S]*?data-time-unit=/i.test(html), "leaderboard still contains Exact, Hours, or Days display controls");
 check(html.includes('id="compare-search"') && html.includes('id="compare-picker-status"'), "compare search elements required by app.js are missing");
 check(html.includes('data-equipment="hulls"') && html.includes('data-equipment="turrets"'), "profile equipment tabs are missing");
+check(html.includes('id="rating-date"') && html.includes('data-period="day"') && html.includes('data-period="week"'), "profile rating calendar or reset-aware period controls are missing");
+check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"'), "profile daily K/D or hourly rate cards are missing");
 check(!/href="\//.test(html) && !/src="\//.test(html), "root-absolute assets break project GitHub Pages sites");
 check(css.includes("overflow-x: clip"), "horizontal overflow clipping is missing");
 check(!/overflow-x\s*:\s*hidden/.test(css), "overflow-x hidden can break sticky positioning");
@@ -58,8 +61,11 @@ check(html.includes('class="equipment-icon equipment-icon--drones"') && app.incl
 check(css.includes("scrollbar-width: none") && css.includes(".segmented-control::-webkit-scrollbar"), "segmented control scrollbar is not hidden");
 check(css.includes(".equipment-item-icon.favorite-artwork") && css.includes(".equipment-icon.favorite-artwork") && css.includes("width: 4rem;") && css.includes("height: 4rem;"), "favorite equipment artwork must render at 4rem");
 check(app.includes("hour < 24") && app.includes("Math.round(fill * 4) * 25") && css.includes(".activity-slice.fill-100::after"), "24-slice quarter-hour activity rendering is missing");
-check(app.includes("issues/new?title=") && requestWorkflow.includes("issues:"), "GitHub player request flow is missing");
+check(app.includes('RATING_TIME_ZONE = "Europe/Stockholm"') && app.includes("stockholmBoundaryMs") && app.includes("mondayDateKey"), "Stockholm 04:00 daily or Monday weekly boundaries are missing");
+check(app.includes("rateHour(period.delta.kills") && app.includes("rateHour(period.delta.crystals") && app.includes("rateHour(period.delta.score"), "selected-period hourly rates are missing");
 check(trackWorkflow.includes('cron: "17 * * * *"'), "collector must run every hour");
+check(trackScript.includes('ZoneInfo("Europe/Stockholm")') && trackScript.includes("rating_boundary_due"), "collector must retain Stockholm rating-boundary snapshots");
+check(app.includes("issues/new?title=") && requestWorkflow.includes("issues:"), "GitHub player request flow is missing");
 check(trackWorkflow.includes("actions/checkout@v5") && trackWorkflow.includes("actions/setup-python@v6"), "collector actions must use Node 24-compatible releases");
 check(rankGuide.includes("31.png") && rankGuide.includes("Legend"), "rank icon upload guide is missing");
 check(tracker.schemaVersion === 1 && tracker.players && typeof tracker.players === "object", "tracker.json schema is invalid");

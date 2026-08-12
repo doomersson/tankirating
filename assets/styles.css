@@ -463,6 +463,56 @@ button,
   gap: var(--space-sm);
 }
 
+.rating-date-control {
+  min-height: 2.75rem;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding-inline-start: var(--space-sm);
+  border: var(--rule-thin) solid var(--color-rule-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-2);
+  color: var(--color-neutral);
+}
+
+.rating-date-control > span {
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rating-date-control input {
+  width: 9.5rem;
+  min-height: calc(2.75rem - var(--rule-thin) * 2);
+  padding-inline: var(--space-xs);
+  border: 0;
+  border-inline-start: var(--rule-thin) solid var(--color-rule);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: transparent;
+  color: var(--color-ink);
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.rating-date-control input:disabled {
+  color: var(--color-neutral);
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.rating-date-control:has(input:focus-visible) {
+  border-color: var(--color-focus);
+}
+
+.rating-reset-note {
+  flex-basis: 100%;
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
 .action-link {
   min-height: 2.75rem;
   display: inline-flex;
@@ -532,6 +582,10 @@ button,
 
 .stat-strip {
   border-block: var(--rule-thin) solid var(--color-rule);
+}
+
+.stat-strip + .stat-strip {
+  border-block-start: 0;
 }
 
 .stat-strip article {
@@ -1495,7 +1549,8 @@ dialog {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .dialog-field input:hover:not(:disabled) {
+  .dialog-field input:hover:not(:disabled),
+  .rating-date-control input:hover:not(:disabled) {
     background: var(--color-paper-3);
   }
 
@@ -1673,6 +1728,10 @@ dialog {
   .stat-strip {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .stat-strip--rates {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .stat-strip article {

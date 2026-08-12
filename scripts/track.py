@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +22,8 @@ CONFIG_PATH = ROOT / "data" / "players.json"
 TRACKER_PATH = ROOT / "data" / "tracker.json"
 SCHEMA_VERSION = 1
 USER_AGENT = "TankiTrackerPages/1.0 (+GitHub Actions; community statistics)"
+RATING_TIME_ZONE = ZoneInfo("Europe/Stockholm")
+RATING_RESET_HOUR = 4
 
 
 class ProfileNotFoundError(ValueError):
@@ -42,6 +45,14 @@ def parse_time(value: str | None) -> datetime | None:
         return datetime.fromisoformat(value.replace("Z", "+00:00"))
     except (TypeError, ValueError):
         return None
+
+
+def rating_day(value: datetime) -> str:
+    """Return the Tanki rating-day key for a UTC instant in Stockholm time."""
+    local = value.astimezone(RATING_TIME_ZONE)
+    if local.hour < RATING_RESET_HOUR:
+        local -= timedelta(days=1)
+    return local.date().isoformat()
 
 
 def number_value(value: Any, default: int = 0) -> int:
@@ -227,9 +238,11 @@ def merge_player(existing: Any, current: dict[str, Any], retention_days: int) ->
     snapshot = compact_snapshot(current)
     previous = history[-1] if history else None
     previous_time = parse_time(previous.get("at")) if isinstance(previous, dict) else None
-    heartbeat_due = previous_time is None or utc_now() - previous_time >= timedelta(hours=23)
+    current_time = parse_time(snapshot.get("at")) or utc_now()
+    heartbeat_due = previous_time is None or current_time - previous_time >= timedelta(hours=23)
+    rating_boundary_due = previous_time is not None and rating_day(previous_time) != rating_day(current_time)
 
-    if previous is None or snapshot_changed(previous, snapshot) or heartbeat_due:
+    if previous is None or snapshot_changed(previous, snapshot) or heartbeat_due or rating_boundary_due:
         history.append(snapshot)
 
     cutoff = utc_now() - timedelta(days=retention_days)

@@ -647,18 +647,21 @@ button,
   white-space: nowrap;
 }
 
-.equipment-item-icon.favorite-artwork {
+.equipment-item-icon.favorite-artwork,
+.equipment-icon.favorite-artwork {
   grid-column: 2;
   grid-row: 1 / span 3;
   align-self: center;
   justify-self: end;
   width: 4rem;
   height: 4rem;
+}
+
+.equipment-item-icon.favorite-artwork {
   object-fit: contain;
 }
 
 .equipment-icon,
-.equipment-tab-icon,
 .equipment-item-icon {
   width: 1.15rem;
   height: 1.15rem;
@@ -690,13 +693,14 @@ button,
   mask-image: url("./icons/turret.svg");
 }
 
+.equipment-icon--drones {
+  -webkit-mask-image: url("./icons/drone.svg");
+  mask-image: url("./icons/drone.svg");
+}
+
 .equipment-icon--modes {
   -webkit-mask-image: url("./icons/mode.svg");
   mask-image: url("./icons/mode.svg");
-}
-
-.equipment-tab-icon {
-  object-fit: contain;
 }
 
 .favorite-item span {
@@ -776,15 +780,31 @@ button,
 .activity-bar-wrap {
   height: 8rem;
   display: flex;
-  align-items: end;
+  flex-direction: column-reverse;
+  gap: 1px;
+  padding: 1px;
+  background: var(--color-rule);
+}
+
+.activity-slice {
+  min-height: 1px;
+  flex: 1 1 0;
+  position: relative;
   background: var(--color-paper-3);
 }
 
-.activity-bar {
-  width: 100%;
-  min-height: 1px;
+.activity-slice::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: var(--color-accent);
+  opacity: 0;
 }
+
+.activity-slice.fill-25::after { opacity: 0.25; }
+.activity-slice.fill-50::after { opacity: 0.5; }
+.activity-slice.fill-75::after { opacity: 0.75; }
+.activity-slice.fill-100::after { opacity: 1; }
 
 .bar-label {
   overflow: hidden;

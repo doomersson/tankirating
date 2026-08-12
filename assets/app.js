@@ -407,7 +407,7 @@
     if (!itemName) return "";
     if (category === "drones") {
       if (modifierClass !== "favorite-artwork") return "";
-      return '<img class="equipment-item-icon favorite-artwork" src="./assets/icons/drone.svg" alt="" width="64" height="64">';
+      return '<span class="equipment-icon equipment-icon--drones favorite-artwork" aria-hidden="true"></span>';
     }
     var fallback = { hulls: "hull", turrets: "turret", modes: "mode" }[category];
     if (!fallback) return "";
@@ -436,16 +436,25 @@
       var dayKey = localDateKey(date.toISOString());
       days.push({ date: date, value: daily[dayKey] || 0 });
     }
-    var max = Math.max.apply(Math, days.map(function (day) { return day.value; }).concat([1]));
     elements["activity-chart"].innerHTML = days.map(function (day) {
-      var ratio = day.value / max;
       var dateLabel = formatDayMonth(day.date);
       return '<div class="activity-day" title="' + escapeAttr(dateLabel + " · " + formatDurationDisplay(day.value)) + '">' +
-        '<span class="activity-bar-wrap"><span class="activity-bar" style="height:' + Math.max(day.value ? 3 : 0.5, ratio * 100).toFixed(1) + '%"></span></span>' +
+        '<span class="activity-bar-wrap" aria-hidden="true">' + activitySlicesMarkup(day.value) + '</span>' +
         '<span class="bar-label">' + escapeHtml(dateLabel) + '</span></div>';
     }).join("");
     var total = days.reduce(function (sum, day) { return sum + day.value; }, 0);
     elements["activity-chart"].setAttribute("aria-label", "Hours played during the last 14 days: " + formatDurationDisplay(total) + ".");
+  }
+
+  function activitySlicesMarkup(timeMs) {
+    var hours = Math.min(24, positive(timeMs) / 3600000);
+    var slices = [];
+    for (var hour = 0; hour < 24; hour += 1) {
+      var fill = Math.max(0, Math.min(1, hours - hour));
+      var fillStep = Math.round(fill * 4) * 25;
+      slices.push('<span class="activity-slice fill-' + fillStep + '"></span>');
+    }
+    return slices.join("");
   }
 
   function periodPointsForDays(player, days) {

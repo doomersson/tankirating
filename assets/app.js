@@ -300,7 +300,7 @@
     elements["hero-efficiency"].textContent = formatInteger(current.efficiency);
     elements["hero-position"].textContent = current.efficiencyPosition > 0 ? "Efficiency rank #" + formatInteger(current.efficiencyPosition) : "Efficiency rank unavailable";
     elements["refresh-player"].href = requestIssueUrl("Refresh", current.name);
-    elements["time-heading"].textContent = state.timeUnit === "hours" ? "Battle time in hours" : state.timeUnit === "days" ? "Battle time in days" : "Exact battle time";
+    elements["time-heading"].textContent = "Hours Played";
     elements["total-time"].textContent = formatDurationDisplay(lifetimeTime);
     elements["total-time"].title = formatExactDuration(lifetimeTime);
     elements["period-time"].textContent = period ? formatDurationDisplay(period.delta.time) + " during selected period" : "Period rate begins after another active snapshot";
@@ -389,7 +389,7 @@
     if (!player) return;
     var points = periodPoints(player);
     var key = { score: "s", crystals: "c", kills: "k", time: "t" }[state.metric];
-    var label = { score: "score", crystals: "crystals", kills: "kills", time: "battle time" }[state.metric];
+    var label = { score: "score", crystals: "crystals", kills: "kills", time: "hours played" }[state.metric];
     if (points.length < 2) {
       renderChartEmpty("Tracking begins here", "A second changed snapshot is needed to draw the " + label + " trend.");
       return;
@@ -448,8 +448,8 @@
     ];
     elements["equipment-summary"].innerHTML = categories.map(function (entry) {
       var favorite = favoriteItem(equipment[entry[0]]);
-      return '<div class="favorite-item"><span class="favorite-label">' + equipmentIconMarkup(entry[0], favorite && favorite.name) + '<span>' + entry[1] + '</span></span><strong title="' + escapeAttr(favorite ? favorite.name : "No usage") + '">' +
-        escapeHtml(favorite ? favorite.name : "—") + '</strong><span>' + (favorite ? escapeHtml(formatDurationDisplay(favorite.timeMs)) : "No data") + '</span></div>';
+      return '<div class="favorite-item"><span class="favorite-label">' + entry[1] + '</span><strong class="favorite-name" title="' + escapeAttr(favorite ? favorite.name : "No usage") + '">' +
+        equipmentIconMarkup(entry[0], favorite && favorite.name) + '<span>' + escapeHtml(favorite ? favorite.name : "—") + '</span></strong><span>' + (favorite ? escapeHtml(formatDurationDisplay(favorite.timeMs)) : "No data") + '</span></div>';
     }).join("");
   }
 
@@ -505,7 +505,7 @@
         '<span class="bar-label">' + escapeHtml(dateLabel) + '</span></div>';
     }).join("");
     var total = days.reduce(function (sum, day) { return sum + day.value; }, 0);
-    elements["activity-chart"].setAttribute("aria-label", "Battle time during the last 14 days: " + formatDurationDisplay(total) + ".");
+    elements["activity-chart"].setAttribute("aria-label", "Hours played during the last 14 days: " + formatDurationDisplay(total) + ".");
   }
 
   function periodPointsForDays(player, days) {

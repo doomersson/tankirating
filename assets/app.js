@@ -25,6 +25,10 @@
     second: "2-digit",
     hourCycle: "h23"
   });
+  var PIE_COLORS = [
+    "var(--color-data-1)", "var(--color-data-2)", "var(--color-data-3)", "var(--color-data-4)",
+    "var(--color-data-5)", "var(--color-data-6)", "var(--color-data-7)", "var(--color-data-8)"
+  ];
 
   var rankThresholds = [
     ["Recruit", 0], ["Private", 100], ["Gefreiter", 500], ["Corporal", 1500],
@@ -45,6 +49,7 @@
     localMode: false,
     currentPlayerId: null,
     view: "leaderboard",
+    profileSection: "overview",
     period: "day",
     selectedRatingDate: null,
     equipment: "hulls",
@@ -54,7 +59,8 @@
     leaderboardSort: "kills13",
     leaderboardDirection: "desc",
     leaderboardPeriod: 7,
-    timeUnit: "exact"
+    timeUnit: "exact",
+    animatedEquipment: {}
   };
 
   var elements = {};
@@ -89,6 +95,7 @@
       "rank-fallback", "rank-icon", "rank-progress-text", "rank-progress-percent", "rank-progress-bar",
       "profile-title", "player-meta", "hero-efficiency", "hero-position", "total-time",
       "time-heading",
+      "overview-time", "overview-kills", "overview-deaths", "overview-kd", "overview-score", "overview-crystals",
       "period-time", "activity-state", "stat-kills", "delta-kills", "stat-kd", "period-kd",
       "stat-k13", "period-k13", "stat-c13", "period-crystals", "stat-s13", "period-score",
       "rating-date", "rating-reset-note", "range-kd-label", "stat-range-kd", "range-kd-detail",
@@ -107,6 +114,14 @@
   function bindEvents() {
     document.querySelectorAll("[data-view]").forEach(function (button) {
       button.addEventListener("click", function () { navigateToView(button.dataset.view); });
+    });
+
+    document.getElementById("profile-section-tabs").addEventListener("click", function (event) {
+      var button = event.target.closest("button[data-profile-section]");
+      if (!button) return;
+      state.profileSection = button.dataset.profileSection;
+      syncProfileSectionControls();
+      if (state.profileSection === "overview") renderEquipmentList(getCurrentPlayer());
     });
 
     document.getElementById("period-control").addEventListener("click", function (event) {
@@ -321,6 +336,13 @@
     elements["hero-efficiency"].textContent = formatInteger(current.efficiency);
     elements["hero-position"].textContent = current.efficiencyPosition > 0 ? "Efficiency rank #" + formatInteger(current.efficiencyPosition) : "Efficiency rank unavailable";
     elements["refresh-player"].href = requestIssueUrl("Refresh", current.name);
+    elements["overview-time"].textContent = formatDurationDisplay(lifetimeTime);
+    elements["overview-time"].title = formatExactDuration(lifetimeTime);
+    elements["overview-kills"].textContent = formatInteger(current.kills);
+    elements["overview-deaths"].textContent = formatInteger(current.deaths);
+    elements["overview-kd"].textContent = formatRate(lifetimeKd);
+    elements["overview-score"].textContent = formatInteger(current.score);
+    elements["overview-crystals"].textContent = formatInteger(current.crystals);
     elements["time-heading"].textContent = "Hours Played";
     elements["total-time"].textContent = formatDurationDisplay(lifetimeTime);
     elements["total-time"].title = formatExactDuration(lifetimeTime);
@@ -342,6 +364,7 @@
     renderEquipmentList(player);
     renderActivity(player);
     renderAccountDetails(player);
+    syncProfileSectionControls();
   }
 
   function calculatePeriod(player) {
@@ -491,18 +514,60 @@
 
   function renderEquipmentList(player) {
     if (!player) return;
-    var items = ((player.current.equipment || {})[state.equipment] || []).slice().sort(function (a, b) { return positive(b.timeMs) - positive(a.timeMs); }).slice(0, 10);
-    if (!items.length) {
+    var items = ((player.current.equipment || {})[state.equipment] || []).slice().filter(function (item) {
+      return item && positive(item.timeMs) > 0;
+    }).sort(function (a, b) { return positive(b.timeMs) - positive(a.timeMs); });
+    var total = items.reduce(function (sum, item) { return sum + positive(item.timeMs); }, 0);
+    if (!items.length || !total) {
       elements["equipment-list"].innerHTML = '<p class="chart-empty">No usage was reported for this category.</p>';
       return;
     }
-    var max = positive(items[0].timeMs) || 1;
-    elements["equipment-list"].innerHTML = items.map(function (item) {
-      var width = Math.max(0.5, positive(item.timeMs) / max * 100);
-      return '<div class="usage-row"><span class="usage-identity">' + equipmentIconMarkup(state.equipment, item.name) + '<span class="usage-name" title="' + escapeAttr(item.name) + '">' + escapeHtml(item.name) + '</span></span>' +
-        '<span class="usage-bar" aria-hidden="true"><span style="transform:scaleX(' + (width / 100).toFixed(4) + ')"></span></span>' +
-        '<span class="usage-meta">' + escapeHtml(formatDurationDisplay(item.timeMs)) + '</span></div>';
+    var slices = [];
+    var othersTime = 0;
+    items.forEach(function (item) {
+      if (positive(item.timeMs) / total >= 0.1) slices.push({ name: item.name, timeMs: positive(item.timeMs), others: false });
+      else othersTime += positive(item.timeMs);
+    });
+    if (othersTime > 0) slices.push({ name: "Others", timeMs: othersTime, others: true });
+
+    var cursor = 0;
+    var stops = slices.map(function (slice, index) {
+      var start = cursor;
+      cursor += slice.timeMs / total * 100;
+      slice.percent = slice.timeMs / total * 100;
+      slice.color = slice.others ? "var(--color-data-other)" : PIE_COLORS[index % PIE_COLORS.length];
+      return slice.color + " " + start.toFixed(4) + "% " + cursor.toFixed(4) + "%";
+    });
+    var categoryLabel = equipmentCategoryLabel(state.equipment);
+    var description = slices.map(function (slice) { return slice.name + " " + formatRate(slice.percent) + "%"; }).join(", ");
+    var animationKey = state.currentPlayerId + ":" + state.equipment;
+    var legend = slices.map(function (slice) {
+      var icon = slice.others ? "" : equipmentIconMarkup(state.equipment, slice.name);
+      var title = slice.name + " · " + formatExactDuration(slice.timeMs) + " · " + formatRate(slice.percent) + "%";
+      return '<div class="usage-legend-item" role="listitem" title="' + escapeAttr(title) + '">' +
+        '<span class="usage-swatch" style="--swatch-color:' + slice.color + '" aria-hidden="true"></span>' +
+        '<span class="usage-legend-identity">' + icon + '<span class="usage-name">' + escapeHtml(slice.name) + '</span></span>' +
+        '<span class="usage-legend-value"><strong>' + escapeHtml(formatRate(slice.percent)) + '%</strong><small>' + escapeHtml(formatDurationDisplay(slice.timeMs)) + '</small></span></div>';
     }).join("");
+    elements["equipment-list"].innerHTML = '<div class="usage-pie-layout"><div class="usage-pie-figure">' +
+      '<div class="usage-pie" data-animation-key="' + escapeAttr(animationKey) + '" role="img" aria-label="' + escapeAttr(categoryLabel + " usage: " + description + ".") + '" style="--pie-background:conic-gradient(' + stops.join(",") + ')"></div>' +
+      '<p><strong>' + escapeHtml(formatDurationDisplay(total)) + '</strong><span>Total reported ' + escapeHtml(categoryLabel.toLowerCase()) + ' time</span></p></div>' +
+      '<div class="usage-legend" role="list" aria-label="' + escapeAttr(categoryLabel + " usage details") + '">' + legend + '</div></div>';
+    animateEquipmentPie(animationKey);
+  }
+
+  function equipmentCategoryLabel(category) {
+    return { hulls: "Hull", turrets: "Turret", drones: "Drone", modes: "Mode" }[category] || "Equipment";
+  }
+
+  function animateEquipmentPie(animationKey) {
+    if (state.animatedEquipment[animationKey] || state.view !== "profile" || state.profileSection !== "overview") return;
+    window.requestAnimationFrame(function () {
+      var pie = elements["equipment-list"].querySelector(".usage-pie");
+      if (!pie || pie.dataset.animationKey !== animationKey) return;
+      state.animatedEquipment[animationKey] = true;
+      pie.classList.add("is-unfolding");
+    });
   }
 
   function equipmentIconMarkup(category, itemName, modifierClass, size) {
@@ -767,6 +832,8 @@
   function navigateToView(view) {
     if (view === "profile") {
       var player = getCurrentPlayer();
+      state.profileSection = "overview";
+      syncProfileSectionControls();
       window.location.hash = player ? "player/" + encodeURIComponent(player.current.name) : "profile";
     } else {
       window.location.hash = view;
@@ -781,6 +848,7 @@
       var match = getPlayerIds().find(function (id) {
         return id.toLowerCase() === name || state.data.players[id].current.name.toLowerCase() === name;
       });
+      if (match && match !== state.currentPlayerId) state.profileSection = "overview";
       if (match) state.currentPlayerId = match;
       setView("profile");
     } else if (hash === "leaderboard" || hash === "compare") {
@@ -808,6 +876,8 @@
   function selectPlayer(id) {
     if (!state.data.players[id]) return;
     state.currentPlayerId = id;
+    state.profileSection = "overview";
+    syncProfileSectionControls();
     closeDialog(elements["search-dialog"]);
     window.location.hash = "player/" + encodeURIComponent(state.data.players[id].current.name);
   }
@@ -1012,6 +1082,17 @@
       button.setAttribute("aria-pressed", button === active ? "true" : "false");
     });
     active.classList.add(selector.replace(".", ""));
+  }
+
+  function syncProfileSectionControls() {
+    document.querySelectorAll("#profile-section-tabs button[data-profile-section]").forEach(function (button) {
+      var active = button.dataset.profileSection === state.profileSection;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    document.querySelectorAll("#profile-view .profile-section").forEach(function (section) {
+      section.hidden = section.id !== (state.profileSection === "period" ? "profile-period-summary" : "profile-overview");
+    });
   }
 
   function syncProfilePeriodControls() {

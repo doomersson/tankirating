@@ -16,6 +16,15 @@
   --color-error: #ff8f88;
   --color-error-soft: #3c2022;
   --color-success: #8ed6ad;
+  --color-data-1: #55c9dd;
+  --color-data-2: #8ed6ad;
+  --color-data-3: #87a8df;
+  --color-data-4: #b49ad6;
+  --color-data-5: #d7ae77;
+  --color-data-6: #d88c9e;
+  --color-data-7: #a9c578;
+  --color-data-8: #c6b994;
+  --color-data-other: #45525f;
   --color-backdrop: rgba(3, 7, 10, 0.78);
 
   --font-display: "Space Grotesk", "Arial Narrow", sans-serif;
@@ -81,6 +90,15 @@
     --color-error: oklch(76% 0.13 25);
     --color-error-soft: oklch(27% 0.06 25);
     --color-success: oklch(80% 0.1 155);
+    --color-data-1: oklch(78% 0.13 210);
+    --color-data-2: oklch(80% 0.1 155);
+    --color-data-3: oklch(72% 0.09 255);
+    --color-data-4: oklch(72% 0.09 305);
+    --color-data-5: oklch(76% 0.09 75);
+    --color-data-6: oklch(71% 0.09 10);
+    --color-data-7: oklch(78% 0.08 125);
+    --color-data-8: oklch(76% 0.045 85);
+    --color-data-other: oklch(42% 0.021 230);
     --color-backdrop: oklch(8% 0.015 230 / 0.82);
   }
 }

@@ -82,112 +82,175 @@
           </div>
         </div>
 
-        <div class="profile-toolbar" aria-label="Profile period and actions">
-          <div class="toolbar-groups">
-            <div class="segmented-control" id="period-control" role="group" aria-label="Statistics period">
-              <button type="button" data-period="day" class="is-active" aria-pressed="true">Day</button>
-              <button type="button" data-period="week" aria-pressed="false">Week</button>
-              <button type="button" data-period="30">30d</button>
-              <button type="button" data-period="all">All</button>
-            </div>
-            <label class="rating-date-control" for="rating-date">
-              <span>Rating date</span>
-              <input id="rating-date" type="date" aria-describedby="rating-reset-note" />
-            </label>
-            <div class="segmented-control" role="group" aria-label="Time display">
-              <button type="button" data-time-unit="exact" class="is-active">Exact</button>
-              <button type="button" data-time-unit="hours">Hours</button>
-              <button type="button" data-time-unit="days">Days</button>
-            </div>
-            <span class="rating-reset-note" id="rating-reset-note">Dates follow your device timezone.</span>
-          </div>
-          <div class="profile-actions">
-            <a class="quiet-button action-link" id="refresh-player" target="_blank" rel="noopener">Request refresh</a>
-            <button class="quiet-button" id="profile-csv" type="button">Export profile CSV</button>
+        <div class="profile-section-switcher">
+          <div class="segmented-control" id="profile-section-tabs" role="tablist" aria-label="Profile section">
+            <button id="profile-tab-overview" type="button" role="tab" data-profile-section="overview" aria-controls="profile-overview" aria-selected="true" class="is-active">Overview</button>
+            <button id="profile-tab-period" type="button" role="tab" data-profile-section="period" aria-controls="profile-period-summary" aria-selected="false">Period summary</button>
           </div>
         </div>
 
-        <section class="time-led" aria-labelledby="time-heading">
-          <div>
-            <p class="metric-label" id="time-heading">Hours Played</p>
-            <p class="time-figure" id="total-time">—</p>
-          </div>
-          <div class="time-aside">
-            <span id="period-time">— during selected period</span>
-            <span id="activity-state">No activity history yet</span>
-          </div>
-        </section>
-
-        <section class="stat-strip" aria-label="Player performance statistics">
-          <article>
-            <span class="metric-label">Kills</span>
-            <strong id="stat-kills">—</strong>
-            <span id="delta-kills">— selected period</span>
-          </article>
-          <article>
-            <span class="metric-label">K/D</span>
-            <strong id="stat-kd">—</strong>
-            <span id="period-kd">— selected period</span>
-          </article>
-          <article>
-            <span class="metric-label">Kills / 13 min</span>
-            <strong id="stat-k13">—</strong>
-            <span id="period-k13">Lifetime rate</span>
-          </article>
-          <article>
-            <span class="metric-label">Crystals / 13 min</span>
-            <strong id="stat-c13">—</strong>
-            <span id="period-crystals">— selected period</span>
-          </article>
-          <article>
-            <span class="metric-label">Score / 13 min</span>
-            <strong id="stat-s13">—</strong>
-            <span id="period-score">— selected period</span>
-          </article>
-        </section>
-
-        <section class="stat-strip stat-strip--rates" aria-label="Selected rating period rates">
-          <article>
-            <span class="metric-label" id="range-kd-label">Daily K/D</span>
-            <strong id="stat-range-kd">—</strong>
-            <span id="range-kd-detail">Select a tracked date</span>
-          </article>
-          <article>
-            <span class="metric-label">Kills / hour</span>
-            <strong id="stat-kills-hour">—</strong>
-            <span id="kills-hour-detail">Selected rating period</span>
-          </article>
-          <article>
-            <span class="metric-label">Crystals / hour</span>
-            <strong id="stat-crystals-hour">—</strong>
-            <span id="crystals-hour-detail">Selected rating period</span>
-          </article>
-          <article>
-            <span class="metric-label">Score / hour</span>
-            <strong id="stat-score-hour">—</strong>
-            <span id="score-hour-detail">Selected rating period</span>
-          </article>
-        </section>
-
-        <div class="analysis-grid">
-          <section class="usage-panel" aria-labelledby="equipment-heading">
+        <div class="profile-section" id="profile-overview" role="tabpanel" aria-labelledby="profile-tab-overview">
+          <section class="usage-panel loadout-panel" aria-labelledby="loadout-heading">
             <div class="panel-heading compact">
               <div>
-                <h2 id="equipment-heading">Most played equipment</h2>
-                <p>Lifetime usage reported by Tanki Ratings.</p>
+                <h2 id="loadout-heading">Most-used loadout</h2>
+                <p>Favorite item in each category. Tanki reports category totals, not confirmed battle combinations.</p>
               </div>
             </div>
             <div id="equipment-summary" class="equipment-summary"></div>
-            <div class="equipment-tabs" id="equipment-tabs" role="tablist" aria-label="Equipment category">
-              <button type="button" role="tab" aria-selected="true" data-equipment="hulls"><span class="equipment-icon equipment-icon--hulls" aria-hidden="true"></span><span>Hulls</span></button>
-              <button type="button" role="tab" aria-selected="false" data-equipment="turrets"><span class="equipment-icon equipment-icon--turrets" aria-hidden="true"></span><span>Turrets</span></button>
-              <button type="button" role="tab" aria-selected="false" data-equipment="drones"><span class="equipment-icon equipment-icon--drones" aria-hidden="true"></span><span>Drones</span></button>
-              <button type="button" role="tab" aria-selected="false" data-equipment="modes"><span class="equipment-icon equipment-icon--modes" aria-hidden="true"></span><span>Modes</span></button>
-            </div>
-            <div id="equipment-list" class="usage-list" role="tabpanel"></div>
           </section>
 
-          <section class="activity-panel" aria-labelledby="activity-heading">
+          <section class="stat-strip stat-strip--overview" aria-label="Overall account statistics">
+            <article>
+              <span class="metric-label">Hours played</span>
+              <strong id="overview-time">—</strong>
+              <span>Lifetime</span>
+            </article>
+            <article>
+              <span class="metric-label">Kills</span>
+              <strong id="overview-kills">—</strong>
+              <span>Lifetime</span>
+            </article>
+            <article>
+              <span class="metric-label">Deaths</span>
+              <strong id="overview-deaths">—</strong>
+              <span>Lifetime</span>
+            </article>
+            <article>
+              <span class="metric-label">K/D</span>
+              <strong id="overview-kd">—</strong>
+              <span>Lifetime</span>
+            </article>
+            <article>
+              <span class="metric-label">Score</span>
+              <strong id="overview-score">—</strong>
+              <span>Lifetime</span>
+            </article>
+            <article>
+              <span class="metric-label">Crystals</span>
+              <strong id="overview-crystals">—</strong>
+              <span>Lifetime</span>
+            </article>
+          </section>
+
+          <div class="analysis-grid">
+            <section class="usage-panel" aria-labelledby="equipment-heading">
+              <div class="panel-heading compact">
+                <div>
+                  <h2 id="equipment-heading">Equipment share</h2>
+                  <p>Items below 10% are combined as Others.</p>
+                </div>
+              </div>
+              <div class="equipment-tabs" id="equipment-tabs" role="tablist" aria-label="Equipment category">
+                <button type="button" role="tab" aria-selected="true" data-equipment="hulls"><span class="equipment-icon equipment-icon--hulls" aria-hidden="true"></span><span>Hulls</span></button>
+                <button type="button" role="tab" aria-selected="false" data-equipment="turrets"><span class="equipment-icon equipment-icon--turrets" aria-hidden="true"></span><span>Turrets</span></button>
+                <button type="button" role="tab" aria-selected="false" data-equipment="drones"><span class="equipment-icon equipment-icon--drones" aria-hidden="true"></span><span>Drones</span></button>
+                <button type="button" role="tab" aria-selected="false" data-equipment="modes"><span class="equipment-icon equipment-icon--modes" aria-hidden="true"></span><span>Modes</span></button>
+              </div>
+              <div id="equipment-list" class="usage-list" role="tabpanel"></div>
+            </section>
+
+            <section class="detail-panel" aria-labelledby="account-heading">
+              <div class="panel-heading compact">
+                <div>
+                  <h2 id="account-heading">Account details</h2>
+                  <p>Latest values in the current snapshot.</p>
+                </div>
+              </div>
+              <dl class="detail-list" id="account-details"></dl>
+            </section>
+          </div>
+        </div>
+
+        <div class="profile-section" id="profile-period-summary" role="tabpanel" aria-labelledby="profile-tab-period" hidden>
+          <div class="profile-toolbar" aria-label="Profile period and actions">
+            <div class="toolbar-groups">
+              <div class="segmented-control" id="period-control" role="group" aria-label="Statistics period">
+                <button type="button" data-period="day" class="is-active" aria-pressed="true">Day</button>
+                <button type="button" data-period="week" aria-pressed="false">Week</button>
+                <button type="button" data-period="30">30d</button>
+                <button type="button" data-period="all">All</button>
+              </div>
+              <label class="rating-date-control" for="rating-date">
+                <span>Rating date</span>
+                <input id="rating-date" type="date" aria-describedby="rating-reset-note" />
+              </label>
+              <div class="segmented-control" role="group" aria-label="Time display">
+                <button type="button" data-time-unit="exact" class="is-active">Exact</button>
+                <button type="button" data-time-unit="hours">Hours</button>
+                <button type="button" data-time-unit="days">Days</button>
+              </div>
+              <span class="rating-reset-note" id="rating-reset-note">Dates follow your device timezone.</span>
+            </div>
+            <div class="profile-actions">
+              <a class="quiet-button action-link" id="refresh-player" target="_blank" rel="noopener">Request refresh</a>
+              <button class="quiet-button" id="profile-csv" type="button">Export profile CSV</button>
+            </div>
+          </div>
+
+          <section class="time-led" aria-labelledby="time-heading">
+            <div>
+              <p class="metric-label" id="time-heading">Hours Played</p>
+              <p class="time-figure" id="total-time">—</p>
+            </div>
+            <div class="time-aside">
+              <span id="period-time">— during selected period</span>
+              <span id="activity-state">No activity history yet</span>
+            </div>
+          </section>
+
+          <section class="stat-strip" aria-label="Player performance statistics">
+            <article>
+              <span class="metric-label">Kills</span>
+              <strong id="stat-kills">—</strong>
+              <span id="delta-kills">— selected period</span>
+            </article>
+            <article>
+              <span class="metric-label">K/D</span>
+              <strong id="stat-kd">—</strong>
+              <span id="period-kd">— selected period</span>
+            </article>
+            <article>
+              <span class="metric-label">Kills / 13 min</span>
+              <strong id="stat-k13">—</strong>
+              <span id="period-k13">Lifetime rate</span>
+            </article>
+            <article>
+              <span class="metric-label">Crystals / 13 min</span>
+              <strong id="stat-c13">—</strong>
+              <span id="period-crystals">— selected period</span>
+            </article>
+            <article>
+              <span class="metric-label">Score / 13 min</span>
+              <strong id="stat-s13">—</strong>
+              <span id="period-score">— selected period</span>
+            </article>
+          </section>
+
+          <section class="stat-strip stat-strip--rates" aria-label="Selected rating period rates">
+            <article>
+              <span class="metric-label" id="range-kd-label">Daily K/D</span>
+              <strong id="stat-range-kd">—</strong>
+              <span id="range-kd-detail">Select a tracked date</span>
+            </article>
+            <article>
+              <span class="metric-label">Kills / hour</span>
+              <strong id="stat-kills-hour">—</strong>
+              <span id="kills-hour-detail">Selected rating period</span>
+            </article>
+            <article>
+              <span class="metric-label">Crystals / hour</span>
+              <strong id="stat-crystals-hour">—</strong>
+              <span id="crystals-hour-detail">Selected rating period</span>
+            </article>
+            <article>
+              <span class="metric-label">Score / hour</span>
+              <strong id="stat-score-hour">—</strong>
+              <span id="score-hour-detail">Selected rating period</span>
+            </article>
+          </section>
+
+          <section class="activity-panel period-activity-panel" aria-labelledby="activity-heading">
             <div class="panel-heading compact">
               <div>
                 <h2 id="activity-heading">Recent activity</h2>
@@ -195,7 +258,6 @@
               </div>
             </div>
             <div id="activity-chart" class="activity-chart" role="img" aria-label="Recent daily play time"></div>
-            <dl class="detail-list" id="account-details"></dl>
           </section>
         </div>
       </section>

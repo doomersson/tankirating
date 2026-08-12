@@ -32,6 +32,9 @@ check(/data-leaderboard-period="7" class="is-active" aria-pressed="true"/.test(h
 check(!/<section[^>]+id="leaderboard-view"[\s\S]*?data-time-unit=/i.test(html), "leaderboard still contains Exact, Hours, or Days display controls");
 check(html.includes('id="compare-search"') && html.includes('id="compare-picker-status"'), "compare search elements required by app.js are missing");
 check(html.includes('data-equipment="hulls"') && html.includes('data-equipment="turrets"'), "profile equipment tabs are missing");
+check(html.includes('id="profile-overview"') && html.includes('id="profile-period-summary"') && html.includes('data-profile-section="overview"') && html.includes('data-profile-section="period"'), "profile Overview or Period summary switch is missing");
+check(/id="profile-overview"[\s\S]*?id="equipment-summary"[\s\S]*?id="overview-kills"[\s\S]*?id="overview-deaths"[\s\S]*?id="overview-kd"/.test(html), "profile Overview must lead with loadout and overall account statistics");
+check(/id="profile-period-summary"[\s\S]*?class="profile-toolbar"[\s\S]*?class="time-led"[\s\S]*?class="stat-strip"/.test(html), "Period summary must contain the period toolbar, time lead, and statistic strips");
 check(html.includes('id="rating-date"') && html.includes('data-period="day"') && html.includes('data-period="week"'), "profile rating calendar or reset-aware period controls are missing");
 check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"'), "profile daily K/D or hourly rate cards are missing");
 check(!/href="\//.test(html) && !/src="\//.test(html), "root-absolute assets break project GitHub Pages sites");
@@ -45,6 +48,7 @@ check(css.includes("prefers-reduced-motion"), "reduced-motion support is missing
 check((css.match(/font-family:\s*var\(--font-outlier\)/g) || []).length <= 2, "outlier typography is used in more than two roles");
 check(css.includes("line-height: 1;"), "intrinsic controls need compact line-height");
 check(tokens.includes("--color-accent-ink"), "accent contrast token is missing");
+check(tokens.includes("--color-data-1") && tokens.includes("--color-data-other"), "equipment pie data-color tokens are missing");
 check(tokens.includes("--font-display") && tokens.includes("--font-body"), "font pairing tokens are missing");
 check(tokens.includes("--site-header-height") && tokens.includes("--z-sticky-nav"), "sticky leaderboard offset tokens are missing");
 check(app.includes("indexedDB"), "local import persistence is missing");
@@ -58,6 +62,9 @@ const leaderboardStart = app.indexOf("function leaderboardColumns");
 const leaderboardOrder = ["efficiency", "score", "crystals", "kills13", "kills", "deaths", "kd", "golds", "time"].map((key) => app.indexOf(`{ key: "${key}"`, leaderboardStart));
 check(leaderboardOrder.every((position, index) => position >= 0 && (index === 0 || position > leaderboardOrder[index - 1])), "leaderboard columns are out of the requested order");
 check(app.includes('"./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg"'), "profile equipment names are not mapped to their matching SVG filenames");
+check(app.includes("positive(item.timeMs) / total >= 0.1") && app.includes('name: "Others"'), "equipment below 10% must be grouped into Others");
+check(app.includes("conic-gradient(") && css.includes("@keyframes pie-unfold") && css.includes(".usage-pie.is-unfolding"), "animated equipment pie rendering is missing");
+check(!app.includes('class="usage-bar"'), "equipment usage bars must be replaced by the pie breakdown");
 check(html.includes('class="equipment-icon equipment-icon--drones"') && app.includes('equipment-icon--drones favorite-artwork') && css.includes('mask-image: url("./icons/drone.svg")') && droneIcon.includes('viewBox="0 0 80 80"'), "drone summary or tab mask is missing");
 check(css.includes("scrollbar-width: none") && css.includes(".segmented-control::-webkit-scrollbar"), "segmented control scrollbar is not hidden");
 check(css.includes(".equipment-item-icon.favorite-artwork") && css.includes(".equipment-icon.favorite-artwork") && css.includes("width: 4rem;") && css.includes("height: 4rem;"), "favorite equipment artwork must render at 4rem");

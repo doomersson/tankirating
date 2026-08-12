@@ -66,9 +66,9 @@ check(app.includes("positive(item.timeMs) / total >= 0.05") && app.includes('nam
 check(app.includes("var legend = items.map") && app.includes("grouped into Others on chart"), "the equipment legend must list every item and identify chart-only grouping");
 check(app.includes("conic-gradient(") && css.includes("@keyframes pie-unfold") && css.includes(".usage-pie.is-unfolding"), "animated equipment pie rendering is missing");
 check(!app.includes('class="usage-bar"'), "equipment usage bars must be replaced by the pie breakdown");
-check(html.includes('class="equipment-icon equipment-icon--drones"') && app.includes('equipment-icon--drones favorite-artwork') && css.includes('mask-image: url("./icons/drone.svg")') && droneIcon.includes('viewBox="0 0 80 80"'), "drone summary or tab mask is missing");
+check(html.includes('class="equipment-icon equipment-icon--drones"') && app.includes('class="equipment-item-icon favorite-artwork" src="./assets/icons/drone.svg"') && css.includes('mask-image: url("./icons/drone.svg")') && droneIcon.includes('viewBox="0 0 80 80"'), "drone summary image or tab mask is missing");
 check(css.includes("scrollbar-width: none") && css.includes(".segmented-control::-webkit-scrollbar"), "segmented control scrollbar is not hidden");
-check(css.includes(".equipment-item-icon.favorite-artwork") && css.includes(".equipment-icon.favorite-artwork") && css.includes("width: 4rem;") && css.includes("height: 4rem;"), "favorite equipment artwork must render at 4rem");
+check(css.includes(".equipment-item-icon.favorite-artwork") && css.includes("width: 4rem;") && css.includes("height: 4rem;"), "favorite equipment artwork must render at 4rem");
 check(app.includes("hour < 24") && app.includes("Math.round(fill * 4) * 25") && css.includes(".activity-slice.fill-100::after"), "24-slice quarter-hour activity rendering is missing");
 check(app.includes("resolvedOptions().timeZone") && app.includes("ratingBoundaryMs") && app.includes("mondayDateKey"), "viewer-timezone rating dates or Monday weekly boundaries are missing");
 check(html.includes('id="activity-zone-note"') && !html.includes("Stockholm time"), "Recent activity must identify the viewer timezone instead of hard-coding Stockholm");

@@ -731,17 +731,13 @@ button,
   white-space: nowrap;
 }
 
-.equipment-item-icon.favorite-artwork,
-.equipment-icon.favorite-artwork {
+.equipment-item-icon.favorite-artwork {
   grid-column: 2;
   grid-row: 1 / span 3;
   align-self: center;
   justify-self: end;
   width: 4rem;
   height: 4rem;
-}
-
-.equipment-item-icon.favorite-artwork {
   object-fit: contain;
 }
 

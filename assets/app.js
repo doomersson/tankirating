@@ -580,7 +580,8 @@
     if (!itemName) return "";
     if (category === "drones") {
       if (modifierClass !== "favorite-artwork") return "";
-      return '<span class="equipment-icon equipment-icon--drones favorite-artwork" aria-hidden="true"></span>';
+      var droneDimension = size || 20;
+      return '<img class="equipment-item-icon favorite-artwork" src="./assets/icons/drone.svg" alt="" width="' + droneDimension + '" height="' + droneDimension + '">';
     }
     var fallback = { hulls: "hull", turrets: "turret", modes: "mode" }[category];
     if (!fallback) return "";

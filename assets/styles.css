@@ -376,7 +376,13 @@ button,
   position: relative;
   z-index: var(--z-base);
 }
+.rank-token img {
+  background: var(--color-paper-2);
+}
 
+.rank-badge img {
+  background: var(--color-paper-3);
+}
 .context-line,
 .metric-label {
   font-family: var(--font-body);

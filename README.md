@@ -1,5 +1,5 @@
 # Tanki Tracker — free GitHub Pages edition
-
+[https://doomersson.github.io/tankirating/](https://doomersson.github.io/tankirating/)
 A static community statistics tracker for up to 100 Tanki Online accounts. GitHub Actions collects public profiles every hour, stores compact history in the repository, and publishes the interface with GitHub Pages. There is no paid server or database.
 
 The collector reads Tanki’s public profile response from:

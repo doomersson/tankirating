@@ -721,7 +721,7 @@ button,
 
 .activity-day {
   min-width: 0;
-  flex: 1 0 2.25rem;
+  flex: 1 0 1.25rem;
   display: grid;
   grid-template-rows: 1fr auto;
   align-items: end;

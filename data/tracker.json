@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-12T00:29:31Z",
+  "generatedAt": "2026-08-12T01:05:37Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "akame": {
@@ -2935,27 +2935,27 @@
     },
     "ziam": {
       "current": {
-        "at": "2026-08-12T00:29:31Z",
+        "at": "2026-08-12T01:05:37Z",
         "name": "Ziam",
         "rank": 124,
-        "score": 20300393,
+        "score": 20302388,
         "scoreBase": 20200000,
         "scoreNext": 20400000,
-        "kills": 343858,
-        "deaths": 145603,
-        "crystals": 23494750,
+        "kills": 343913,
+        "deaths": 145615,
+        "crystals": 23500663,
         "golds": 1369,
-        "efficiency": 8967559,
-        "efficiencyPosition": 28384,
-        "totalTimeMs": 8368770003,
+        "efficiency": 8967695,
+        "efficiencyPosition": 28351,
+        "totalTimeMs": 8369550808,
         "gearScore": 9999,
         "premium": true,
         "equipment": {
           "hulls": [
             {
               "name": "Crusader",
-              "timeMs": 4841920174,
-              "score": 10585383
+              "timeMs": 4842700979,
+              "score": 10587378
             },
             {
               "name": "Viking",
@@ -3021,8 +3021,8 @@
             },
             {
               "name": "Vulcan",
-              "timeMs": 995370978,
-              "score": 2853858
+              "timeMs": 996151783,
+              "score": 2855853
             },
             {
               "name": "Thunder",
@@ -3113,8 +3113,8 @@
             },
             {
               "name": "Defender",
-              "timeMs": 1210500920,
-              "score": 2922378
+              "timeMs": 1211281725,
+              "score": 2924373
             },
             {
               "name": "Booster",
@@ -3140,8 +3140,8 @@
           "modes": [
             {
               "name": "Capture The Flag",
-              "timeMs": 2470014122,
-              "score": 4945899
+              "timeMs": 2470147158,
+              "score": 4946034
             },
             {
               "name": "Team Deathmatch",
@@ -3160,13 +3160,13 @@
             },
             {
               "name": "Rugby",
-              "timeMs": 707213933,
-              "score": 1396087
+              "timeMs": 707797059,
+              "score": 1397917
             },
             {
               "name": "Deathmatch",
-              "timeMs": 703335373,
-              "score": 2881473
+              "timeMs": 703400016,
+              "score": 2881503
             },
             {
               "name": "Siege",
@@ -3219,6 +3219,17 @@
           "e": 8967559,
           "r": 124,
           "t": 8368770003
+        },
+        {
+          "at": "2026-08-12T01:05:37Z",
+          "k": 343913,
+          "d": 145615,
+          "c": 23500663,
+          "s": 20302388,
+          "g": 1369,
+          "e": 8967695,
+          "r": 124,
+          "t": 8369550808
         }
       ]
     }
@@ -3238,5 +3249,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-12T00:29:31Z"
+  "lastAttemptAt": "2026-08-12T01:05:37Z"
 }

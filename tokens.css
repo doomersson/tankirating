@@ -11,6 +11,10 @@
   --color-ink-2: #d7e0e4;
   --color-accent: #55c9dd;
   --color-accent-soft: #1d3e46;
+  --color-heat-1: #214650;
+  --color-heat-2: #287080;
+  --color-heat-3: #35a0b3;
+  --color-heat-4: #55c9dd;
   --color-accent-ink: #0c1b1f;
   --color-focus: #82e6f2;
   --color-error: #ff8f88;
@@ -76,6 +80,10 @@
     --color-ink-2: oklch(89% 0.014 220);
     --color-accent: oklch(78% 0.13 210);
     --color-accent-soft: oklch(30% 0.055 210);
+    --color-heat-1: oklch(32% 0.055 210);
+    --color-heat-2: oklch(48% 0.09 210);
+    --color-heat-3: oklch(64% 0.115 210);
+    --color-heat-4: oklch(78% 0.13 210);
     --color-accent-ink: oklch(17% 0.03 210);
     --color-focus: oklch(86% 0.12 205);
     --color-error: oklch(76% 0.13 25);

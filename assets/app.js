@@ -12,6 +12,7 @@
   var shortNumber = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
   var dateTime = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" });
   var shortDate = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
+  var monthName = new Intl.DateTimeFormat(undefined, { month: "short" });
 
   var rankThresholds = [
     ["Recruit", 0], ["Private", 100], ["Gefreiter", 500], ["Corporal", 1500],
@@ -391,48 +392,74 @@
     var key = { score: "s", crystals: "c", kills: "k", time: "t" }[state.metric];
     var label = { score: "score", crystals: "crystals", kills: "kills", time: "hours played" }[state.metric];
     if (points.length < 2) {
-      renderChartEmpty("Tracking begins here", "A second changed snapshot is needed to draw the " + label + " trend.");
+      renderChartEmpty("Tracking begins here", "A second snapshot is needed to build the " + label + " activity calendar.");
       return;
     }
 
-    var base = positive(points[0][key]);
-    var values = points.map(function (point) { return Math.max(0, positive(point[key]) - base); });
-    var max = Math.max.apply(Math, values);
-    if (max === 0) {
-      renderChartEmpty("No change in this period", "The collector ran, but " + label + " stayed at the same value.");
-      return;
+    var end = startOfLocalDay(parseDate(points[points.length - 1].at));
+    var start = state.period === "all"
+      ? startOfLocalDay(parseDate(points[0].at))
+      : addLocalDays(end, 1 - Number(state.period));
+    var daily = {};
+    for (var i = 1; i < points.length; i += 1) {
+      var dayKey = localDateKey(points[i].at);
+      var dayDate = startOfLocalDay(parseDate(points[i].at));
+      if (dayDate < start || dayDate > end) continue;
+      daily[dayKey] = (daily[dayKey] || 0) + Math.max(0, positive(points[i][key]) - positive(points[i - 1][key]));
     }
 
-    var width = 900;
-    var height = 310;
-    var pad = { top: 18, right: 18, bottom: 38, left: 72 };
-    var plotW = width - pad.left - pad.right;
-    var plotH = height - pad.top - pad.bottom;
-    var coords = values.map(function (value, index) {
-      var x = pad.left + (points.length === 1 ? plotW / 2 : index / (points.length - 1) * plotW);
-      var y = pad.top + plotH - value / max * plotH;
-      return { x: x, y: y, value: value, at: points[index].at };
+    var days = [];
+    for (var cursor = new Date(start); cursor <= end; cursor = addLocalDays(cursor, 1)) {
+      var cursorKey = localDateKey(cursor);
+      days.push({ date: new Date(cursor), value: positive(daily[cursorKey]) });
+    }
+    var max = Math.max.apply(Math, days.map(function (day) { return day.value; }).concat([0]));
+    var total = days.reduce(function (sum, day) { return sum + day.value; }, 0);
+    var activeDays = days.filter(function (day) { return day.value > 0; }).length;
+    var gridStart = addLocalDays(start, -start.getDay());
+    var gridEnd = addLocalDays(end, 6 - end.getDay());
+    var gridDays = [];
+    for (cursor = new Date(gridStart); cursor <= gridEnd; cursor = addLocalDays(cursor, 1)) gridDays.push(new Date(cursor));
+    var weeks = Math.ceil(gridDays.length / 7);
+    var months = {};
+    gridDays.forEach(function (date, index) {
+      if (date < start || date > end) return;
+      var week = Math.floor(index / 7) + 1;
+      if (index === start.getDay() || date.getDate() <= 7) months[week] = monthName.format(date);
     });
-    var line = coords.map(function (coord) { return coord.x.toFixed(2) + "," + coord.y.toFixed(2); }).join(" ");
-    var area = pad.left + "," + (pad.top + plotH) + " " + line + " " + (pad.left + plotW) + "," + (pad.top + plotH);
-    var grid = [0, 0.5, 1].map(function (ratio) {
-      var y = pad.top + plotH - ratio * plotH;
-      var value = ratio * max;
-      return '<line class="chart-grid-line" x1="' + pad.left + '" y1="' + y + '" x2="' + (pad.left + plotW) + '" y2="' + y + '"></line>' +
-        '<text class="chart-axis-label" x="' + (pad.left - 10) + '" y="' + (y + 4) + '" text-anchor="end">' + escapeHtml(formatChartValue(value, state.metric)) + '</text>';
+    var monthMarkup = Object.keys(months).map(function (week) {
+      return '<span style="grid-column:' + week + '">' + escapeHtml(months[week]) + '</span>';
     }).join("");
-    var dotEvery = Math.max(1, Math.ceil(coords.length / 12));
-    var dots = coords.filter(function (_, index) { return index % dotEvery === 0 || index === coords.length - 1; }).map(function (coord) {
-      return '<circle class="chart-point" cx="' + coord.x + '" cy="' + coord.y + '" r="3"><title>' + escapeHtml(formatDateTime(coord.at) + " · +" + formatChartValue(coord.value, state.metric)) + '</title></circle>';
+    var cells = gridDays.map(function (date) {
+      if (date < start || date > end) return '<span class="heatmap-day is-outside" aria-hidden="true"></span>';
+      var value = positive(daily[localDateKey(date)]);
+      var level = value > 0 && max > 0 ? Math.max(1, Math.ceil(value / max * 4)) : 0;
+      var valueLabel = value > 0 ? "+" + formatChartValue(value, state.metric) : "No " + label + " gained";
+      var tooltip = shortDate.format(date) + " · " + valueLabel;
+      return '<span class="heatmap-day level-' + level + '" title="' + escapeAttr(tooltip) + '" aria-label="' + escapeAttr(tooltip) + '"></span>';
     }).join("");
-    var startLabel = escapeHtml(shortDate.format(parseDate(points[0].at)));
-    var endLabel = escapeHtml(shortDate.format(parseDate(points[points.length - 1].at)));
-    elements["trend-chart"].innerHTML = '<svg class="trend-svg" viewBox="0 0 ' + width + " " + height + '" aria-hidden="true" focusable="false">' +
-      grid + '<polygon class="chart-area" points="' + area + '"></polygon><polyline class="chart-line" points="' + line + '"></polyline>' + dots +
-      '<text class="chart-axis-label" x="' + pad.left + '" y="' + (height - 8) + '">' + startLabel + '</text>' +
-      '<text class="chart-axis-label" x="' + (pad.left + plotW) + '" y="' + (height - 8) + '" text-anchor="end">' + endLabel + '</text></svg>';
-    elements["trend-chart"].setAttribute("aria-label", label + " increased by " + formatChartValue(max, state.metric) + " across " + points.length + " snapshots.");
-    elements["trend-summary"].textContent = "+" + formatChartValue(max, state.metric) + " across " + points.length + " snapshots.";
+    elements["trend-chart"].innerHTML = '<div class="heatmap-scroll" tabindex="0" aria-label="Scrollable activity calendar"><div class="heatmap-calendar" style="--heatmap-weeks:' + weeks + '">' +
+      '<div class="heatmap-months" aria-hidden="true">' + monthMarkup + '</div>' +
+      '<div class="heatmap-weekdays" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div>' +
+      '<div class="heatmap-grid">' + cells + '</div></div></div>' +
+      '<div class="heatmap-footer"><span>' + escapeHtml(shortDate.format(start) + " — " + shortDate.format(end)) + '</span><span class="heatmap-legend" aria-label="Activity intensity from less to more"><span>Less</span><i class="level-0"></i><i class="level-1"></i><i class="level-2"></i><i class="level-3"></i><i class="level-4"></i><span>More</span></span></div>';
+    var scroller = elements["trend-chart"].querySelector(".heatmap-scroll");
+    scroller.scrollLeft = scroller.scrollWidth;
+    var summary = total > 0
+      ? "+" + formatChartValue(total, state.metric) + " across " + activeDays + " active " + plural(activeDays, "day") + "."
+      : "No " + label + " gained in this period.";
+    elements["trend-chart"].setAttribute("aria-label", summary + " Daily activity from " + shortDate.format(start) + " to " + shortDate.format(end) + ".");
+    elements["trend-summary"].textContent = summary;
+  }
+
+  function startOfLocalDay(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  function addLocalDays(date, amount) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + amount);
+    return result;
   }
 
   function renderChartEmpty(title, body) {

@@ -1,6 +1,6 @@
 # Tanki Tracker — free GitHub Pages edition
 
-A static community statistics tracker for up to 100 Tanki Online accounts. GitHub Actions collects public profiles every three hours, stores compact history in the repository, and publishes the interface with GitHub Pages. There is no paid server or database.
+A static community statistics tracker for up to 100 Tanki Online accounts. GitHub Actions collects public profiles every hour, stores compact history in the repository, and publishes the interface with GitHub Pages. There is no paid server or database.
 
 The collector reads Tanki’s public profile response from:
 
@@ -37,7 +37,7 @@ Profile equipment names use matching lowercase SVG filenames from `assets/icons/
 5. Open the repository’s **Actions** tab, choose **Track players**, and select **Run workflow** once.
 6. The site will publish at `https://doomersson.github.io/tankirating/`. Run **Deploy GitHub Pages** manually once only if the first deployment did not start automatically.
 
-The scheduled collector runs at minute 17 every three hours. GitHub can start scheduled workflows a little late during busy periods.
+The scheduled collector runs at minute 17 every hour. GitHub can start scheduled workflows a little late during busy periods.
 
 ## Public player requests and refreshes
 
@@ -97,13 +97,13 @@ Open **Data tools → Export tracker JSON** on the site and keep the downloaded 
 
 ## Storage behavior
 
-To keep the repository small, the collector stores one compact point when cumulative statistics change, one heartbeat after roughly 23 unchanged hours, normalized equipment totals, and two years of history by default. For up to 100 accounts, this is much smaller than saving full API responses every three hours.
+To keep the repository small, the collector stores one compact point when cumulative statistics change, one heartbeat after roughly 23 unchanged hours, normalized equipment totals, and two years of history by default. For up to 100 accounts, this is much smaller than saving full API responses every hour.
 
 ## Limitations
 
 - GitHub scheduled workflows are not real-time and occasionally start late.
 - A requested refresh normally takes a few minutes for collection and deployment; it is not an immediate browser-side API call.
-- Playtime inside a three-hour interval is known, but the exact minute inside that interval is not. Activity is attributed to the collection date.
+- Playtime inside a one-hour interval is known, but the exact minute inside that interval is not. Activity is attributed to the collection date.
 - Historical charts begin when this tracker starts. Tanki’s endpoint supplies cumulative totals, not older snapshots.
 - If the Tanki profile response changes, `scripts/track.py` may need an update.
 - This is a community project and is not affiliated with Tanki Online.

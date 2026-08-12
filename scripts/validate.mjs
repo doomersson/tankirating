@@ -53,7 +53,7 @@ const leaderboardOrder = ["efficiency", "score", "crystals", "kills13", "kills",
 check(leaderboardOrder.every((position, index) => position >= 0 && (index === 0 || position > leaderboardOrder[index - 1])), "leaderboard columns are out of the requested order");
 check(app.includes('"./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg"'), "profile equipment names are not mapped to their matching SVG filenames");
 check(app.includes("issues/new?title=") && requestWorkflow.includes("issues:"), "GitHub player request flow is missing");
-check(trackWorkflow.includes('cron: "17 */3 * * *"'), "collector must run every three hours");
+check(trackWorkflow.includes('cron: "17 * * * *"'), "collector must run every hour");
 check(trackWorkflow.includes("actions/checkout@v5") && trackWorkflow.includes("actions/setup-python@v6"), "collector actions must use Node 24-compatible releases");
 check(rankGuide.includes("31.png") && rankGuide.includes("Legend"), "rank icon upload guide is missing");
 check(tracker.schemaVersion === 1 && tracker.players && typeof tracker.players === "object", "tracker.json schema is invalid");

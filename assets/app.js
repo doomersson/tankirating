@@ -448,8 +448,9 @@
     ];
     elements["equipment-summary"].innerHTML = categories.map(function (entry) {
       var favorite = favoriteItem(equipment[entry[0]]);
-      return '<div class="favorite-item"><span class="favorite-label">' + entry[1] + '</span><strong class="favorite-name" title="' + escapeAttr(favorite ? favorite.name : "No usage") + '">' +
-        equipmentIconMarkup(entry[0], favorite && favorite.name) + '<span>' + escapeHtml(favorite ? favorite.name : "—") + '</span></strong><span>' + (favorite ? escapeHtml(formatDurationDisplay(favorite.timeMs)) : "No data") + '</span></div>';
+      var artwork = equipmentIconMarkup(entry[0], favorite && favorite.name, "favorite-artwork", 76);
+      return '<div class="favorite-item' + (artwork ? ' has-artwork' : '') + '"><span class="favorite-label">' + entry[1] + '</span><strong class="favorite-name" title="' + escapeAttr(favorite ? favorite.name : "No usage") + '">' +
+        '<span>' + escapeHtml(favorite ? favorite.name : "—") + '</span></strong><span class="favorite-time">' + (favorite ? escapeHtml(formatDurationDisplay(favorite.timeMs)) : "No data") + '</span>' + artwork + '</div>';
     }).join("");
   }
 
@@ -469,12 +470,14 @@
     }).join("");
   }
 
-  function equipmentIconMarkup(category, itemName) {
+  function equipmentIconMarkup(category, itemName, modifierClass, size) {
     if (category === "drones" || !itemName) return "";
     var fallback = { hulls: "hull", turrets: "turret", modes: "mode" }[category];
     if (!fallback) return "";
     var source = "./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg";
-    return '<img class="equipment-item-icon" src="' + escapeAttr(source) + '" data-fallback-icon="./assets/icons/' + fallback + '.svg" alt="" width="20" height="20">';
+    var className = "equipment-item-icon" + (modifierClass ? " " + modifierClass : "");
+    var dimension = size || 20;
+    return '<img class="' + className + '" src="' + escapeAttr(source) + '" data-fallback-icon="./assets/icons/' + fallback + '.svg" alt="" width="' + dimension + '" height="' + dimension + '">';
   }
 
   function equipmentIconSlug(name) {

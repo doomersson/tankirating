@@ -45,7 +45,6 @@
   --radius-md: 0.5rem;
   --radius-pill: 999rem;
   --rule-thin: 1px;
-  --site-header-height: 4.25rem;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
@@ -58,7 +57,6 @@
   --z-raised: 10;
   --z-dropdown: 100;
   --z-sticky: 200;
-  --z-sticky-nav: 300;
   --z-modal: 400;
   --z-toast: 500;
 }

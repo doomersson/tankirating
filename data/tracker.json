@@ -1,8 +1,275 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-12T19:29:42Z",
+  "generatedAt": "2026-08-12T20:05:37Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
+    "abyss": {
+      "current": {
+        "at": "2026-08-12T20:05:37Z",
+        "name": "Abyss",
+        "rank": 285,
+        "score": 52502442,
+        "scoreBase": 52400000,
+        "scoreNext": 52600000,
+        "kills": 606979,
+        "deaths": 187800,
+        "crystals": 67504361,
+        "golds": 3888,
+        "efficiency": 9105230,
+        "efficiencyPosition": 6716,
+        "totalTimeMs": 15359350044,
+        "gearScore": 9999,
+        "premium": true,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Crusader",
+              "timeMs": 4965484097,
+              "score": 18379697
+            },
+            {
+              "name": "Ares",
+              "timeMs": 3340958313,
+              "score": 9891794
+            },
+            {
+              "name": "Viking",
+              "timeMs": 2783236942,
+              "score": 11017036
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 912305019,
+              "score": 2336163
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 821183750,
+              "score": 2325603
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 800774050,
+              "score": 2355406
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 471433929,
+              "score": 1321451
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 382843871,
+              "score": 890362
+            },
+            {
+              "name": "Titan",
+              "timeMs": 344452572,
+              "score": 1407754
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 286962431,
+              "score": 1071351
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 249715070,
+              "score": 371892
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Shaft",
+              "timeMs": 4618710110,
+              "score": 16527751
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 1421056991,
+              "score": 4995495
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 1270801444,
+              "score": 4315101
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 1071558311,
+              "score": 3230240
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 1018839694,
+              "score": 3648715
+            },
+            {
+              "name": "Twins",
+              "timeMs": 848048848,
+              "score": 1819351
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 769506907,
+              "score": 3065991
+            },
+            {
+              "name": "Striker",
+              "timeMs": 698100405,
+              "score": 1990020
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 676268226,
+              "score": 2209335
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 620105430,
+              "score": 1836424
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 499119185,
+              "score": 1839707
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 467536305,
+              "score": 1722493
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 413923321,
+              "score": 1314755
+            },
+            {
+              "name": "Tsunami",
+              "timeMs": 353066313,
+              "score": 760223
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 279844063,
+              "score": 940652
+            },
+            {
+              "name": "Isida",
+              "timeMs": 189815836,
+              "score": 497731
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 133719628,
+              "score": 584301
+            }
+          ],
+          "drones": [
+            {
+              "name": "Hyperion",
+              "timeMs": 4867826102,
+              "score": 17433254
+            },
+            {
+              "name": "Crisis",
+              "timeMs": 2038755798,
+              "score": 7270838
+            },
+            {
+              "name": "Booster",
+              "timeMs": 1811435897,
+              "score": 5512192
+            },
+            {
+              "name": "Defender",
+              "timeMs": 1711667094,
+              "score": 5346830
+            },
+            {
+              "name": "Trickster",
+              "timeMs": 908505980,
+              "score": 2673979
+            },
+            {
+              "name": "Mechanic",
+              "timeMs": 603818556,
+              "score": 1205729
+            },
+            {
+              "name": "Saboteur",
+              "timeMs": 111229164,
+              "score": 448103
+            },
+            {
+              "name": "Brutus",
+              "timeMs": 3283118,
+              "score": 5385
+            }
+          ],
+          "modes": [
+            {
+              "name": "Capture The Flag",
+              "timeMs": 2983591718,
+              "score": 9941697
+            },
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 2747973783,
+              "score": 7496420
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 2195479732,
+              "score": 8091780
+            },
+            {
+              "name": "Assault",
+              "timeMs": 2022232995,
+              "score": 7638597
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 1542614832,
+              "score": 5533399
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 999830937,
+              "score": 3900920
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 857535446,
+              "score": 2588122
+            },
+            {
+              "name": "Siege",
+              "timeMs": 843889043,
+              "score": 2487781
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 837800992,
+              "score": 2482563
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-12T20:05:37Z",
+          "k": 606979,
+          "d": 187800,
+          "c": 67504361,
+          "s": 52502442,
+          "g": 3888,
+          "e": 9105230,
+          "r": 285,
+          "t": 15359350044
+        }
+      ]
+    },
     "akame": {
       "current": {
         "at": "2026-08-12T19:29:42Z",
@@ -4392,6 +4659,7 @@
   },
   "errors": {},
   "configuredPlayers": [
+    "abyss",
     "akame",
     "alone",
     "arkoanl",
@@ -4408,5 +4676,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-12T19:29:42Z"
+  "lastAttemptAt": "2026-08-12T20:05:37Z"
 }

@@ -479,6 +479,15 @@ button,
   scrollbar-width: thin;
 }
 
+.segmented-control {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.segmented-control::-webkit-scrollbar {
+  display: none;
+}
+
 .segmented-control button,
 .equipment-tabs button {
   min-width: max-content;
@@ -607,7 +616,7 @@ button,
 }
 
 .favorite-item.has-artwork {
-  grid-template-columns: minmax(0, 1fr) clamp(3rem, 8vw, 4.75rem);
+  grid-template-columns: minmax(0, 1fr) 4rem;
   column-gap: var(--space-sm);
 }
 
@@ -638,19 +647,18 @@ button,
   white-space: nowrap;
 }
 
-.favorite-artwork {
+.equipment-item-icon.favorite-artwork {
   grid-column: 2;
   grid-row: 1 / span 3;
   align-self: center;
   justify-self: end;
-  width: 100%;
-  height: 100%;
-  max-height: 4.75rem;
+  width: 4rem;
+  height: 4rem;
   object-fit: contain;
 }
 
 .equipment-icon,
-.equipment-tab-svg,
+.equipment-tab-icon,
 .equipment-item-icon {
   width: 1.15rem;
   height: 1.15rem;
@@ -687,12 +695,8 @@ button,
   mask-image: url("./icons/mode.svg");
 }
 
-.equipment-tab-svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.65;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
+.equipment-tab-icon {
+  object-fit: contain;
 }
 
 .favorite-item span {

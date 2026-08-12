@@ -37,6 +37,7 @@
     compareQuery: "",
     searchIndex: 0,
     leaderboardSort: "efficiency",
+    leaderboardDirection: "desc",
     leaderboardPeriod: 1,
     timeUnit: "exact"
   };
@@ -380,7 +381,7 @@
     ];
     elements["equipment-summary"].innerHTML = categories.map(function (entry) {
       var favorite = favoriteItem(equipment[entry[0]]);
-      var artwork = equipmentIconMarkup(entry[0], favorite && favorite.name, "favorite-artwork", 76);
+      var artwork = equipmentIconMarkup(entry[0], favorite && favorite.name, "favorite-artwork", 64);
       return '<div class="favorite-item' + (artwork ? ' has-artwork' : '') + '"><span class="favorite-label">' + entry[1] + '</span><strong class="favorite-name" title="' + escapeAttr(favorite ? favorite.name : "No usage") + '">' +
         '<span>' + escapeHtml(favorite ? favorite.name : "—") + '</span></strong><span class="favorite-time">' + (favorite ? escapeHtml(formatDurationDisplay(favorite.timeMs)) : "No data") + '</span>' + artwork + '</div>';
     }).join("");
@@ -403,7 +404,11 @@
   }
 
   function equipmentIconMarkup(category, itemName, modifierClass, size) {
-    if (category === "drones" || !itemName) return "";
+    if (!itemName) return "";
+    if (category === "drones") {
+      if (modifierClass !== "favorite-artwork") return "";
+      return '<img class="equipment-item-icon favorite-artwork" src="./assets/icons/drone.svg" alt="" width="64" height="64">';
+    }
     var fallback = { hulls: "hull", turrets: "turret", modes: "mode" }[category];
     if (!fallback) return "";
     var source = "./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg";
@@ -466,6 +471,7 @@
   function renderLeaderboard() {
     if (!state.data) return;
     var sort = state.leaderboardSort;
+    var direction = state.leaderboardDirection;
     var players = getPlayerIds().map(function (id) {
       var player = state.data.players[id];
       return { id: id, player: player, metrics: leaderboardMetrics(player) };
@@ -473,20 +479,25 @@
     players.sort(function (a, b) {
       var aValue = sortValue(a.metrics, sort);
       var bValue = sortValue(b.metrics, sort);
+      if (aValue === null && bValue === null) return a.player.current.name.localeCompare(b.player.current.name);
+      if (aValue === null) return 1;
+      if (bValue === null) return -1;
       if (aValue === bValue) return a.player.current.name.localeCompare(b.player.current.name);
-      return bValue > aValue ? 1 : -1;
+      return direction === "asc" ? (aValue > bValue ? 1 : -1) : (bValue > aValue ? 1 : -1);
     });
     var columns = leaderboardColumns();
     var allTime = state.leaderboardPeriod === "all";
     var periodLabel = leaderboardPeriodLabel();
     elements["leaderboard-count"].textContent = formatInteger(players.length);
     elements["leaderboard-sort-strip"].innerHTML = columns.map(function (column) {
-      return '<button type="button" data-sort="' + column.key + '" class="' + (sort === column.key ? "is-active" : "") + '" aria-pressed="' + (sort === column.key) + '">' + escapeHtml(column.shortLabel || column.label) + '</button>';
+      var active = sort === column.key;
+      var sortLabel = active ? (direction === "desc" ? "descending" : "ascending") : "not sorted";
+      return '<button type="button" data-sort="' + column.key + '" class="' + (active ? "is-active" : "") + '" aria-pressed="' + active + '" aria-label="' + escapeAttr(column.label + ", " + sortLabel) + '">' + escapeHtml(column.shortLabel || column.label) + (active ? '<span aria-hidden="true">' + (direction === "desc" ? "↓" : "↑") + '</span>' : "") + '</button>';
     }).join("");
 
     var head = columns.map(function (column) {
       var active = sort === column.key;
-      return '<th scope="col" aria-sort="' + (active ? "descending" : "none") + '"><button class="leaderboard-sort-button' + (active ? " is-active" : "") + '" type="button" data-sort="' + column.key + '">' + escapeHtml(column.label) + (active ? '<span aria-hidden="true">↓</span>' : "") + '</button></th>';
+      return '<th scope="col" aria-sort="' + (active ? (direction === "desc" ? "descending" : "ascending") : "none") + '"><button class="leaderboard-sort-button' + (active ? " is-active" : "") + '" type="button" data-sort="' + column.key + '">' + escapeHtml(column.label) + (active ? '<span aria-hidden="true">' + (direction === "desc" ? "↓" : "↑") + '</span>' : "") + '</button></th>';
     }).join("");
     var rows = players.map(function (entry, index) {
       var current = entry.player.current;
@@ -504,7 +515,7 @@
         '<td data-label="Golds">' + escapeHtml(formatLeaderboardInteger(metrics.golds, allTime)) + '</td>' +
         '<td data-label="Hours Played"' + (Number.isFinite(metrics.time) ? ' title="' + escapeAttr(formatExactDuration(metrics.time)) + '"' : "") + '>' + escapeHtml(formatHoursPlayed(metrics.time)) + '</td></tr>';
     }).join("");
-    elements["leaderboard-list"].innerHTML = '<div class="leaderboard-table-wrap"><table><caption class="sr-only">Tracked player statistics for ' + escapeHtml(periodLabel) + ', sorted by ' + escapeHtml(columns.find(function (column) { return column.key === sort; }).label) + ' from highest to lowest.</caption><thead><tr><th scope="col">#</th><th scope="col">Player</th>' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+    elements["leaderboard-list"].innerHTML = '<div class="leaderboard-table-wrap"><table><caption class="sr-only">Tracked player statistics for ' + escapeHtml(periodLabel) + ', sorted by ' + escapeHtml(columns.find(function (column) { return column.key === sort; }).label) + (direction === "desc" ? " from highest to lowest." : " from lowest to highest.") + '</caption><thead><tr><th scope="col">#</th><th scope="col">Player</th>' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
 
   function leaderboardColumns() {
@@ -560,13 +571,17 @@
 
   function setLeaderboardSort(sort) {
     if (!leaderboardColumns().some(function (column) { return column.key === sort; })) return;
-    state.leaderboardSort = sort;
+    if (state.leaderboardSort === sort) state.leaderboardDirection = state.leaderboardDirection === "desc" ? "asc" : "desc";
+    else {
+      state.leaderboardSort = sort;
+      state.leaderboardDirection = "desc";
+    }
     renderLeaderboard();
   }
 
   function sortValue(metrics, sort) {
     var value = metrics[sort];
-    return Number.isNaN(value) ? -Infinity : value;
+    return Number.isNaN(value) ? null : value;
   }
 
   function renderComparePicker() {

@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const read = (path) => readFile(resolve(root, path), "utf8");
-const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow, rankGuide] = await Promise.all([
+const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow, rankGuide, droneIcon] = await Promise.all([
   read("index.html"),
   read("assets/styles.css"),
   read("tokens.css"),
@@ -14,6 +14,7 @@ const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow,
   read(".github/workflows/track.yml"),
   read(".github/workflows/request-player.yml"),
   read("assets/ranks/README.md"),
+  read("assets/icons/drone.svg"),
 ]);
 
 const failures = [];
@@ -47,11 +48,15 @@ check(app.includes("Export tracker JSON") || html.includes("Export tracker JSON"
 check(app.includes('["Legend", 1600000]') && app.includes("legendProgress / 200000"), "unlimited Legend rank progression is missing");
 check(app.includes("Efficiency rank #") && app.includes("formatDayMonth"), "efficiency position or date-labelled activity is missing");
 check(app.includes("leaderboardPeriod: 1") && app.includes("calculatePeriodFor(player, state.leaderboardPeriod)"), "period-specific leaderboard metrics are missing");
+check(app.includes('leaderboardDirection: "desc"') && app.includes('state.leaderboardDirection === "desc" ? "asc" : "desc"'), "leaderboard sort direction toggle is missing");
 check(app.includes('{ key: "time", label: "Hours Played"') && !app.includes('{ key: "gearScore", label: "Gear"'), "leaderboard Hours Played label or removed Gear column is incorrect");
 const leaderboardStart = app.indexOf("function leaderboardColumns");
 const leaderboardOrder = ["efficiency", "score", "crystals", "kills13", "kills", "deaths", "kd", "golds", "time"].map((key) => app.indexOf(`{ key: "${key}"`, leaderboardStart));
 check(leaderboardOrder.every((position, index) => position >= 0 && (index === 0 || position > leaderboardOrder[index - 1])), "leaderboard columns are out of the requested order");
 check(app.includes('"./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg"'), "profile equipment names are not mapped to their matching SVG filenames");
+check(html.includes('src="./assets/icons/drone.svg"') && app.includes('src="./assets/icons/drone.svg"') && droneIcon.includes('viewBox="0 0 80 80"'), "drone summary or tab icon is missing");
+check(css.includes("scrollbar-width: none") && css.includes(".segmented-control::-webkit-scrollbar"), "segmented control scrollbar is not hidden");
+check(css.includes(".equipment-item-icon.favorite-artwork") && css.includes("width: 4rem;") && css.includes("height: 4rem;"), "favorite equipment artwork must render at 4rem");
 check(app.includes("issues/new?title=") && requestWorkflow.includes("issues:"), "GitHub player request flow is missing");
 check(trackWorkflow.includes('cron: "17 * * * *"'), "collector must run every hour");
 check(trackWorkflow.includes("actions/checkout@v5") && trackWorkflow.includes("actions/setup-python@v6"), "collector actions must use Node 24-compatible releases");

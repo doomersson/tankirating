@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-12T00:16:03Z",
+  "generatedAt": "2026-08-12T00:29:31Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "akame": {
@@ -2935,27 +2935,27 @@
     },
     "ziam": {
       "current": {
-        "at": "2026-08-12T00:13:05Z",
+        "at": "2026-08-12T00:29:31Z",
         "name": "Ziam",
         "rank": 124,
-        "score": 20299118,
+        "score": 20300393,
         "scoreBase": 20200000,
         "scoreNext": 20400000,
-        "kills": 343826,
-        "deaths": 145592,
-        "crystals": 23492727,
+        "kills": 343858,
+        "deaths": 145603,
+        "crystals": 23494750,
         "golds": 1369,
-        "efficiency": 8967537,
-        "efficiencyPosition": 28389,
-        "totalTimeMs": 8368121929,
+        "efficiency": 8967559,
+        "efficiencyPosition": 28384,
+        "totalTimeMs": 8368770003,
         "gearScore": 9999,
         "premium": true,
         "equipment": {
           "hulls": [
             {
               "name": "Crusader",
-              "timeMs": 4841272100,
-              "score": 10584108
+              "timeMs": 4841920174,
+              "score": 10585383
             },
             {
               "name": "Viking",
@@ -3021,8 +3021,8 @@
             },
             {
               "name": "Vulcan",
-              "timeMs": 994722904,
-              "score": 2852583
+              "timeMs": 995370978,
+              "score": 2853858
             },
             {
               "name": "Thunder",
@@ -3113,8 +3113,8 @@
             },
             {
               "name": "Defender",
-              "timeMs": 1209852846,
-              "score": 2921103
+              "timeMs": 1210500920,
+              "score": 2922378
             },
             {
               "name": "Booster",
@@ -3140,7 +3140,7 @@
           "modes": [
             {
               "name": "Capture The Flag",
-              "timeMs": 2470013764,
+              "timeMs": 2470014122,
               "score": 4945899
             },
             {
@@ -3150,13 +3150,13 @@
             },
             {
               "name": "Juggernaut",
-              "timeMs": 823030319,
-              "score": 1729404
+              "timeMs": 823095750,
+              "score": 1729464
             },
             {
               "name": "Control Points",
-              "timeMs": 774738487,
-              "score": 1881003
+              "timeMs": 775320772,
+              "score": 1882218
             },
             {
               "name": "Rugby",
@@ -3208,6 +3208,17 @@
           "e": 8967537,
           "r": 124,
           "t": 8368121929
+        },
+        {
+          "at": "2026-08-12T00:29:31Z",
+          "k": 343858,
+          "d": 145603,
+          "c": 23494750,
+          "s": 20300393,
+          "g": 1369,
+          "e": 8967559,
+          "r": 124,
+          "t": 8368770003
         }
       ]
     }
@@ -3227,5 +3238,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-12T00:16:03Z"
+  "lastAttemptAt": "2026-08-12T00:29:31Z"
 }

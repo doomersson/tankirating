@@ -522,32 +522,38 @@
       elements["equipment-list"].innerHTML = '<p class="chart-empty">No usage was reported for this category.</p>';
       return;
     }
-    var slices = [];
+    var chartSlices = [];
     var othersTime = 0;
     items.forEach(function (item) {
-      if (positive(item.timeMs) / total >= 0.1) slices.push({ name: item.name, timeMs: positive(item.timeMs), others: false });
+      if (positive(item.timeMs) / total >= 0.05) chartSlices.push({ name: item.name, timeMs: positive(item.timeMs), others: false });
       else othersTime += positive(item.timeMs);
     });
-    if (othersTime > 0) slices.push({ name: "Others", timeMs: othersTime, others: true });
+    if (othersTime > 0) chartSlices.push({ name: "Others", timeMs: othersTime, others: true });
 
     var cursor = 0;
-    var stops = slices.map(function (slice, index) {
+    var chartColors = {};
+    var stops = chartSlices.map(function (slice, index) {
       var start = cursor;
       cursor += slice.timeMs / total * 100;
       slice.percent = slice.timeMs / total * 100;
       slice.color = slice.others ? "var(--color-data-other)" : PIE_COLORS[index % PIE_COLORS.length];
+      if (!slice.others) chartColors[slice.name] = slice.color;
       return slice.color + " " + start.toFixed(4) + "% " + cursor.toFixed(4) + "%";
     });
     var categoryLabel = equipmentCategoryLabel(state.equipment);
-    var description = slices.map(function (slice) { return slice.name + " " + formatRate(slice.percent) + "%"; }).join(", ");
+    var description = chartSlices.map(function (slice) { return slice.name + " " + formatRate(slice.percent) + "%"; }).join(", ");
     var animationKey = state.currentPlayerId + ":" + state.equipment;
-    var legend = slices.map(function (slice) {
-      var icon = slice.others ? "" : equipmentIconMarkup(state.equipment, slice.name);
-      var title = slice.name + " · " + formatExactDuration(slice.timeMs) + " · " + formatRate(slice.percent) + "%";
+    var legend = items.map(function (item) {
+      var percent = positive(item.timeMs) / total * 100;
+      var grouped = percent < 5;
+      var color = grouped ? "var(--color-data-other)" : chartColors[item.name];
+      var icon = equipmentIconMarkup(state.equipment, item.name);
+      var title = item.name + " · " + formatExactDuration(item.timeMs) + " · " + formatRate(percent) + "%" + (grouped ? " · grouped into Others on chart" : "");
       return '<div class="usage-legend-item" role="listitem" title="' + escapeAttr(title) + '">' +
-        '<span class="usage-swatch" style="--swatch-color:' + slice.color + '" aria-hidden="true"></span>' +
-        '<span class="usage-legend-identity">' + icon + '<span class="usage-name">' + escapeHtml(slice.name) + '</span></span>' +
-        '<span class="usage-legend-value"><strong>' + escapeHtml(formatRate(slice.percent)) + '%</strong><small>' + escapeHtml(formatDurationDisplay(slice.timeMs)) + '</small></span></div>';
+        '<span class="usage-swatch" style="--swatch-color:' + color + '" aria-hidden="true"></span>' +
+        '<span class="usage-legend-copy"><span class="usage-legend-identity">' + icon + '<span class="usage-name">' + escapeHtml(item.name) + '</span></span>' +
+        (grouped ? '<small class="usage-group-note">In Others slice</small>' : '') + '</span>' +
+        '<span class="usage-legend-value"><strong>' + escapeHtml(formatRate(percent)) + '%</strong><small>' + escapeHtml(formatDurationDisplay(item.timeMs)) + '</small></span></div>';
     }).join("");
     elements["equipment-list"].innerHTML = '<div class="usage-pie-layout"><div class="usage-pie-figure">' +
       '<div class="usage-pie" data-animation-key="' + escapeAttr(animationKey) + '" role="img" aria-label="' + escapeAttr(categoryLabel + " usage: " + description + ".") + '" style="--pie-background:conic-gradient(' + stops.join(",") + ')"></div>' +

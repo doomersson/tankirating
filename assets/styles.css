@@ -898,6 +898,17 @@ button,
   gap: var(--space-xs);
 }
 
+.usage-legend-copy {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-3xs);
+}
+
+.usage-group-note {
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+}
+
 .usage-name {
   min-width: 0;
   overflow: hidden;

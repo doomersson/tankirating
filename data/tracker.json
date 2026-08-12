@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-12T05:03:56Z",
+  "generatedAt": "2026-08-12T06:13:16Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "akame": {
@@ -572,19 +572,19 @@
     },
     "arkoanl": {
       "current": {
-        "at": "2026-08-12T05:03:56Z",
+        "at": "2026-08-12T06:13:16Z",
         "name": "ARKOANL",
         "rank": 27,
-        "score": 1027637,
+        "score": 1030317,
         "scoreBase": 1000000,
         "scoreNext": 1122000,
-        "kills": 15833,
-        "deaths": 6465,
-        "crystals": 651842,
+        "kills": 15911,
+        "deaths": 6478,
+        "crystals": 657408,
         "golds": 100,
-        "efficiency": 7436376,
-        "efficiencyPosition": 278822,
-        "totalTimeMs": 342808716,
+        "efficiency": 7441142,
+        "efficiencyPosition": 278114,
+        "totalTimeMs": 344300694,
         "gearScore": 7691,
         "premium": false,
         "equipment": {
@@ -621,8 +621,8 @@
             },
             {
               "name": "Crusader",
-              "timeMs": 13940894,
-              "score": 19285
+              "timeMs": 15432872,
+              "score": 21975
             },
             {
               "name": "Hopper",
@@ -653,8 +653,8 @@
             },
             {
               "name": "Striker",
-              "timeMs": 55167737,
-              "score": 104160
+              "timeMs": 56659715,
+              "score": 106850
             },
             {
               "name": "Railgun",
@@ -735,8 +735,8 @@
           "drones": [
             {
               "name": "Crisis",
-              "timeMs": 139354492,
-              "score": 340491
+              "timeMs": 140846470,
+              "score": 343181
             },
             {
               "name": "Brutus",
@@ -767,8 +767,8 @@
             },
             {
               "name": "Juggernaut",
-              "timeMs": 33142544,
-              "score": 92652
+              "timeMs": 33895874,
+              "score": 93972
             },
             {
               "name": "Control Points",
@@ -782,8 +782,8 @@
             },
             {
               "name": "Siege",
-              "timeMs": 4380798,
-              "score": 6274
+              "timeMs": 5119446,
+              "score": 7644
             },
             {
               "name": "Rugby",
@@ -826,6 +826,17 @@
           "e": 7436376,
           "r": 27,
           "t": 342808716
+        },
+        {
+          "at": "2026-08-12T06:13:16Z",
+          "k": 15911,
+          "d": 6478,
+          "c": 657408,
+          "s": 1030317,
+          "g": 100,
+          "e": 7441142,
+          "r": 27,
+          "t": 344300694
         }
       ]
     },
@@ -3282,5 +3293,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-12T05:03:56Z"
+  "lastAttemptAt": "2026-08-12T06:13:16Z"
 }

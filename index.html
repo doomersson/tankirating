@@ -99,7 +99,7 @@
               <button type="button" data-time-unit="hours">Hours</button>
               <button type="button" data-time-unit="days">Days</button>
             </div>
-            <span class="rating-reset-note" id="rating-reset-note">Days reset at 04:00 Europe/Stockholm.</span>
+            <span class="rating-reset-note" id="rating-reset-note">Dates follow your device timezone.</span>
           </div>
           <div class="profile-actions">
             <a class="quiet-button action-link" id="refresh-player" target="_blank" rel="noopener">Request refresh</a>
@@ -191,7 +191,7 @@
             <div class="panel-heading compact">
               <div>
                 <h2 id="activity-heading">Recent activity</h2>
-                <p>Hours played by Tanki rating day, resetting at 04:00 Stockholm time.</p>
+                <p id="activity-zone-note">Hours played by rating day in your device timezone.</p>
               </div>
             </div>
             <div id="activity-chart" class="activity-chart" role="img" aria-label="Recent daily play time"></div>
@@ -211,8 +211,8 @@
         <div class="leaderboard-controls">
           <p>Day and Week show gains between collected snapshots. Efficiency rank remains Tanki’s latest official position.</p>
           <div class="segmented-control" id="leaderboard-period-control" role="group" aria-label="Leaderboard statistics period">
-            <button type="button" data-leaderboard-period="1" class="is-active" aria-pressed="true">Day</button>
-            <button type="button" data-leaderboard-period="7" aria-pressed="false">Week</button>
+            <button type="button" data-leaderboard-period="1" aria-pressed="false">Day</button>
+            <button type="button" data-leaderboard-period="7" class="is-active" aria-pressed="true">Week</button>
             <button type="button" data-leaderboard-period="all" aria-pressed="false">All time</button>
           </div>
         </div>

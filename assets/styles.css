@@ -649,8 +649,18 @@ button,
 }
 
 .analysis-grid {
+  min-width: 0;
   display: grid;
   gap: var(--space-xl);
+}
+
+.analysis-grid > *,
+.usage-panel,
+.activity-panel,
+.equipment-summary,
+.usage-list {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .equipment-summary {
@@ -763,8 +773,16 @@ button,
 }
 
 .equipment-tabs {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: var(--space-sm) var(--space-md);
+  display: grid;
+  overflow: visible;
   border-block-end: var(--rule-thin) solid var(--color-rule);
+}
+
+.equipment-tabs button {
+  min-width: 0;
+  justify-content: flex-start;
 }
 
 .usage-list {
@@ -773,7 +791,7 @@ button,
 
 .usage-row {
   display: grid;
-  grid-template-columns: minmax(5rem, 9rem) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(4.5rem, 7rem) minmax(0, 1fr);
   align-items: center;
   gap: var(--space-sm);
   padding-block: var(--space-sm);
@@ -805,8 +823,9 @@ button,
 }
 
 .usage-meta {
-  min-width: 4.5rem;
-  text-align: end;
+  min-width: 0;
+  grid-column: 2;
+  text-align: start;
   font-family: var(--font-body);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
@@ -1758,6 +1777,25 @@ dialog {
     align-items: start;
   }
 
+  .equipment-tabs {
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .equipment-tabs button {
+    min-width: max-content;
+  }
+
+  .usage-row {
+    grid-template-columns: minmax(5rem, 9rem) minmax(0, 1fr) auto;
+  }
+
+  .usage-meta {
+    min-width: 4.5rem;
+    grid-column: auto;
+    text-align: end;
+  }
+
   .equipment-summary {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -1810,6 +1848,21 @@ dialog {
   }
 }
 
+@media (max-width: 30rem) {
+  .equipment-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .favorite-item,
+  .favorite-item:nth-child(2n) {
+    border-inline-end: 0;
+  }
+
+  .favorite-item:last-child {
+    border-block-end: 0;
+  }
+}
+
 @media (max-width: 26rem) {
   .brand > span:last-child,
   .search-copy,
@@ -1826,15 +1879,6 @@ dialog {
     width: 2.75rem;
     padding: 0;
     justify-content: center;
-  }
-
-  .usage-row {
-    grid-template-columns: minmax(4.5rem, 7rem) minmax(0, 1fr);
-  }
-
-  .usage-meta {
-    grid-column: 2;
-    text-align: start;
   }
 
 }

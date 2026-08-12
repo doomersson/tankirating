@@ -28,6 +28,7 @@ check(html.includes('src="./assets/app.js"'), "application script is not linked 
 check(html.includes('class="view is-active" id="leaderboard-view"'), "leaderboard must be the landing view");
 check(!html.includes('id="leaderboard-sort"'), "leaderboard must not use a metric select menu");
 check(html.includes('id="leaderboard-period-control"') && html.includes('data-leaderboard-period="1"') && html.includes('data-leaderboard-period="7"') && html.includes('data-leaderboard-period="all"'), "Day, Week, and All time leaderboard controls are missing");
+check(/data-leaderboard-period="7" class="is-active" aria-pressed="true"/.test(html) && app.includes('leaderboardPeriod: 7'), "Week must be the default leaderboard period");
 check(!/<section[^>]+id="leaderboard-view"[\s\S]*?data-time-unit=/i.test(html), "leaderboard still contains Exact, Hours, or Days display controls");
 check(html.includes('id="compare-search"') && html.includes('id="compare-picker-status"'), "compare search elements required by app.js are missing");
 check(html.includes('data-equipment="hulls"') && html.includes('data-equipment="turrets"'), "profile equipment tabs are missing");
@@ -50,7 +51,7 @@ check(app.includes("indexedDB"), "local import persistence is missing");
 check(app.includes("Export tracker JSON") || html.includes("Export tracker JSON"), "JSON export control is missing");
 check(app.includes('["Legend", 1600000]') && app.includes("legendProgress / 200000"), "unlimited Legend rank progression is missing");
 check(app.includes("Efficiency rank #") && app.includes("formatDayMonth"), "efficiency position or date-labelled activity is missing");
-check(app.includes("leaderboardPeriod: 1") && app.includes("calculatePeriodFor(player, state.leaderboardPeriod)"), "period-specific leaderboard metrics are missing");
+check(app.includes('leaderboardSort: "kills13"') && app.includes("calculatePeriodFor(player, state.leaderboardPeriod)"), "Kills / 13m must be the default leaderboard sort");
 check(app.includes('leaderboardDirection: "desc"') && app.includes('state.leaderboardDirection === "desc" ? "asc" : "desc"'), "leaderboard sort direction toggle is missing");
 check(app.includes('{ key: "time", label: "Hours Played"') && !app.includes('{ key: "gearScore", label: "Gear"'), "leaderboard Hours Played label or removed Gear column is incorrect");
 const leaderboardStart = app.indexOf("function leaderboardColumns");
@@ -61,7 +62,9 @@ check(html.includes('class="equipment-icon equipment-icon--drones"') && app.incl
 check(css.includes("scrollbar-width: none") && css.includes(".segmented-control::-webkit-scrollbar"), "segmented control scrollbar is not hidden");
 check(css.includes(".equipment-item-icon.favorite-artwork") && css.includes(".equipment-icon.favorite-artwork") && css.includes("width: 4rem;") && css.includes("height: 4rem;"), "favorite equipment artwork must render at 4rem");
 check(app.includes("hour < 24") && app.includes("Math.round(fill * 4) * 25") && css.includes(".activity-slice.fill-100::after"), "24-slice quarter-hour activity rendering is missing");
-check(app.includes('RATING_TIME_ZONE = "Europe/Stockholm"') && app.includes("stockholmBoundaryMs") && app.includes("mondayDateKey"), "Stockholm 04:00 daily or Monday weekly boundaries are missing");
+check(app.includes("resolvedOptions().timeZone") && app.includes("ratingBoundaryMs") && app.includes("mondayDateKey"), "viewer-timezone rating dates or Monday weekly boundaries are missing");
+check(html.includes('id="activity-zone-note"') && !html.includes("Stockholm time"), "Recent activity must identify the viewer timezone instead of hard-coding Stockholm");
+check(css.includes(".analysis-grid > *") && css.includes("grid-template-columns: repeat(2, minmax(0, 1fr))") && css.includes("@media (max-width: 30rem)"), "mobile profile containment or equipment reflow is missing");
 check(app.includes("rateHour(period.delta.kills") && app.includes("rateHour(period.delta.crystals") && app.includes("rateHour(period.delta.score"), "selected-period hourly rates are missing");
 check(trackWorkflow.includes('cron: "17 * * * *"'), "collector must run every hour");
 check(trackScript.includes('ZoneInfo("Europe/Stockholm")') && trackScript.includes("rating_boundary_due"), "collector must retain Stockholm rating-boundary snapshots");

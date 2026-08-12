@@ -4,7 +4,7 @@
   var MS_13_MINUTES = 13 * 60 * 1000;
   var DAY_MS = 24 * 60 * 60 * 1000;
   var HOUR_MS = 60 * 60 * 1000;
-  var RATING_TIME_ZONE = "Europe/Stockholm";
+  var RATING_TIME_ZONE = viewerTimeZone();
   var RATING_RESET_HOUR = 4;
   var DATA_URL = "./data/tracker.json";
   var REPOSITORY = "doomersson/tankirating";
@@ -15,7 +15,7 @@
   var dateTime = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" });
   var shortDate = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
   var ratingDate = new Intl.DateTimeFormat(undefined, { timeZone: RATING_TIME_ZONE, year: "numeric", month: "short", day: "numeric" });
-  var stockholmClock = new Intl.DateTimeFormat("en-GB", {
+  var ratingClock = new Intl.DateTimeFormat("en-GB", {
     timeZone: RATING_TIME_ZONE,
     year: "numeric",
     month: "2-digit",
@@ -51,9 +51,9 @@
     compare: [],
     compareQuery: "",
     searchIndex: 0,
-    leaderboardSort: "efficiency",
+    leaderboardSort: "kills13",
     leaderboardDirection: "desc",
-    leaderboardPeriod: 1,
+    leaderboardPeriod: 7,
     timeUnit: "exact"
   };
 
@@ -94,7 +94,7 @@
       "rating-date", "rating-reset-note", "range-kd-label", "stat-range-kd", "range-kd-detail",
       "stat-kills-hour", "kills-hour-detail", "stat-crystals-hour", "crystals-hour-detail",
       "stat-score-hour", "score-hour-detail",
-      "equipment-summary", "equipment-list", "activity-chart",
+      "equipment-summary", "equipment-list", "activity-chart", "activity-zone-note",
       "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list", "compare-search", "compare-picker-status",
       "compare-picker", "compare-empty",
       "comparison", "global-empty", "footer-sync", "search-trigger", "mobile-search", "search-dialog",
@@ -359,7 +359,7 @@
       startKey = shiftDateKey(currentKey, -29);
       endKey = shiftDateKey(currentKey, 1);
     }
-    return calculatePeriodBetween(player, stockholmBoundaryMs(startKey), stockholmBoundaryMs(endKey));
+    return calculatePeriodBetween(player, ratingBoundaryMs(startKey), ratingBoundaryMs(endKey));
   }
 
   function renderPeriodRates(period, periodName) {
@@ -1035,22 +1035,23 @@
     elements["rating-date"].value = state.selectedRatingDate;
     elements["rating-date"].disabled = points.length < 2;
     elements["rating-reset-note"].textContent = ratingRangeNote(player);
+    elements["activity-zone-note"].textContent = "Hours played by rating day in " + ratingZoneLabel() + ", resetting at 04:00.";
     syncProfilePeriodControls();
   }
 
   function ratingRangeNote(player) {
     var currentKey = state.selectedRatingDate || currentRatingDateKey(player);
     if (state.period === "day") {
-      return formatRatingDateKey(state.selectedRatingDate || currentKey) + " · 04:00–04:00 Stockholm · closest hourly snapshots";
+      return formatRatingDateKey(state.selectedRatingDate || currentKey) + " · 04:00–04:00 " + ratingZoneLabel() + " · closest hourly snapshots";
     }
     if (state.period === "week") {
       var monday = mondayDateKey(currentKey);
-      return "Mon " + formatRatingDateKey(monday) + " 04:00 – Mon " + formatRatingDateKey(shiftDateKey(monday, 7)) + " 04:00 Stockholm · closest hourly snapshots";
+      return "Mon " + formatRatingDateKey(monday) + " 04:00 – Mon " + formatRatingDateKey(shiftDateKey(monday, 7)) + " 04:00 " + ratingZoneLabel() + " · closest hourly snapshots";
     }
     if (state.period === 30) {
-      return formatRatingDateKey(shiftDateKey(currentKey, -29)) + " – " + formatRatingDateKey(currentKey) + " · 04:00 Stockholm · closest hourly snapshots";
+      return formatRatingDateKey(shiftDateKey(currentKey, -29)) + " – " + formatRatingDateKey(currentKey) + " · 04:00 " + ratingZoneLabel() + " · closest hourly snapshots";
     }
-    return "All collected snapshots · Stockholm reset boundaries · hourly resolution";
+    return "All collected snapshots · " + ratingZoneLabel() + " reset boundaries · hourly resolution";
   }
 
   function profilePeriodName() {
@@ -1215,7 +1216,7 @@
 
   function formatRatingDateKey(key) {
     if (!validDateKey(key)) return "—";
-    return ratingDate.format(new Date(stockholmBoundaryMs(key)));
+    return ratingDate.format(new Date(ratingBoundaryMs(key)));
   }
 
   function formatRelativeTime(value) {
@@ -1236,33 +1237,45 @@
     return Number.isNaN(date.getTime()) ? null : date;
   }
 
-  function stockholmParts(value) {
+  function viewerTimeZone() {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+    } catch (_) {
+      return "UTC";
+    }
+  }
+
+  function ratingZoneLabel() {
+    return RATING_TIME_ZONE === "UTC" ? "UTC" : RATING_TIME_ZONE.replace(/_/g, " ");
+  }
+
+  function ratingZoneParts(value) {
     var date = value instanceof Date ? value : parseDate(value);
     if (!date) return null;
     var result = {};
-    stockholmClock.formatToParts(date).forEach(function (part) {
+    ratingClock.formatToParts(date).forEach(function (part) {
       if (part.type !== "literal") result[part.type] = Number(part.value);
     });
     return result;
   }
 
-  function stockholmOffsetMs(date) {
-    var parts = stockholmParts(date);
+  function ratingZoneOffsetMs(date) {
+    var parts = ratingZoneParts(date);
     if (!parts) return 0;
     var zonedAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
     return zonedAsUtc - Math.floor(date.getTime() / 1000) * 1000;
   }
 
-  function stockholmBoundaryMs(key) {
+  function ratingBoundaryMs(key) {
     if (!validDateKey(key)) return NaN;
     var parts = key.split("-").map(Number);
     var wallClockUtc = Date.UTC(parts[0], parts[1] - 1, parts[2], RATING_RESET_HOUR);
-    var candidate = wallClockUtc - stockholmOffsetMs(new Date(wallClockUtc));
-    return wallClockUtc - stockholmOffsetMs(new Date(candidate));
+    var candidate = wallClockUtc - ratingZoneOffsetMs(new Date(wallClockUtc));
+    return wallClockUtc - ratingZoneOffsetMs(new Date(candidate));
   }
 
   function ratingDateKeyForInstant(value) {
-    var parts = stockholmParts(value);
+    var parts = ratingZoneParts(value);
     if (!parts) return "unknown";
     var key = parts.year + "-" + String(parts.month).padStart(2, "0") + "-" + String(parts.day).padStart(2, "0");
     return parts.hour < RATING_RESET_HOUR ? shiftDateKey(key, -1) : key;

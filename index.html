@@ -49,12 +49,6 @@
     </header>
 
     <main id="main" class="page-shell" tabindex="-1">
-      <div class="data-notice" id="data-notice" role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span id="data-notice-text">Loading tracker data…</span>
-        <button class="quiet-button is-hidden" id="use-site-data" type="button">Use site data</button>
-      </div>
-
       <section class="view" id="profile-view" data-view-panel="profile" aria-labelledby="profile-title" hidden>
         <div class="profile-head">
           <div class="identity-block">
@@ -94,7 +88,6 @@
             <div class="panel-heading compact">
               <div>
                 <h2 id="loadout-heading">Most-used loadout</h2>
-                <p>Favorite item in each category. Tanki reports category totals, not confirmed battle combinations.</p>
               </div>
             </div>
             <div id="equipment-summary" class="equipment-summary"></div>
@@ -104,37 +97,31 @@
             <article>
               <span class="metric-label">Hours played</span>
               <strong id="overview-time">—</strong>
-              <span>Lifetime</span>
             </article>
             <article>
               <span class="metric-label">Kills</span>
               <strong id="overview-kills">—</strong>
-              <span>Lifetime</span>
             </article>
             <article>
               <span class="metric-label">Deaths</span>
               <strong id="overview-deaths">—</strong>
-              <span>Lifetime</span>
             </article>
             <article>
               <span class="metric-label">K/D</span>
               <strong id="overview-kd">—</strong>
-              <span>Lifetime</span>
             </article>
             <article>
               <span class="metric-label">Score</span>
               <strong id="overview-score">—</strong>
-              <span>Lifetime</span>
             </article>
             <article>
               <span class="metric-label">Crystals</span>
               <strong id="overview-crystals">—</strong>
-              <span>Lifetime</span>
             </article>
           </section>
 
           <div class="analysis-grid">
-            <section class="usage-panel" aria-labelledby="equipment-heading">
+            <section class="usage-panel equipment-share-panel" aria-labelledby="equipment-heading">
               <div class="panel-heading compact">
                 <div>
                   <h2 id="equipment-heading">Equipment share</h2>
@@ -358,6 +345,12 @@
       <div class="import-status" id="import-status" role="status" aria-live="polite"></div>
     </dialog>
 
-    <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true">
+      <div class="data-notice" id="data-notice" role="status" aria-live="polite" hidden>
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="data-notice-text">Loading tracker data…</span>
+        <button class="quiet-button is-hidden" id="use-site-data" type="button">Use site data</button>
+      </div>
+    </div>
   </body>
 </html>

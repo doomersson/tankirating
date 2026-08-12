@@ -64,6 +64,8 @@
   };
 
   var elements = {};
+  var dataNoticeTimer = 0;
+  var dataNoticeHideTimer = 0;
 
   document.addEventListener("DOMContentLoaded", init);
 
@@ -214,6 +216,12 @@
     elements["import-data"].addEventListener("change", importTracker);
     elements["profile-csv"].addEventListener("click", exportProfileCsv);
     elements["use-site-data"].addEventListener("click", clearImportedData);
+    elements["data-notice"].addEventListener("mouseenter", pauseDataNoticeToast);
+    elements["data-notice"].addEventListener("mouseleave", scheduleDataNoticeToastHide);
+    elements["data-notice"].addEventListener("focusin", pauseDataNoticeToast);
+    elements["data-notice"].addEventListener("focusout", function (event) {
+      if (!event.currentTarget.contains(event.relatedTarget)) scheduleDataNoticeToastHide();
+    });
 
     document.querySelectorAll("[data-close-dialog]").forEach(function (button) {
       button.addEventListener("click", function () { closeDialog(button.closest("dialog")); });
@@ -277,6 +285,7 @@
   function renderAll() {
     elements["global-empty"].classList.add("is-hidden");
     updateDataNotice();
+    if (state.view === "profile") showDataNoticeToast();
     renderProfile();
     renderLeaderboard();
     renderComparePicker();
@@ -305,6 +314,7 @@
       elements["data-notice-text"].textContent = "Site data · updated " + formatRelativeTime(state.data.generatedAt);
       elements["use-site-data"].classList.add("is-hidden");
     }
+    elements["data-notice"].dataset.ready = "true";
     elements["footer-sync"].textContent = generated ? "Snapshot " + formatDateTime(state.data.generatedAt) : "Awaiting data";
   }
 
@@ -555,10 +565,10 @@
         (grouped ? '<small class="usage-group-note">In Others slice</small>' : '') + '</span>' +
         '<span class="usage-legend-value"><strong>' + escapeHtml(formatRate(percent)) + '%</strong><small>' + escapeHtml(formatDurationDisplay(item.timeMs)) + '</small></span></div>';
     }).join("");
-    elements["equipment-list"].innerHTML = '<div class="usage-pie-layout"><div class="usage-pie-figure">' +
-      '<div class="usage-pie" data-animation-key="' + escapeAttr(animationKey) + '" role="img" aria-label="' + escapeAttr(categoryLabel + " usage: " + description + ".") + '" style="--pie-background:conic-gradient(' + stops.join(",") + ')"></div>' +
-      '<p><strong>' + escapeHtml(formatDurationDisplay(total)) + '</strong><span>Total reported ' + escapeHtml(categoryLabel.toLowerCase()) + ' time</span></p></div>' +
-      '<div class="usage-legend" role="list" aria-label="' + escapeAttr(categoryLabel + " usage details") + '">' + legend + '</div></div>';
+    elements["equipment-list"].innerHTML = '<div class="usage-pie-layout">' +
+      '<div class="usage-legend" role="list" aria-label="' + escapeAttr(categoryLabel + " usage details") + '">' + legend + '</div>' +
+      '<div class="usage-pie-figure"><div class="usage-pie" data-animation-key="' + escapeAttr(animationKey) + '" role="img" aria-label="' + escapeAttr(categoryLabel + " usage: " + description + ".") + '" style="--pie-background:conic-gradient(' + stops.join(",") + ')"></div>' +
+      '<p><strong>' + escapeHtml(formatDurationDisplay(total)) + '</strong><span>Total reported ' + escapeHtml(categoryLabel.toLowerCase()) + ' time</span></p></div></div>';
     animateEquipmentPie(animationKey);
   }
 
@@ -838,6 +848,7 @@
 
   function navigateToView(view) {
     if (view === "profile") {
+      showDataNoticeToast();
       var player = getCurrentPlayer();
       state.profileSection = "overview";
       syncProfileSectionControls();
@@ -867,6 +878,7 @@
   }
 
   function setView(view) {
+    var enteringProfile = view === "profile" && state.view !== "profile";
     state.view = view;
     document.querySelectorAll("[data-view-panel]").forEach(function (panel) {
       var active = panel.dataset.viewPanel === view;
@@ -877,6 +889,8 @@
       button.classList.toggle("is-active", button.dataset.view === view);
       if (button.matches(".nav-button")) button.setAttribute("aria-current", button.dataset.view === view ? "page" : "false");
     });
+    if (enteringProfile) showDataNoticeToast();
+    if (view !== "profile") hideDataNoticeToast();
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
@@ -1081,6 +1095,38 @@
     toast.addEventListener("mouseenter", function () { window.clearTimeout(timer); });
     toast.addEventListener("mouseleave", function () { timer = window.setTimeout(remove, 2500); });
     function remove() { if (toast.parentNode) toast.remove(); }
+  }
+
+  function showDataNoticeToast() {
+    var notice = elements["data-notice"];
+    if (!notice || notice.dataset.ready !== "true") return;
+    window.clearTimeout(dataNoticeTimer);
+    window.clearTimeout(dataNoticeHideTimer);
+    notice.hidden = false;
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        if (state.view === "profile") notice.classList.add("is-visible");
+      });
+    });
+    scheduleDataNoticeToastHide();
+  }
+
+  function pauseDataNoticeToast() {
+    window.clearTimeout(dataNoticeTimer);
+  }
+
+  function scheduleDataNoticeToastHide() {
+    window.clearTimeout(dataNoticeTimer);
+    dataNoticeTimer = window.setTimeout(hideDataNoticeToast, 5000);
+  }
+
+  function hideDataNoticeToast() {
+    var notice = elements["data-notice"];
+    if (!notice || notice.hidden) return;
+    window.clearTimeout(dataNoticeTimer);
+    window.clearTimeout(dataNoticeHideTimer);
+    notice.classList.remove("is-visible");
+    dataNoticeHideTimer = window.setTimeout(function () { notice.hidden = true; }, 180);
   }
 
   function setActiveButton(container, active, selector) {

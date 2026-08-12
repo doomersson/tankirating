@@ -34,6 +34,7 @@ check(html.includes('id="compare-search"') && html.includes('id="compare-picker-
 check(html.includes('data-equipment="hulls"') && html.includes('data-equipment="turrets"'), "profile equipment tabs are missing");
 check(html.includes('id="profile-overview"') && html.includes('id="profile-period-summary"') && html.includes('data-profile-section="overview"') && html.includes('data-profile-section="period"'), "profile Overview or Period summary switch is missing");
 check(/id="profile-overview"[\s\S]*?id="equipment-summary"[\s\S]*?id="overview-kills"[\s\S]*?id="overview-deaths"[\s\S]*?id="overview-kd"/.test(html), "profile Overview must lead with loadout and overall account statistics");
+check(!html.includes("Favorite item in each category") && !/<span>Lifetime<\/span>/.test(html), "profile overview still includes redundant explanatory copy");
 check(/id="profile-period-summary"[\s\S]*?class="profile-toolbar"[\s\S]*?class="time-led"[\s\S]*?class="stat-strip"/.test(html), "Period summary must contain the period toolbar, time lead, and statistic strips");
 check(html.includes('id="rating-date"') && html.includes('data-period="day"') && html.includes('data-period="week"'), "profile rating calendar or reset-aware period controls are missing");
 check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"'), "profile daily K/D or hourly rate cards are missing");
@@ -64,6 +65,8 @@ check(leaderboardOrder.every((position, index) => position >= 0 && (index === 0 
 check(app.includes('"./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg"'), "profile equipment names are not mapped to their matching SVG filenames");
 check(app.includes("positive(item.timeMs) / total >= 0.05") && app.includes('name: "Others"'), "equipment below 5% must be grouped into Others on the chart");
 check(app.includes("var legend = items.map") && app.includes("grouped into Others on chart"), "the equipment legend must list every item and identify chart-only grouping");
+check(html.includes("equipment-share-panel") && css.includes(".equipment-share-panel .equipment-tabs") && /\.equipment-share-panel \.usage-legend\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/.test(css), "equipment categories, two-column list, or right-side chart layout is missing");
+check(/class="toast-region"[\s\S]*?id="data-notice"/.test(html) && app.includes("showDataNoticeToast") && app.includes("hideDataNoticeToast"), "profile data notice must render as an auto-hiding toast");
 check(app.includes("conic-gradient(") && css.includes("@keyframes pie-unfold") && css.includes(".usage-pie.is-unfolding"), "animated equipment pie rendering is missing");
 check(!app.includes('class="usage-bar"'), "equipment usage bars must be replaced by the pie breakdown");
 check(html.includes('class="equipment-icon equipment-icon--drones"') && app.includes('class="equipment-item-icon favorite-artwork" src="./assets/icons/drone.svg"') && css.includes('mask-image: url("./icons/drone.svg")') && droneIcon.includes('viewBox="0 0 80 80"'), "drone summary image or tab mask is missing");

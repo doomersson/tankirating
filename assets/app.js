@@ -9,10 +9,8 @@
   var STORE_NAME = "imports";
   var number = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
   var decimal = new Intl.NumberFormat(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  var shortNumber = new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 });
   var dateTime = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" });
   var shortDate = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
-  var monthName = new Intl.DateTimeFormat(undefined, { month: "short" });
 
   var rankThresholds = [
     ["Recruit", 0], ["Private", 100], ["Gefreiter", 500], ["Corporal", 1500],
@@ -34,7 +32,6 @@
     currentPlayerId: null,
     view: "leaderboard",
     period: 7,
-    metric: "score",
     equipment: "hulls",
     compare: [],
     compareQuery: "",
@@ -78,7 +75,7 @@
       "time-heading",
       "period-time", "activity-state", "stat-kills", "delta-kills", "stat-kd", "period-kd",
       "stat-k13", "period-k13", "stat-c13", "period-crystals", "stat-s13", "period-score",
-      "trend-summary", "trend-chart", "equipment-summary", "equipment-list", "activity-chart",
+      "equipment-summary", "equipment-list", "activity-chart",
       "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list", "compare-search", "compare-picker-status",
       "compare-picker", "compare-empty",
       "comparison", "global-empty", "footer-sync", "search-trigger", "mobile-search", "search-dialog",
@@ -100,14 +97,6 @@
       setActiveButton(event.currentTarget, button, ".is-active");
       renderProfile();
       renderComparison();
-    });
-
-    document.getElementById("metric-switcher").addEventListener("click", function (event) {
-      var button = event.target.closest("button[data-metric]");
-      if (!button) return;
-      state.metric = button.dataset.metric;
-      setActiveButton(event.currentTarget, button, ".is-active");
-      renderTrend();
     });
 
     document.getElementById("leaderboard-period-control").addEventListener("click", function (event) {
@@ -317,7 +306,6 @@
     elements["stat-s13"].textContent = formatRate(lifetimeS13);
     elements["period-score"].textContent = period ? signed(period.delta.score) + " selected period" : "— selected period";
 
-    renderTrend();
     renderEquipmentSummary(player);
     renderEquipmentList(player);
     renderActivity(player);
@@ -383,89 +371,6 @@
       r: current.rank,
       t: current.totalTimeMs
     };
-  }
-
-  function renderTrend() {
-    var player = getCurrentPlayer();
-    if (!player) return;
-    var points = periodPoints(player);
-    var key = { score: "s", crystals: "c", kills: "k", time: "t" }[state.metric];
-    var label = { score: "score", crystals: "crystals", kills: "kills", time: "hours played" }[state.metric];
-    if (points.length < 2) {
-      renderChartEmpty("Tracking begins here", "A second snapshot is needed to build the " + label + " activity calendar.");
-      return;
-    }
-
-    var end = startOfLocalDay(parseDate(points[points.length - 1].at));
-    var start = state.period === "all"
-      ? startOfLocalDay(parseDate(points[0].at))
-      : addLocalDays(end, 1 - Number(state.period));
-    var daily = {};
-    for (var i = 1; i < points.length; i += 1) {
-      var dayKey = localDateKey(points[i].at);
-      var dayDate = startOfLocalDay(parseDate(points[i].at));
-      if (dayDate < start || dayDate > end) continue;
-      daily[dayKey] = (daily[dayKey] || 0) + Math.max(0, positive(points[i][key]) - positive(points[i - 1][key]));
-    }
-
-    var days = [];
-    for (var cursor = new Date(start); cursor <= end; cursor = addLocalDays(cursor, 1)) {
-      var cursorKey = localDateKey(cursor);
-      days.push({ date: new Date(cursor), value: positive(daily[cursorKey]) });
-    }
-    var max = Math.max.apply(Math, days.map(function (day) { return day.value; }).concat([0]));
-    var total = days.reduce(function (sum, day) { return sum + day.value; }, 0);
-    var activeDays = days.filter(function (day) { return day.value > 0; }).length;
-    var gridStart = addLocalDays(start, -start.getDay());
-    var gridEnd = addLocalDays(end, 6 - end.getDay());
-    var gridDays = [];
-    for (cursor = new Date(gridStart); cursor <= gridEnd; cursor = addLocalDays(cursor, 1)) gridDays.push(new Date(cursor));
-    var weeks = Math.ceil(gridDays.length / 7);
-    var months = {};
-    gridDays.forEach(function (date, index) {
-      if (date < start || date > end) return;
-      var week = Math.floor(index / 7) + 1;
-      if (index === start.getDay() || date.getDate() <= 7) months[week] = monthName.format(date);
-    });
-    var monthMarkup = Object.keys(months).map(function (week) {
-      return '<span style="grid-column:' + week + '">' + escapeHtml(months[week]) + '</span>';
-    }).join("");
-    var cells = gridDays.map(function (date) {
-      if (date < start || date > end) return '<span class="heatmap-day is-outside" aria-hidden="true"></span>';
-      var value = positive(daily[localDateKey(date)]);
-      var level = value > 0 && max > 0 ? Math.max(1, Math.ceil(value / max * 4)) : 0;
-      var valueLabel = value > 0 ? "+" + formatChartValue(value, state.metric) : "No " + label + " gained";
-      var tooltip = shortDate.format(date) + " · " + valueLabel;
-      return '<span class="heatmap-day level-' + level + '" title="' + escapeAttr(tooltip) + '" aria-label="' + escapeAttr(tooltip) + '"></span>';
-    }).join("");
-    elements["trend-chart"].innerHTML = '<div class="heatmap-scroll" tabindex="0" aria-label="Scrollable activity calendar"><div class="heatmap-calendar" style="--heatmap-weeks:' + weeks + '">' +
-      '<div class="heatmap-months" aria-hidden="true">' + monthMarkup + '</div>' +
-      '<div class="heatmap-weekdays" aria-hidden="true"><span>Mon</span><span>Wed</span><span>Fri</span></div>' +
-      '<div class="heatmap-grid">' + cells + '</div></div></div>' +
-      '<div class="heatmap-footer"><span>' + escapeHtml(shortDate.format(start) + " — " + shortDate.format(end)) + '</span><span class="heatmap-legend" aria-label="Activity intensity from less to more"><span>Less</span><i class="level-0"></i><i class="level-1"></i><i class="level-2"></i><i class="level-3"></i><i class="level-4"></i><span>More</span></span></div>';
-    var scroller = elements["trend-chart"].querySelector(".heatmap-scroll");
-    scroller.scrollLeft = scroller.scrollWidth;
-    var summary = total > 0
-      ? "+" + formatChartValue(total, state.metric) + " across " + activeDays + " active " + plural(activeDays, "day") + "."
-      : "No " + label + " gained in this period.";
-    elements["trend-chart"].setAttribute("aria-label", summary + " Daily activity from " + shortDate.format(start) + " to " + shortDate.format(end) + ".");
-    elements["trend-summary"].textContent = summary;
-  }
-
-  function startOfLocalDay(date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  }
-
-  function addLocalDays(date, amount) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + amount);
-    return result;
-  }
-
-  function renderChartEmpty(title, body) {
-    elements["trend-chart"].innerHTML = '<div class="chart-empty"><strong>' + escapeHtml(title) + '</strong><span>' + escapeHtml(body) + '</span></div>';
-    elements["trend-chart"].setAttribute("aria-label", title + ". " + body);
-    elements["trend-summary"].textContent = body;
   }
 
   function renderEquipmentSummary(player) {
@@ -1088,11 +993,6 @@
     return Number.isFinite(Number(value)) ? decimal.format(Number(value)) : "—";
   }
 
-  function formatChartValue(value, metric) {
-    if (metric === "time") return state.timeUnit === "exact" ? formatShortDuration(value) : formatDurationDisplay(value);
-    return Math.abs(value) >= 10000 ? shortNumber.format(value) : number.format(Math.round(value));
-  }
-
   function formatDurationDisplay(ms) {
     ms = positive(ms);
     if (state.timeUnit === "hours") return decimal.format(ms / 3600000) + " hours";
@@ -1119,14 +1019,6 @@
     ms = positive(ms);
     var seconds = Math.floor(ms / 1000) % 60;
     return formatDurationWords(ms) + " " + seconds + " " + plural(seconds, "second");
-  }
-
-  function formatShortDuration(ms) {
-    ms = positive(ms);
-    var minutes = Math.floor(ms / 60000);
-    if (minutes >= 1440) return decimal.format(minutes / 1440) + "d";
-    if (minutes >= 60) return decimal.format(minutes / 60) + "h";
-    return number.format(minutes) + "m";
   }
 
   function formatDate(value) {

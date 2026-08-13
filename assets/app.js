@@ -525,18 +525,20 @@
   function renderEquipmentList(player) {
     if (!player) return;
     var items = ((player.current.equipment || {})[state.equipment] || []).slice().filter(function (item) {
-      return item && positive(item.timeMs) > 0;
+      return item && typeof item.name === "string" && item.name.trim();
     }).sort(function (a, b) { return positive(b.timeMs) - positive(a.timeMs); });
     var total = items.reduce(function (sum, item) { return sum + positive(item.timeMs); }, 0);
-    if (!items.length || !total) {
+    if (!items.length) {
       elements["equipment-list"].innerHTML = '<p class="chart-empty">No usage was reported for this category.</p>';
       return;
     }
     var chartSlices = [];
     var othersTime = 0;
     items.forEach(function (item) {
-      if (positive(item.timeMs) / total >= 0.05) chartSlices.push({ name: item.name, timeMs: positive(item.timeMs), others: false });
-      else othersTime += positive(item.timeMs);
+      var itemTime = positive(item.timeMs);
+      if (!itemTime || !total) return;
+      if (itemTime / total >= 0.05) chartSlices.push({ name: item.name, timeMs: itemTime, others: false });
+      else othersTime += itemTime;
     });
     if (othersTime > 0) chartSlices.push({ name: "Others", timeMs: othersTime, others: true });
 
@@ -551,23 +553,28 @@
       return slice.color + " " + start.toFixed(4) + "% " + cursor.toFixed(4) + "%";
     });
     var categoryLabel = equipmentCategoryLabel(state.equipment);
-    var description = chartSlices.map(function (slice) { return slice.name + " " + formatRate(slice.percent) + "%"; }).join(", ");
+    var description = chartSlices.length ? chartSlices.map(function (slice) { return slice.name + " " + formatRate(slice.percent) + "%"; }).join(", ") : "no recorded usage";
     var animationKey = state.currentPlayerId + ":" + state.equipment;
     var legend = items.map(function (item) {
-      var percent = positive(item.timeMs) / total * 100;
-      var grouped = percent < 5;
+      var itemTime = positive(item.timeMs);
+      var percent = total ? itemTime / total * 100 : 0;
+      var zeroTime = itemTime === 0;
+      var grouped = !zeroTime && percent < 5;
       var color = grouped ? "var(--color-data-other)" : chartColors[item.name];
+      if (zeroTime) color = "var(--color-data-other)";
       var icon = equipmentIconMarkup(state.equipment, item.name);
-      var title = item.name + " · " + formatExactDuration(item.timeMs) + " · " + formatRate(percent) + "%" + (grouped ? " · grouped into Others on chart" : "");
+      var note = grouped ? "In Others slice" : (zeroTime ? "No recorded usage" : "");
+      var title = item.name + " · " + formatExactDuration(item.timeMs) + " · " + formatRate(percent) + "%" + (grouped ? " · grouped into Others on chart" : (zeroTime ? " · no recorded usage" : ""));
       return '<div class="usage-legend-item" role="listitem" title="' + escapeAttr(title) + '">' +
         '<span class="usage-swatch" style="--swatch-color:' + color + '" aria-hidden="true"></span>' +
         '<span class="usage-legend-copy"><span class="usage-legend-identity">' + icon + '<span class="usage-name">' + escapeHtml(item.name) + '</span></span>' +
-        (grouped ? '<small class="usage-group-note">In Others slice</small>' : '') + '</span>' +
+        (note ? '<small class="usage-group-note">' + note + '</small>' : '') + '</span>' +
         '<span class="usage-legend-value"><strong>' + escapeHtml(formatRate(percent)) + '%</strong><small>' + escapeHtml(formatDurationDisplay(item.timeMs)) + '</small></span></div>';
     }).join("");
+    var pieBackground = stops.length ? "conic-gradient(" + stops.join(",") + ")" : "var(--color-paper-3)";
     elements["equipment-list"].innerHTML = '<div class="usage-pie-layout">' +
       '<div class="usage-legend" role="list" aria-label="' + escapeAttr(categoryLabel + " usage details") + '">' + legend + '</div>' +
-      '<div class="usage-pie-figure"><div class="usage-pie" data-animation-key="' + escapeAttr(animationKey) + '" role="img" aria-label="' + escapeAttr(categoryLabel + " usage: " + description + ".") + '" style="--pie-background:conic-gradient(' + stops.join(",") + ')"></div>' +
+      '<div class="usage-pie-figure"><div class="usage-pie" data-animation-key="' + escapeAttr(animationKey) + '" role="img" aria-label="' + escapeAttr(categoryLabel + " usage: " + description + ".") + '" style="--pie-background:' + pieBackground + '"></div>' +
       '<p><strong>' + escapeHtml(formatDurationDisplay(total)) + '</strong><span>Total reported ' + escapeHtml(categoryLabel.toLowerCase()) + ' time</span></p></div></div>';
     animateEquipmentPie(animationKey);
   }

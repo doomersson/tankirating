@@ -35,9 +35,13 @@ check(html.includes('data-equipment="hulls"') && html.includes('data-equipment="
 check(html.includes('id="profile-overview"') && html.includes('id="profile-period-summary"') && html.includes('data-profile-section="overview"') && html.includes('data-profile-section="period"'), "profile Overview or Period summary switch is missing");
 check(/id="profile-overview"[\s\S]*?id="equipment-summary"[\s\S]*?id="overview-kills"[\s\S]*?id="overview-deaths"[\s\S]*?id="overview-kd"/.test(html), "profile Overview must lead with loadout and overall account statistics");
 check(!html.includes("Favorite item in each category") && !/<span>Lifetime<\/span>/.test(html), "profile overview still includes redundant explanatory copy");
-check(/id="profile-period-summary"[\s\S]*?class="profile-toolbar"[\s\S]*?class="time-led"[\s\S]*?class="stat-strip"/.test(html), "Period summary must contain the period toolbar, time lead, and statistic strips");
-check(html.includes('id="rating-date"') && html.includes('data-period="day"') && html.includes('data-period="week"'), "profile rating calendar or reset-aware period controls are missing");
-check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"'), "profile daily K/D or hourly rate cards are missing");
+check(/id="profile-period-summary"[\s\S]*?class="period-console"[\s\S]*?class="period-summary-board"[\s\S]*?period-activity-panel/.test(html), "Period summary must contain the range console, summary board, and recent activity");
+check(["day", "week", "month", "year", "all", "custom"].every((period) => html.includes(`data-period="${period}"`)), "Day, Week, Month, Year, All Time, or Custom period controls are missing");
+check(["first", "previous", "next", "latest"].every((direction) => html.includes(`data-period-nav="${direction}"`)) && app.includes("navigateProfilePeriod"), "period first, previous, next, or latest navigation is missing");
+check(html.includes('id="rating-date"') && html.includes('id="custom-date-start"') && html.includes('id="custom-date-end"') && app.includes("ensureCustomDates"), "reference-date or custom-range inputs are missing");
+check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"') && html.includes('id="stat-time-day"'), "profile K/D, hourly, or time-per-day headline metrics are missing");
+check(["crystals", "score", "time", "kills", "deaths", "golds", "efficiency", "kd"].every((icon) => html.includes(`data-period-icon="${icon}"`)) && css.includes(".period-metric-icon"), "future period metric icon hooks are incomplete");
+check(app.includes('state.period === "month"') && app.includes('state.period === "year"') && app.includes('state.period === "custom"') && app.includes("shiftMonthDateKey") && app.includes("shiftYearDateKey"), "calendar month, year, or custom range calculations are missing");
 check(!/href="\//.test(html) && !/src="\//.test(html), "root-absolute assets break project GitHub Pages sites");
 check(css.includes("overflow-x: clip"), "horizontal overflow clipping is missing");
 check(!/overflow-x\s*:\s*hidden/.test(css), "overflow-x hidden can break sticky positioning");

@@ -1,5 +1,8 @@
 /* Hallmark · macrostructure: Stat-Led · tone: minimal dark technical · anchor hue: cool cyan 210° */
-/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4
+/* Hallmark · component: period workbench · genre: atmospheric · theme: Midnight
+ * states: default · hover · focus · active · disabled · loading · error · success
+ * contrast: pass (40–41)
+ * pre-emit critique: P5 H5 E5 S5 R5 V4
  * genre: atmospheric · theme: Midnight
  * enrichment: none · nav: N13 · footer: Ft2
  * audience: public friend-group tracker · use: leaderboard first, then profiles · tone: minimal dark technical
@@ -475,7 +478,6 @@ button,
   max-width: 100%;
 }
 
-.profile-toolbar,
 .table-toolbar {
   padding-block: var(--space-md);
   display: flex;
@@ -485,61 +487,392 @@ button,
   gap: var(--space-sm);
 }
 
-.toolbar-groups,
 .profile-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-sm);
 }
 
-.rating-date-control {
-  min-height: 2.75rem;
-  max-width: 100%;
-  display: inline-flex;
+.period-console,
+.period-summary-board {
+  margin-block-start: var(--space-xl);
+  border: var(--rule-thin) solid var(--color-rule);
+  background: var(--color-paper-2);
+}
+
+.period-console-heading,
+.period-summary-heading {
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-md);
+}
+
+.period-console-heading,
+.period-summary-heading,
+.period-mode-control,
+.period-range-navigator,
+.period-date-fields {
+  border-block-end: var(--rule-thin) solid var(--color-rule);
+}
+
+.period-console-heading p,
+.period-summary-heading p {
+  margin-block-start: var(--space-xs);
+  color: var(--color-neutral);
+  font-size: var(--text-sm);
+}
+
+.period-console-heading .profile-actions {
+  align-self: start;
+}
+
+.rating-reset-note {
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.period-mode-control {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.period-range-navigator {
+  min-width: 0;
+  padding: var(--space-md);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
+  gap: var(--space-sm);
+}
+
+.period-range-readout {
+  min-width: 0;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2xs);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.period-range-readout > span:first-child {
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.period-range-readout strong {
+  min-width: 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(var(--text-md), 6vw, var(--text-xl));
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.period-range-readout > span:last-child {
+  max-width: 62ch;
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+}
+
+.period-nav-group {
+  grid-row: 2;
+  display: flex;
   gap: var(--space-xs);
-  padding-inline-start: var(--space-sm);
+}
+
+.period-nav-group--earlier {
+  grid-column: 1;
+}
+
+.period-nav-group--later {
+  grid-column: 2;
+  justify-self: end;
+}
+
+.period-nav-button {
+  width: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  display: grid;
+  place-items: center;
+  position: relative;
   border: var(--rule-thin) solid var(--color-rule-2);
   border-radius: var(--radius-sm);
   background: var(--color-paper-2);
-  color: var(--color-neutral);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
 }
 
-.rating-date-control > span {
+.period-nav-button:active {
+  transform: translateY(1px);
+}
+
+.period-nav-button:disabled,
+.period-nav-button[data-state="disabled"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.period-nav-button[data-state="loading"] span {
+  opacity: 0;
+}
+
+.period-nav-button[data-state="loading"]::after {
+  content: "";
+  width: 0.85rem;
+  height: 0.85rem;
+  position: absolute;
+  border: var(--rule-thin) solid var(--color-rule-2);
+  border-block-start-color: var(--color-accent);
+  border-radius: 50%;
+  animation: period-control-spin var(--dur-long) linear infinite;
+}
+
+.period-console button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.period-console button[data-state="loading"] {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.period-console button[data-state="error"] {
+  color: var(--color-error);
+}
+
+.period-console button[data-state="success"] {
+  color: var(--color-success);
+}
+
+@keyframes period-control-spin {
+  to { transform: rotate(1turn); }
+}
+
+.period-date-fields {
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.period-date-field {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-2xs);
+  color: var(--color-neutral);
   font-size: var(--text-xs);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
-.rating-date-control input {
-  width: 9.5rem;
-  min-height: calc(2.75rem - var(--rule-thin) * 2);
-  padding-inline: var(--space-xs);
-  border: 0;
-  border-inline-start: var(--rule-thin) solid var(--color-rule);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: transparent;
+#rating-date-field {
+  max-width: 18rem;
+}
+
+.period-date-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding-inline: var(--space-sm);
+  border: var(--rule-thin) solid var(--color-rule-2);
+  border-radius: var(--radius-sm);
+  outline: 2px solid transparent;
+  outline-offset: 1px;
+  background: var(--color-paper);
   color: var(--color-ink);
   color-scheme: dark;
   cursor: pointer;
 }
 
-.rating-date-control input:disabled {
-  color: var(--color-neutral);
+.period-date-field input:focus-visible {
+  outline-color: var(--color-focus);
+}
+
+.period-date-field input:disabled {
+  opacity: 0.55;
   cursor: not-allowed;
+  background: var(--color-paper-3);
+  color: var(--color-neutral);
+}
+
+.period-date-field input[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.period-date-field input[data-state="loading"] {
+  cursor: wait;
+  background: var(--color-paper-3);
+}
+
+.period-date-field input[data-state="success"] {
+  border-color: var(--color-success);
+}
+
+.period-field-message {
+  min-height: 1lh;
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+}
+
+.period-field-message[data-state="error"] {
+  color: var(--color-error);
+}
+
+.period-field-message[data-state="success"] {
+  color: var(--color-success);
+}
+
+.period-console-footer {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.period-time-format {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.period-time-format > span {
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.period-summary-board[data-state="loading"] {
   opacity: 0.62;
 }
 
-.rating-date-control:has(input:focus-visible) {
-  border-color: var(--color-focus);
+.period-summary-board[data-state="empty"] .period-highlight strong,
+.period-summary-board[data-state="empty"] .period-metric-row strong {
+  color: var(--color-neutral);
 }
 
-.rating-reset-note {
-  flex-basis: 100%;
+.period-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--rule-thin);
+  border-block-end: var(--rule-thin) solid var(--color-rule);
+  background: var(--color-rule);
+}
+
+.period-highlight {
+  min-width: 0;
+  min-height: 7.5rem;
+  padding: var(--space-md);
+  display: grid;
+  align-content: center;
+  gap: var(--space-2xs);
+  background: var(--color-paper-2);
+}
+
+.period-highlight--primary {
+  grid-column: 1 / -1;
+  background: var(--color-paper-3);
+}
+
+.period-highlight strong {
+  min-width: 0;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.period-highlight small {
   color: var(--color-neutral);
   font-size: var(--text-xs);
+}
+
+.period-metric-label,
+.period-metric-row > span {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.period-metric-label {
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Stable asset hooks: each data-period-icon slot can receive a mask later without changing metric markup. */
+.period-metric-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 1rem;
+  display: inline-block;
+  background: currentColor;
+  opacity: 0;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.period-detail-grid {
+  display: grid;
+}
+
+.period-detail-column {
+  min-width: 0;
+  padding: var(--space-lg) var(--space-md);
+}
+
+.period-detail-column + .period-detail-column {
+  border-block-start: var(--rule-thin) solid var(--color-rule);
+}
+
+.period-detail-column h3 {
+  font-size: var(--text-md);
+}
+
+.period-metric-list {
+  margin-block-start: var(--space-sm);
+}
+
+.period-metric-row {
+  min-width: 0;
+  min-height: 2.75rem;
+  padding-block: var(--space-xs);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: var(--space-sm);
+  border-block-end: var(--rule-thin) solid var(--color-rule);
+}
+
+.period-metric-row:last-child {
+  border-block-end: 0;
+}
+
+.period-metric-row > span {
+  color: var(--color-neutral);
+}
+
+.period-metric-row strong {
+  color: var(--color-ink);
+  text-align: end;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .action-link {
@@ -582,31 +915,6 @@ button,
 .equipment-tabs button[aria-selected="true"] {
   background: var(--color-accent-soft);
   color: var(--color-accent);
-}
-
-.time-led {
-  display: grid;
-  gap: var(--space-lg);
-  padding: var(--space-xl) 0 var(--space-lg);
-}
-
-.time-figure {
-  margin-block-start: var(--space-xs);
-  font-family: var(--font-display);
-  font-size: clamp(2.15rem, 8vw, 5.4rem);
-  font-weight: 700;
-  letter-spacing: -0.055em;
-  line-height: 0.95;
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
-}
-
-.time-aside {
-  display: grid;
-  align-content: end;
-  gap: var(--space-xs);
-  color: var(--color-muted);
-  font-size: var(--text-sm);
 }
 
 .stat-strip {
@@ -1690,7 +1998,7 @@ dialog {
 
 @media (hover: hover) and (pointer: fine) {
   .dialog-field input:hover:not(:disabled),
-  .rating-date-control input:hover:not(:disabled) {
+  .period-date-field input:hover:not(:disabled) {
     background: var(--color-paper-3);
   }
 
@@ -1705,7 +2013,8 @@ dialog {
   .leaderboard-sort-button:hover,
   .leaderboard-sort-strip button:hover,
   .search-request:hover,
-  .search-result:hover {
+  .search-result:hover,
+  .period-nav-button:hover:not(:disabled) {
     background: var(--color-paper-3);
   }
 
@@ -1856,22 +2165,65 @@ dialog {
     text-align: end;
   }
 
-  .time-led {
-    grid-template-columns: minmax(0, 1.65fr) minmax(12rem, 0.6fr);
-    padding-block: var(--space-2xl) var(--space-xl);
+  .period-console-heading,
+  .period-summary-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
   }
 
-  .time-aside {
-    padding-block-end: var(--space-xs);
+  .period-console-heading .profile-actions {
+    justify-content: flex-end;
+  }
+
+  .period-range-navigator {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .period-nav-group,
+  .period-range-readout {
+    grid-row: 1;
+  }
+
+  .period-nav-group--earlier {
+    grid-column: 1;
+  }
+
+  .period-range-readout {
+    grid-column: 2;
+  }
+
+  .period-nav-group--later {
+    grid-column: 3;
+  }
+
+  .period-date-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .period-field-message {
+    grid-column: 1 / -1;
+  }
+
+  .period-highlight-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .period-highlight--primary {
+    grid-column: span 2;
+  }
+
+  .period-detail-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+
+  .period-detail-column + .period-detail-column {
+    border-block-start: 0;
+    border-inline-start: var(--rule-thin) solid var(--color-rule);
   }
 
   .stat-strip {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .stat-strip--rates {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .stat-strip--overview {
@@ -1951,6 +2303,14 @@ dialog {
 }
 
 @media (min-width: 64rem) {
+  .period-highlight-grid {
+    grid-template-columns: minmax(9rem, 1.35fr) repeat(4, minmax(7rem, 1fr));
+  }
+
+  .period-highlight--primary {
+    grid-column: auto;
+  }
+
   .stat-strip--overview {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }

@@ -150,91 +150,135 @@
         </div>
 
         <div class="profile-section" id="profile-period-summary" role="tabpanel" aria-labelledby="profile-tab-period" hidden>
-          <div class="profile-toolbar" aria-label="Profile period and actions">
-            <div class="toolbar-groups">
-              <div class="segmented-control" id="period-control" role="group" aria-label="Statistics period">
-                <button type="button" data-period="day" class="is-active" aria-pressed="true">Day</button>
-                <button type="button" data-period="week" aria-pressed="false">Week</button>
-                <button type="button" data-period="30">30d</button>
-                <button type="button" data-period="all">All</button>
+          <section class="period-console" aria-labelledby="period-console-title">
+            <div class="period-console-heading">
+              <div>
+                <h2 id="period-console-title">Period range</h2>
+                <p class="rating-reset-note" id="rating-reset-note">Each rating day resets at 04:00 in your device timezone.</p>
               </div>
-              <label class="rating-date-control" for="rating-date">
-                <span>Rating date</span>
-                <input id="rating-date" type="date" aria-describedby="rating-reset-note" />
+              <div class="profile-actions">
+                <a class="quiet-button action-link" id="refresh-player" target="_blank" rel="noopener">Request refresh</a>
+                <button class="quiet-button" id="profile-csv" type="button">Export CSV</button>
+              </div>
+            </div>
+
+            <div class="segmented-control period-mode-control" id="period-control" role="group" aria-label="Statistics period">
+              <button type="button" data-period="day" class="is-active" aria-pressed="true">Day</button>
+              <button type="button" data-period="week" aria-pressed="false">Week</button>
+              <button type="button" data-period="month" aria-pressed="false">Month</button>
+              <button type="button" data-period="year" aria-pressed="false">Year</button>
+              <button type="button" data-period="all" aria-pressed="false">All Time</button>
+              <button type="button" data-period="custom" aria-pressed="false">Custom</button>
+            </div>
+
+            <div class="period-range-navigator" id="period-range-navigator" aria-label="Browse rating periods">
+              <div class="period-nav-group period-nav-group--earlier">
+                <button class="period-nav-button" type="button" data-period-nav="first" aria-label="Go to first tracked period" title="First tracked period"><span aria-hidden="true">⇤</span></button>
+                <button class="period-nav-button" type="button" data-period-nav="previous" aria-label="Go to previous period" title="Previous period"><span aria-hidden="true">←</span></button>
+              </div>
+              <div class="period-range-readout">
+                <span id="period-range-kicker">Day view</span>
+                <strong id="period-range-label" aria-live="polite">—</strong>
+                <span id="period-range-coverage">Waiting for snapshots</span>
+              </div>
+              <div class="period-nav-group period-nav-group--later">
+                <button class="period-nav-button" type="button" data-period-nav="next" aria-label="Go to next period" title="Next period"><span aria-hidden="true">→</span></button>
+                <button class="period-nav-button" type="button" data-period-nav="latest" aria-label="Go to latest tracked period" title="Latest tracked period"><span aria-hidden="true">⇥</span></button>
+              </div>
+            </div>
+
+            <div class="period-date-fields" id="period-date-fields">
+              <label class="period-date-field" id="rating-date-field" for="rating-date">
+                <span>Reference date</span>
+                <input id="rating-date" type="date" aria-describedby="rating-reset-note period-range-coverage" />
               </label>
-              <div class="segmented-control" role="group" aria-label="Time display">
-                <button type="button" data-time-unit="exact" class="is-active">Exact</button>
-                <button type="button" data-time-unit="hours">Hours</button>
-                <button type="button" data-time-unit="days">Days</button>
+              <label class="period-date-field" id="custom-date-start-field" for="custom-date-start" hidden>
+                <span>From</span>
+                <input id="custom-date-start" type="date" aria-describedby="custom-date-message" />
+              </label>
+              <label class="period-date-field" id="custom-date-end-field" for="custom-date-end" hidden>
+                <span>To</span>
+                <input id="custom-date-end" type="date" aria-describedby="custom-date-message" />
+              </label>
+              <p class="period-field-message" id="custom-date-message" data-state="success" hidden>Both dates are inclusive.</p>
+            </div>
+
+            <div class="period-console-footer">
+              <div class="period-time-format">
+                <span>Time format</span>
+                <div class="segmented-control" role="group" aria-label="Time display">
+                  <button type="button" data-time-unit="exact" class="is-active">Exact</button>
+                  <button type="button" data-time-unit="hours">Hours</button>
+                  <button type="button" data-time-unit="days">Days</button>
+                </div>
               </div>
-              <span class="rating-reset-note" id="rating-reset-note">Dates follow your device timezone.</span>
-            </div>
-            <div class="profile-actions">
-              <a class="quiet-button action-link" id="refresh-player" target="_blank" rel="noopener">Request refresh</a>
-              <button class="quiet-button" id="profile-csv" type="button">Export profile CSV</button>
-            </div>
-          </div>
-
-          <section class="time-led" aria-labelledby="time-heading">
-            <div>
-              <p class="metric-label" id="time-heading">Hours Played</p>
-              <p class="time-figure" id="total-time">—</p>
-            </div>
-            <div class="time-aside">
-              <span id="period-time">— during selected period</span>
-              <span id="activity-state">No activity history yet</span>
             </div>
           </section>
 
-          <section class="stat-strip" aria-label="Player performance statistics">
-            <article>
-              <span class="metric-label">Kills</span>
-              <strong id="stat-kills">—</strong>
-              <span id="delta-kills">— selected period</span>
-            </article>
-            <article>
-              <span class="metric-label">K/D</span>
-              <strong id="stat-kd">—</strong>
-              <span id="period-kd">— selected period</span>
-            </article>
-            <article>
-              <span class="metric-label">Kills / 13 min</span>
-              <strong id="stat-k13">—</strong>
-              <span id="period-k13">Lifetime rate</span>
-            </article>
-            <article>
-              <span class="metric-label">Crystals / 13 min</span>
-              <strong id="stat-c13">—</strong>
-              <span id="period-crystals">— selected period</span>
-            </article>
-            <article>
-              <span class="metric-label">Score / 13 min</span>
-              <strong id="stat-s13">—</strong>
-              <span id="period-score">— selected period</span>
-            </article>
-          </section>
+          <section class="period-summary-board" id="period-summary-board" aria-labelledby="period-summary-title" data-state="ready">
+            <div class="period-summary-heading">
+              <div>
+                <h2 id="period-summary-title">Period summary</h2>
+                <p><span id="activity-state">No activity history yet</span> · <span id="period-summary-status">Choose a tracked period.</span></p>
+              </div>
+            </div>
 
-          <section class="stat-strip stat-strip--rates" aria-label="Selected rating period rates">
-            <article>
-              <span class="metric-label" id="range-kd-label">Daily K/D</span>
-              <strong id="stat-range-kd">—</strong>
-              <span id="range-kd-detail">Select a tracked date</span>
-            </article>
-            <article>
-              <span class="metric-label">Kills / hour</span>
-              <strong id="stat-kills-hour">—</strong>
-              <span id="kills-hour-detail">Selected rating period</span>
-            </article>
-            <article>
-              <span class="metric-label">Crystals / hour</span>
-              <strong id="stat-crystals-hour">—</strong>
-              <span id="crystals-hour-detail">Selected rating period</span>
-            </article>
-            <article>
-              <span class="metric-label">Score / hour</span>
-              <strong id="stat-score-hour">—</strong>
-              <span id="score-hour-detail">Selected rating period</span>
-            </article>
+            <div class="period-highlight-grid" aria-label="Period headline statistics">
+              <article class="period-highlight period-highlight--primary">
+                <span class="period-metric-label" id="range-kd-label"><span class="period-metric-icon" data-period-icon="kd" aria-hidden="true"></span>K/D</span>
+                <strong id="stat-range-kd">—</strong>
+                <small id="range-kd-detail">Kills and deaths in range</small>
+              </article>
+              <article class="period-highlight">
+                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills / hour</span>
+                <strong id="stat-kills-hour">—</strong>
+                <small id="kills-hour-detail">Selected range</small>
+              </article>
+              <article class="period-highlight">
+                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals / hour</span>
+                <strong id="stat-crystals-hour">—</strong>
+                <small id="crystals-hour-detail">Selected range</small>
+              </article>
+              <article class="period-highlight">
+                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Score / hour</span>
+                <strong id="stat-score-hour">—</strong>
+                <small id="score-hour-detail">Selected range</small>
+              </article>
+              <article class="period-highlight">
+                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span>
+                <strong id="stat-time-day">—</strong>
+                <small id="time-day-detail">Across displayed dates</small>
+              </article>
+            </div>
+
+            <div class="period-detail-grid">
+              <section class="period-detail-column" aria-labelledby="period-totals-title">
+                <h3 id="period-totals-title">Totals</h3>
+                <div class="period-metric-list" role="list">
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals</span><strong id="period-crystals">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Score</span><strong id="period-score">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time played</span><strong id="period-time">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills</span><strong id="delta-kills">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="deaths" aria-hidden="true"></span>Deaths</span><strong id="period-deaths">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="golds" aria-hidden="true"></span>Golds</span><strong id="period-golds">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="efficiency" aria-hidden="true"></span>Efficiency gained</span><strong id="period-efficiency">—</strong></div>
+                </div>
+              </section>
+
+              <section class="period-detail-column" aria-labelledby="period-rates-title">
+                <h3 id="period-rates-title">Rates</h3>
+                <div class="period-metric-list" role="list">
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kd" aria-hidden="true"></span>K/D</span><strong id="period-kd">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills / 13 min</span><strong id="period-k13">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals / 13 min</span><strong id="period-c13">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Score / 13 min</span><strong id="period-s13">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills / hour</span><strong id="period-detail-kills-hour">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals / hour</span><strong id="period-detail-crystals-hour">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Score / hour</span><strong id="period-detail-score-hour">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span><strong id="period-detail-time-day">—</strong></div>
+                </div>
+              </section>
+            </div>
           </section>
 
           <section class="activity-panel period-activity-panel" aria-labelledby="activity-heading">

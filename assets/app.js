@@ -52,6 +52,8 @@
     profileSection: "overview",
     period: "day",
     selectedRatingDate: null,
+    customStartDate: null,
+    customEndDate: null,
     equipment: "hulls",
     compare: [],
     compareQuery: "",
@@ -95,14 +97,16 @@
     var ids = [
       "data-notice", "data-notice-text", "use-site-data", "rank-token", "profile-context",
       "rank-fallback", "rank-icon", "rank-progress-text", "rank-progress-percent", "rank-progress-bar",
-      "profile-title", "player-meta", "hero-efficiency", "hero-position", "total-time",
-      "time-heading",
+      "profile-title", "player-meta", "hero-efficiency", "hero-position",
       "overview-time", "overview-kills", "overview-deaths", "overview-kd", "overview-score", "overview-crystals",
-      "period-time", "activity-state", "stat-kills", "delta-kills", "stat-kd", "period-kd",
-      "stat-k13", "period-k13", "stat-c13", "period-crystals", "stat-s13", "period-score",
-      "rating-date", "rating-reset-note", "range-kd-label", "stat-range-kd", "range-kd-detail",
+      "period-time", "activity-state", "delta-kills", "period-deaths", "period-golds", "period-efficiency",
+      "period-kd", "period-k13", "period-c13", "period-s13", "period-crystals", "period-score",
+      "period-detail-kills-hour", "period-detail-crystals-hour", "period-detail-score-hour", "period-detail-time-day",
+      "rating-date", "rating-date-field", "custom-date-start", "custom-date-end", "custom-date-start-field", "custom-date-end-field",
+      "custom-date-message", "period-date-fields", "rating-reset-note", "period-range-kicker", "period-range-label", "period-range-coverage",
+      "period-range-navigator", "period-summary-board", "period-summary-status", "range-kd-label", "stat-range-kd", "range-kd-detail",
       "stat-kills-hour", "kills-hour-detail", "stat-crystals-hour", "crystals-hour-detail",
-      "stat-score-hour", "score-hour-detail",
+      "stat-score-hour", "score-hour-detail", "stat-time-day", "time-day-detail",
       "equipment-summary", "equipment-list", "activity-chart", "activity-zone-note",
       "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list", "compare-search", "compare-picker-status",
       "compare-picker", "compare-empty",
@@ -129,19 +133,23 @@
     document.getElementById("period-control").addEventListener("click", function (event) {
       var button = event.target.closest("button[data-period]");
       if (!button) return;
-      state.period = button.dataset.period === "30" ? 30 : button.dataset.period;
-      syncProfilePeriodControls();
+      state.period = button.dataset.period;
+      if (state.period === "custom") ensureCustomDates(getCurrentPlayer());
       renderProfile();
-      renderComparison();
     });
 
     elements["rating-date"].addEventListener("change", function (event) {
       if (!validDateKey(event.currentTarget.value)) return;
       state.selectedRatingDate = event.currentTarget.value;
-      state.period = "day";
-      syncProfilePeriodControls();
       renderProfile();
-      renderComparison();
+    });
+
+    elements["custom-date-start"].addEventListener("change", handleCustomDateChange);
+    elements["custom-date-end"].addEventListener("change", handleCustomDateChange);
+    elements["period-range-navigator"].addEventListener("click", function (event) {
+      var button = event.target.closest("button[data-period-nav]");
+      if (!button || button.disabled) return;
+      navigateProfilePeriod(button.dataset.periodNav);
     });
 
     document.getElementById("leaderboard-period-control").addEventListener("click", function (event) {
@@ -323,14 +331,11 @@
     if (!player) return;
     var current = player.current;
     configureRatingCalendar(player);
+    var range = profilePeriodRange(player);
     var period = calculatePeriod(player);
     var periodName = profilePeriodName();
-    var periodCopy = period ? periodName.toLowerCase() : "selected rating period";
     var lifetimeTime = positive(current.totalTimeMs);
     var lifetimeKd = safeDivide(current.kills, current.deaths);
-    var lifetimeK13 = rate13(current.kills, lifetimeTime);
-    var lifetimeC13 = rate13(current.crystals, lifetimeTime);
-    var lifetimeS13 = rate13(current.score, lifetimeTime);
     var rank = rankInfo(current.score);
 
     elements["rank-fallback"].textContent = rank.number;
@@ -353,22 +358,8 @@
     elements["overview-kd"].textContent = formatRate(lifetimeKd);
     elements["overview-score"].textContent = formatInteger(current.score);
     elements["overview-crystals"].textContent = formatInteger(current.crystals);
-    elements["time-heading"].textContent = "Hours Played";
-    elements["total-time"].textContent = formatDurationDisplay(lifetimeTime);
-    elements["total-time"].title = formatExactDuration(lifetimeTime);
-    elements["period-time"].textContent = period ? formatDurationDisplay(period.delta.time) + " during " + periodCopy : "This date needs two collected snapshots";
     elements["activity-state"].textContent = activityLabel(player);
-    elements["stat-kills"].textContent = formatInteger(current.kills);
-    elements["delta-kills"].textContent = period ? signed(period.delta.kills) + " during " + periodCopy : "— " + periodCopy;
-    elements["stat-kd"].textContent = formatRate(lifetimeKd);
-    elements["period-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) + " during " + periodCopy : "— " + periodCopy;
-    elements["stat-k13"].textContent = formatRate(lifetimeK13);
-    elements["period-k13"].textContent = period && period.delta.time > 0 ? formatRate(rate13(period.delta.kills, period.delta.time)) + " during " + periodCopy : "Lifetime rate";
-    elements["stat-c13"].textContent = formatRate(lifetimeC13);
-    elements["period-crystals"].textContent = period ? signed(period.delta.crystals) + " during " + periodCopy : "— " + periodCopy;
-    elements["stat-s13"].textContent = formatRate(lifetimeS13);
-    elements["period-score"].textContent = period ? signed(period.delta.score) + " during " + periodCopy : "— " + periodCopy;
-    renderPeriodRates(period, periodName);
+    renderPeriodSummary(period, periodName, range);
 
     renderEquipmentSummary(player);
     renderEquipmentList(player);
@@ -379,23 +370,12 @@
 
   function calculatePeriod(player) {
     if (state.period === "all") return calculatePeriodFor(player, "all");
-    var currentKey = state.selectedRatingDate || currentRatingDateKey(player);
-    var startKey;
-    var endKey;
-    if (state.period === "day") {
-      startKey = state.selectedRatingDate || currentKey;
-      endKey = shiftDateKey(startKey, 1);
-    } else if (state.period === "week") {
-      startKey = mondayDateKey(currentKey);
-      endKey = shiftDateKey(startKey, 7);
-    } else {
-      startKey = shiftDateKey(currentKey, -29);
-      endKey = shiftDateKey(currentKey, 1);
-    }
-    return calculatePeriodBetween(player, ratingBoundaryMs(startKey), ratingBoundaryMs(endKey));
+    var range = profilePeriodRange(player);
+    if (!range) return null;
+    return calculatePeriodBetween(player, ratingBoundaryMs(range.startKey), ratingBoundaryMs(range.endKey));
   }
 
-  function renderPeriodRates(period, periodName) {
+  function renderPeriodSummary(period, periodName, range) {
     var hasTime = period && period.delta.time > 0;
     var rateDetail = period ? formatDurationDisplay(period.delta.time) + " played" : "No complete snapshot range";
     elements["range-kd-label"].textContent = periodName + " K/D";
@@ -407,18 +387,49 @@
     elements["crystals-hour-detail"].textContent = rateDetail;
     elements["stat-score-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.score, period.delta.time)) : "—";
     elements["score-hour-detail"].textContent = rateDetail;
+    var dayCount = period
+      ? dateKeySpanDays(ratingDateKeyForInstant(period.first.at), ratingDateKeyForInstant(period.last.at))
+      : (range ? range.spanDays : 0);
+    var timePerDay = period && dayCount > 0 ? positive(period.delta.time) / dayCount : NaN;
+    elements["stat-time-day"].textContent = Number.isFinite(timePerDay) ? formatDurationDisplay(timePerDay) : "—";
+    elements["time-day-detail"].textContent = dayCount > 0 ? formatInteger(dayCount) + " " + plural(dayCount, "rating day") : "Displayed dates";
+
+    elements["period-crystals"].textContent = period ? signed(period.delta.crystals) : "—";
+    elements["period-score"].textContent = period ? signed(period.delta.score) : "—";
+    elements["period-time"].textContent = period ? formatDurationDisplay(period.delta.time) : "—";
+    elements["period-time"].title = period ? formatExactDuration(period.delta.time) : "";
+    elements["delta-kills"].textContent = period ? signed(period.delta.kills) : "—";
+    elements["period-deaths"].textContent = period ? signed(period.delta.deaths) : "—";
+    elements["period-golds"].textContent = period ? signed(period.delta.golds) : "—";
+    elements["period-efficiency"].textContent = period ? signed(period.delta.efficiency) : "—";
+    elements["period-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) : "—";
+    elements["period-k13"].textContent = hasTime ? formatRate(rate13(period.delta.kills, period.delta.time)) : "—";
+    elements["period-c13"].textContent = hasTime ? formatRate(rate13(period.delta.crystals, period.delta.time)) : "—";
+    elements["period-s13"].textContent = hasTime ? formatRate(rate13(period.delta.score, period.delta.time)) : "—";
+    elements["period-detail-kills-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.kills, period.delta.time)) : "—";
+    elements["period-detail-crystals-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.crystals, period.delta.time)) : "—";
+    elements["period-detail-score-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.score, period.delta.time)) : "—";
+    elements["period-detail-time-day"].textContent = Number.isFinite(timePerDay) ? formatDurationDisplay(timePerDay) : "—";
+    elements["period-summary-status"].textContent = period ? periodName + " · " + rateDetail : "This window needs snapshots close to both boundaries.";
+    elements["period-summary-board"].dataset.state = period ? "ready" : "empty";
   }
 
   function calculatePeriodBetween(player, startMs, endMs) {
     var points = allPlayerPoints(player);
     if (points.length < 2 || !Number.isFinite(startMs) || !Number.isFinite(endMs)) return null;
+    var earliestMs = parseDate(points[0].at).getTime();
     var latestMs = parseDate(points[points.length - 1].at).getTime();
     var effectiveEnd = Math.min(endMs, latestMs);
-    if (effectiveEnd <= startMs) return null;
-    var first = nearestPoint(points, startMs, effectiveEnd, 90 * 60 * 1000);
+    if (effectiveEnd <= startMs || effectiveEnd <= earliestMs) return null;
+    var partialStart = startMs < earliestMs;
+    var partialEnd = endMs > latestMs;
+    var first = partialStart ? points[0] : nearestPoint(points, startMs, effectiveEnd, 90 * 60 * 1000);
     var last = endMs > latestMs ? points[points.length - 1] : nearestPoint(points, endMs, Infinity, 90 * 60 * 1000);
     if (!first || !last || parseDate(last.at).getTime() <= parseDate(first.at).getTime()) return null;
-    return periodDelta(first, last);
+    var result = periodDelta(first, last);
+    result.partialStart = partialStart;
+    result.partialEnd = partialEnd;
+    return result;
   }
 
   function nearestPoint(points, targetMs, maximumMs, maximumDistanceMs) {
@@ -1157,8 +1168,7 @@
 
   function syncProfilePeriodControls() {
     document.querySelectorAll("#period-control button[data-period]").forEach(function (button) {
-      var value = button.dataset.period === "30" ? 30 : button.dataset.period;
-      var active = value === state.period;
+      var active = button.dataset.period === state.period;
       button.classList.toggle("is-active", active);
       button.setAttribute("aria-pressed", active ? "true" : "false");
     });
@@ -1171,35 +1181,172 @@
     if (!validDateKey(state.selectedRatingDate) || state.selectedRatingDate < minimum || state.selectedRatingDate > maximum) {
       state.selectedRatingDate = maximum;
     }
+    ensureCustomDates(player);
     elements["rating-date"].min = minimum;
     elements["rating-date"].max = maximum;
     elements["rating-date"].value = state.selectedRatingDate;
     elements["rating-date"].disabled = points.length < 2;
-    elements["rating-reset-note"].textContent = ratingRangeNote(player);
+    elements["rating-date-field"].hidden = state.period === "all" || state.period === "custom";
+    elements["custom-date-start-field"].hidden = state.period !== "custom";
+    elements["custom-date-end-field"].hidden = state.period !== "custom";
+    elements["custom-date-message"].hidden = state.period !== "custom";
+    elements["period-date-fields"].hidden = state.period === "all";
+
+    elements["custom-date-start"].min = minimum;
+    elements["custom-date-start"].max = maximum;
+    elements["custom-date-start"].value = state.customStartDate;
+    elements["custom-date-end"].min = minimum;
+    elements["custom-date-end"].max = maximum;
+    elements["custom-date-end"].value = state.customEndDate;
+    elements["custom-date-start"].disabled = points.length < 2;
+    elements["custom-date-end"].disabled = points.length < 2;
+
+    var customValid = validDateKey(state.customStartDate) && validDateKey(state.customEndDate) && state.customStartDate <= state.customEndDate;
+    elements["custom-date-start"].setAttribute("aria-invalid", state.period === "custom" && !customValid ? "true" : "false");
+    elements["custom-date-end"].setAttribute("aria-invalid", state.period === "custom" && !customValid ? "true" : "false");
+    elements["custom-date-message"].dataset.state = customValid ? "success" : "error";
+    elements["custom-date-message"].textContent = customValid
+      ? "Valid range · both dates are inclusive and use the same 04:00 reset."
+      : "The From date must be on or before the To date.";
+
+    var range = profilePeriodRange(player);
+    var period = calculatePeriod(player);
+    elements["period-range-kicker"].textContent = state.period === "all" ? "All collected snapshots" : profilePeriodName() + " view";
+    elements["period-range-label"].textContent = formatProfileRangeLabel(range);
+    elements["period-range-coverage"].textContent = periodCoverageNote(period, range);
+    elements["rating-reset-note"].textContent = "04:00 " + ratingZoneLabel() + " boundaries · closest hourly snapshots";
     elements["activity-zone-note"].textContent = "Hours played by rating day in " + ratingZoneLabel() + ", resetting at 04:00.";
     syncProfilePeriodControls();
+    syncProfilePeriodNavigation(player, range);
   }
 
-  function ratingRangeNote(player) {
-    var currentKey = state.selectedRatingDate || currentRatingDateKey(player);
+  function ensureCustomDates(player) {
+    if (!player) return;
+    var points = allPlayerPoints(player);
+    var minimum = points.length ? ratingDateKeyForInstant(points[0].at) : currentRatingDateKey(player);
+    var maximum = currentRatingDateKey(player);
+    if (!validDateKey(state.customEndDate) || state.customEndDate < minimum || state.customEndDate > maximum) {
+      state.customEndDate = maximum;
+    }
+    if (!validDateKey(state.customStartDate) || state.customStartDate < minimum || state.customStartDate > maximum) {
+      state.customStartDate = maxDateKey(minimum, shiftDateKey(state.customEndDate, -6));
+    }
+  }
+
+  function handleCustomDateChange() {
+    state.customStartDate = elements["custom-date-start"].value;
+    state.customEndDate = elements["custom-date-end"].value;
+    renderProfile();
+  }
+
+  function profilePeriodRange(player) {
+    if (!player) return null;
+    var points = allPlayerPoints(player);
+    var minimum = points.length ? ratingDateKeyForInstant(points[0].at) : currentRatingDateKey(player);
+    var maximum = currentRatingDateKey(player);
+    var currentKey = state.selectedRatingDate || maximum;
+    var startKey;
+    var endKey;
     if (state.period === "day") {
-      return formatRatingDateKey(state.selectedRatingDate || currentKey) + " · 04:00–04:00 " + ratingZoneLabel() + " · closest hourly snapshots";
+      startKey = currentKey;
+      endKey = shiftDateKey(startKey, 1);
+    } else if (state.period === "week") {
+      startKey = mondayDateKey(currentKey);
+      endKey = shiftDateKey(startKey, 7);
+    } else if (state.period === "month") {
+      startKey = monthStartDateKey(currentKey);
+      endKey = shiftMonthDateKey(startKey, 1);
+    } else if (state.period === "year") {
+      startKey = yearStartDateKey(currentKey);
+      endKey = shiftYearDateKey(startKey, 1);
+    } else if (state.period === "custom") {
+      if (!validDateKey(state.customStartDate) || !validDateKey(state.customEndDate) || state.customStartDate > state.customEndDate) return null;
+      startKey = state.customStartDate;
+      endKey = shiftDateKey(state.customEndDate, 1);
+    } else {
+      startKey = minimum;
+      endKey = shiftDateKey(maximum, 1);
     }
-    if (state.period === "week") {
-      var monday = mondayDateKey(currentKey);
-      return "Mon " + formatRatingDateKey(monday) + " 04:00 – Mon " + formatRatingDateKey(shiftDateKey(monday, 7)) + " 04:00 " + ratingZoneLabel() + " · closest hourly snapshots";
+    var requestedEndKey = shiftDateKey(endKey, -1);
+    var displayEndKey = minDateKey(requestedEndKey, maximum);
+    return {
+      startKey: startKey,
+      endKey: endKey,
+      displayEndKey: displayEndKey,
+      requestedEndKey: requestedEndKey,
+      minimumKey: minimum,
+      maximumKey: maximum,
+      spanDays: Math.max(1, dateKeySpanDays(startKey, displayEndKey))
+    };
+  }
+
+  function formatProfileRangeLabel(range) {
+    if (!range) return "Choose a valid date range";
+    if (range.startKey === range.displayEndKey) return formatRatingDateKey(range.startKey);
+    return formatRatingDateKey(range.startKey) + " – " + formatRatingDateKey(range.displayEndKey);
+  }
+
+  function periodCoverageNote(period, range) {
+    if (!range) return "The start date must not come after the end date.";
+    if (!period) return "No complete snapshot pair at these boundaries.";
+    var coverage = "Snapshots " + formatDateTime(period.first.at) + " – " + formatDateTime(period.last.at);
+    return period.partialStart ? "Partial start coverage · " + coverage : coverage;
+  }
+
+  function syncProfilePeriodNavigation(player, range) {
+    var allTime = state.period === "all";
+    var canGoEarlier = !allTime && range && range.startKey > range.minimumKey;
+    var canGoLater = !allTime && range && range.requestedEndKey < range.maximumKey;
+    elements["period-range-navigator"].querySelectorAll("button[data-period-nav]").forEach(function (button) {
+      var earlier = button.dataset.periodNav === "first" || button.dataset.periodNav === "previous";
+      var disabled = earlier ? !canGoEarlier : !canGoLater;
+      button.disabled = disabled;
+      button.setAttribute("aria-disabled", disabled ? "true" : "false");
+      button.dataset.state = disabled ? "disabled" : "default";
+    });
+  }
+
+  function navigateProfilePeriod(direction) {
+    var player = getCurrentPlayer();
+    var range = profilePeriodRange(player);
+    if (!player || !range || state.period === "all") return;
+    if (state.period === "custom") {
+      var span = Math.max(1, dateKeySpanDays(state.customStartDate, state.customEndDate));
+      if (direction === "first") {
+        state.customStartDate = range.minimumKey;
+        state.customEndDate = minDateKey(range.maximumKey, shiftDateKey(range.minimumKey, span - 1));
+      } else if (direction === "latest") {
+        state.customEndDate = range.maximumKey;
+        state.customStartDate = maxDateKey(range.minimumKey, shiftDateKey(range.maximumKey, -(span - 1)));
+      } else if (direction === "previous") {
+        state.customStartDate = maxDateKey(range.minimumKey, shiftDateKey(state.customStartDate, -span));
+        state.customEndDate = minDateKey(range.maximumKey, shiftDateKey(state.customStartDate, span - 1));
+      } else if (direction === "next") {
+        state.customEndDate = minDateKey(range.maximumKey, shiftDateKey(state.customEndDate, span));
+        state.customStartDate = maxDateKey(range.minimumKey, shiftDateKey(state.customEndDate, -(span - 1)));
+      }
+    } else if (direction === "first") {
+      state.selectedRatingDate = range.minimumKey;
+    } else if (direction === "latest") {
+      state.selectedRatingDate = range.maximumKey;
+    } else {
+      var step = direction === "previous" ? -1 : 1;
+      if (state.period === "day") state.selectedRatingDate = shiftDateKey(state.selectedRatingDate, step);
+      else if (state.period === "week") state.selectedRatingDate = shiftDateKey(state.selectedRatingDate, step * 7);
+      else if (state.period === "month") state.selectedRatingDate = shiftMonthDateKey(monthStartDateKey(state.selectedRatingDate), step);
+      else state.selectedRatingDate = shiftYearDateKey(yearStartDateKey(state.selectedRatingDate), step);
+      state.selectedRatingDate = minDateKey(range.maximumKey, maxDateKey(range.minimumKey, state.selectedRatingDate));
     }
-    if (state.period === 30) {
-      return formatRatingDateKey(shiftDateKey(currentKey, -29)) + " – " + formatRatingDateKey(currentKey) + " · 04:00 " + ratingZoneLabel() + " · closest hourly snapshots";
-    }
-    return "All collected snapshots · " + ratingZoneLabel() + " reset boundaries · hourly resolution";
+    renderProfile();
   }
 
   function profilePeriodName() {
-    if (state.period === "day") return "Daily";
-    if (state.period === "week") return "Weekly";
-    if (state.period === 30) return "30-day";
-    return "All-time";
+    if (state.period === "day") return "Day";
+    if (state.period === "week") return "Week";
+    if (state.period === "month") return "Month";
+    if (state.period === "year") return "Year";
+    if (state.period === "custom") return "Custom";
+    return "All Time";
   }
 
   function readTimeUnit() {
@@ -1438,6 +1585,44 @@
     var parts = key.split("-").map(Number);
     var weekday = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 12)).getUTCDay();
     return shiftDateKey(key, -((weekday + 6) % 7));
+  }
+
+  function monthStartDateKey(key) {
+    if (!validDateKey(key)) return key;
+    var parts = key.split("-");
+    return parts[0] + "-" + parts[1] + "-01";
+  }
+
+  function shiftMonthDateKey(key, months) {
+    if (!validDateKey(key)) return key;
+    var parts = key.split("-").map(Number);
+    var date = new Date(Date.UTC(parts[0], parts[1] - 1 + months, 1, 12));
+    return date.getUTCFullYear() + "-" + String(date.getUTCMonth() + 1).padStart(2, "0") + "-01";
+  }
+
+  function yearStartDateKey(key) {
+    if (!validDateKey(key)) return key;
+    return key.slice(0, 4) + "-01-01";
+  }
+
+  function shiftYearDateKey(key, years) {
+    if (!validDateKey(key)) return key;
+    return String(Number(key.slice(0, 4)) + years).padStart(4, "0") + "-01-01";
+  }
+
+  function dateKeySpanDays(startKey, endKey) {
+    if (!validDateKey(startKey) || !validDateKey(endKey) || startKey > endKey) return 0;
+    var start = startKey.split("-").map(Number);
+    var end = endKey.split("-").map(Number);
+    return Math.floor((Date.UTC(end[0], end[1] - 1, end[2], 12) - Date.UTC(start[0], start[1] - 1, start[2], 12)) / DAY_MS) + 1;
+  }
+
+  function minDateKey(first, second) {
+    return first < second ? first : second;
+  }
+
+  function maxDateKey(first, second) {
+    return first > second ? first : second;
   }
 
   function validDateKey(key) {

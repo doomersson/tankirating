@@ -65,7 +65,7 @@ check(leaderboardOrder.every((position, index) => position >= 0 && (index === 0 
 check(app.includes('"./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg"'), "profile equipment names are not mapped to their matching SVG filenames");
 check(app.includes("positive(item.timeMs) / total >= 0.05") && app.includes('name: "Others"'), "equipment below 5% must be grouped into Others on the chart");
 check(app.includes("var legend = items.map") && app.includes("grouped into Others on chart"), "the equipment legend must list every item and identify chart-only grouping");
-check(html.includes("equipment-share-panel") && css.includes(".equipment-share-panel .equipment-tabs") && /\.equipment-share-panel \.usage-legend\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/.test(css), "equipment categories, two-column list, or right-side chart layout is missing");
+check(html.includes("equipment-share-panel") && /\.equipment-share-panel \.equipment-tabs\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)/.test(css) && /\.equipment-share-panel \.usage-legend\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/.test(css), "equipment category rail, two-column list, or right-side chart layout is missing");
 check(/class="toast-region"[\s\S]*?id="data-notice"/.test(html) && app.includes("showDataNoticeToast") && app.includes("hideDataNoticeToast"), "profile data notice must render as an auto-hiding toast");
 check(app.includes("conic-gradient(") && css.includes("@keyframes pie-unfold") && css.includes(".usage-pie.is-unfolding"), "animated equipment pie rendering is missing");
 check(!app.includes('class="usage-bar"'), "equipment usage bars must be replaced by the pie breakdown");

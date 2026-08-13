@@ -1982,6 +1982,7 @@ dialog {
   .equipment-share-panel .equipment-tabs {
     grid-column: 1;
     grid-row: 2;
+    grid-template-columns: minmax(0, 1fr);
     padding: var(--space-md) var(--space-sm);
     display: grid;
     align-content: start;

@@ -1,5 +1,5 @@
 /* Hallmark · macrostructure: Stat-Led · tone: minimal dark technical · anchor hue: cool cyan 210° */
-/* Hallmark · component: period workbench · genre: atmospheric · theme: Midnight
+/* Hallmark · component: compact period workbench + global time preference · genre: atmospheric · theme: Midnight
  * states: default · hover · focus · active · disabled · loading · error · success
  * contrast: pass (40–41)
  * pre-emit critique: P5 H5 E5 S5 R5 V4
@@ -494,30 +494,27 @@ button,
   gap: var(--space-sm);
 }
 
-.period-console,
-.period-summary-board {
+.period-console {
   margin-block-start: var(--space-xl);
   border: var(--rule-thin) solid var(--color-rule);
   background: var(--color-paper-2);
 }
 
-.period-console-heading,
-.period-summary-heading {
+.period-console-heading {
   padding: var(--space-md);
   display: grid;
   gap: var(--space-md);
 }
 
 .period-console-heading,
-.period-summary-heading,
 .period-mode-control,
 .period-range-navigator,
-.period-date-fields {
+.period-date-fields,
+.period-summary-meta {
   border-block-end: var(--rule-thin) solid var(--color-rule);
 }
 
-.period-console-heading p,
-.period-summary-heading p {
+.period-console-heading p {
   margin-block-start: var(--space-xs);
   color: var(--color-neutral);
   font-size: var(--text-sm);
@@ -731,23 +728,13 @@ button,
   color: var(--color-success);
 }
 
-.period-console-footer {
+.period-summary-meta {
   padding: var(--space-sm) var(--space-md);
 }
 
-.period-time-format {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-sm);
-}
-
-.period-time-format > span {
+.period-summary-meta p {
   color: var(--color-neutral);
-  font-size: var(--text-xs);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: var(--text-sm);
 }
 
 .period-summary-board[data-state="loading"] {
@@ -1920,8 +1907,37 @@ dialog {
   color: var(--color-neutral);
 }
 
+.tool-preferences {
+  padding: var(--space-md);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-lg);
+  border-block-end: var(--rule-thin) solid var(--color-rule);
+}
+
+.tool-preferences > div:first-child {
+  min-width: min(100%, 20rem);
+  flex: 1 1 20rem;
+}
+
+.tool-preferences strong {
+  font-family: var(--font-display);
+}
+
+.tool-preferences p {
+  margin-block-start: var(--space-2xs);
+  color: var(--color-neutral);
+  font-size: var(--text-sm);
+}
+
+.tool-preferences .segmented-control {
+  flex: 0 0 auto;
+}
+
 .tool-actions {
-  padding: var(--space-lg) var(--space-md) var(--space-sm);
+  padding: var(--space-md) var(--space-md) var(--space-sm);
   display: grid;
   gap: var(--space-sm);
 }
@@ -2073,7 +2089,7 @@ dialog {
 
   .leaderboard-table-wrap table {
     display: table;
-    min-width: 74rem;
+    min-width: 84rem;
   }
 
   .leaderboard-table-wrap thead {
@@ -2165,8 +2181,7 @@ dialog {
     text-align: end;
   }
 
-  .period-console-heading,
-  .period-summary-heading {
+  .period-console-heading {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
   }
@@ -2227,7 +2242,7 @@ dialog {
   }
 
   .stat-strip--overview {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .stat-strip article {
@@ -2240,11 +2255,11 @@ dialog {
     border-inline-end: 0;
   }
 
-  .stat-strip--overview article:nth-child(-n + 3) {
+  .stat-strip--overview article:nth-child(-n + 4) {
     border-block-end: var(--rule-thin) solid var(--color-rule);
   }
 
-  .stat-strip--overview article:nth-child(3n) {
+  .stat-strip--overview article:nth-child(4n) {
     border-inline-end: 0;
   }
 
@@ -2312,15 +2327,15 @@ dialog {
   }
 
   .stat-strip--overview {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
   }
 
   .stat-strip--overview article,
-  .stat-strip--overview article:nth-child(-n + 3) {
+  .stat-strip--overview article:nth-child(-n + 4) {
     border-block-end: 0;
   }
 
-  .stat-strip--overview article:nth-child(3n) {
+  .stat-strip--overview article:nth-child(4n) {
     border-inline-end: var(--rule-thin) solid var(--color-rule);
   }
 

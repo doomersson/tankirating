@@ -61,7 +61,7 @@
     leaderboardSort: "kills13",
     leaderboardDirection: "desc",
     leaderboardPeriod: 7,
-    timeUnit: "exact",
+    timeUnit: "days",
     animatedEquipment: {}
   };
 
@@ -98,9 +98,9 @@
       "data-notice", "data-notice-text", "use-site-data", "rank-token", "profile-context",
       "rank-fallback", "rank-icon", "rank-progress-text", "rank-progress-percent", "rank-progress-bar",
       "profile-title", "player-meta", "hero-efficiency", "hero-position",
-      "overview-time", "overview-kills", "overview-deaths", "overview-kd", "overview-score", "overview-crystals",
+      "overview-time", "overview-kills", "overview-deaths", "overview-kd", "overview-score", "overview-crystals", "overview-crystals-experience",
       "period-time", "activity-state", "delta-kills", "period-deaths", "period-golds", "period-efficiency",
-      "period-kd", "period-k13", "period-c13", "period-s13", "period-crystals", "period-score",
+      "period-kd", "period-crystals-experience", "period-k13", "period-c13", "period-s13", "period-crystals", "period-score",
       "period-detail-kills-hour", "period-detail-crystals-hour", "period-detail-score-hour", "period-detail-time-day",
       "rating-date", "rating-date-field", "custom-date-start", "custom-date-end", "custom-date-start-field", "custom-date-end-field",
       "custom-date-message", "period-date-fields", "rating-reset-note", "period-range-kicker", "period-range-label", "period-range-coverage",
@@ -358,6 +358,7 @@
     elements["overview-kd"].textContent = formatRate(lifetimeKd);
     elements["overview-score"].textContent = formatInteger(current.score);
     elements["overview-crystals"].textContent = formatInteger(current.crystals);
+    elements["overview-crystals-experience"].textContent = formatRate(safeDivide(current.crystals, current.score));
     elements["activity-state"].textContent = activityLabel(player);
     renderPeriodSummary(period, periodName, range);
 
@@ -403,6 +404,7 @@
     elements["period-golds"].textContent = period ? signed(period.delta.golds) : "—";
     elements["period-efficiency"].textContent = period ? signed(period.delta.efficiency) : "—";
     elements["period-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) : "—";
+    elements["period-crystals-experience"].textContent = period ? formatRate(safeDivide(period.delta.crystals, period.delta.score)) : "—";
     elements["period-k13"].textContent = hasTime ? formatRate(rate13(period.delta.kills, period.delta.time)) : "—";
     elements["period-c13"].textContent = hasTime ? formatRate(rate13(period.delta.crystals, period.delta.time)) : "—";
     elements["period-s13"].textContent = hasTime ? formatRate(rate13(period.delta.score, period.delta.time)) : "—";
@@ -644,7 +646,7 @@
         '<span class="bar-label">' + escapeHtml(dateLabel) + '</span></div>';
     }).join("");
     var total = days.reduce(function (sum, day) { return sum + day.value; }, 0);
-    elements["activity-chart"].setAttribute("aria-label", "Hours played during the last 14 days: " + formatDurationDisplay(total) + ".");
+    elements["activity-chart"].setAttribute("aria-label", "Time played during the last 14 days: " + formatDurationDisplay(total) + ".");
   }
 
   function activitySlicesMarkup(timeMs) {
@@ -716,14 +718,15 @@
       return '<tr><td class="leaderboard-order" data-label="Group #">' + (index + 1) + '</td>' +
         '<td class="leaderboard-player-cell" data-label="Player"><button class="leaderboard-player" type="button" data-player-id="' + escapeAttr(entry.id) + '">' + rankBadgeMarkup(rank) + '<span><strong>' + escapeHtml(current.name) + '</strong><small>' + escapeHtml(rank.name) + '</small></span></button></td>' +
         '<td data-label="Efficiency"><span class="leaderboard-efficiency"><strong>' + escapeHtml(formatLeaderboardInteger(metrics.efficiency, allTime)) + '</strong><small>' + (current.efficiencyPosition > 0 ? "#" + escapeHtml(formatInteger(current.efficiencyPosition)) : "Unranked") + '</small></span></td>' +
-        '<td data-label="Score">' + escapeHtml(formatLeaderboardInteger(metrics.score, allTime)) + '</td>' +
+        '<td data-label="Experience">' + escapeHtml(formatLeaderboardInteger(metrics.score, allTime)) + '</td>' +
         '<td data-label="Crystals">' + escapeHtml(formatLeaderboardInteger(metrics.crystals, allTime)) + '</td>' +
+        '<td data-label="Crystals / Experience">' + escapeHtml(formatRate(metrics.crystalsExperience)) + '</td>' +
         '<td data-label="Kills / 13m">' + escapeHtml(formatRate(metrics.kills13)) + '</td>' +
         '<td data-label="Kills">' + escapeHtml(formatLeaderboardInteger(metrics.kills, allTime)) + '</td>' +
         '<td data-label="Deaths">' + escapeHtml(formatLeaderboardInteger(metrics.deaths, allTime)) + '</td>' +
         '<td data-label="K/D">' + escapeHtml(formatRate(metrics.kd)) + '</td>' +
         '<td data-label="Golds">' + escapeHtml(formatLeaderboardInteger(metrics.golds, allTime)) + '</td>' +
-        '<td data-label="Hours Played"' + (Number.isFinite(metrics.time) ? ' title="' + escapeAttr(formatExactDuration(metrics.time)) + '"' : "") + '>' + escapeHtml(formatHoursPlayed(metrics.time)) + '</td></tr>';
+        '<td data-label="Time played"' + (Number.isFinite(metrics.time) ? ' title="' + escapeAttr(formatExactDuration(metrics.time)) + '"' : "") + '>' + escapeHtml(formatTimePlayed(metrics.time)) + '</td></tr>';
     }).join("");
     elements["leaderboard-list"].innerHTML = '<div class="leaderboard-table-wrap"><table><caption class="sr-only">Tracked player statistics for ' + escapeHtml(periodLabel) + ', sorted by ' + escapeHtml(columns.find(function (column) { return column.key === sort; }).label) + (direction === "desc" ? " from highest to lowest." : " from lowest to highest.") + '</caption><thead><tr><th scope="col">#</th><th scope="col">Player</th>' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
   }
@@ -731,14 +734,15 @@
   function leaderboardColumns() {
     return [
       { key: "efficiency", label: "Efficiency" },
-      { key: "score", label: "Score" },
+      { key: "score", label: "Experience" },
       { key: "crystals", label: "Crystals" },
+      { key: "crystalsExperience", label: "Crystals / Experience", shortLabel: "C/EXP" },
       { key: "kills13", label: "Kills / 13m", shortLabel: "K/13m" },
       { key: "kills", label: "Kills" },
       { key: "deaths", label: "Deaths" },
       { key: "kd", label: "K/D" },
       { key: "golds", label: "Golds" },
-      { key: "time", label: "Hours Played", shortLabel: "Hours" }
+      { key: "time", label: "Time played", shortLabel: "Time" }
     ];
   }
 
@@ -749,6 +753,7 @@
         efficiency: positive(current.efficiency),
         score: positive(current.score),
         crystals: positive(current.crystals),
+        crystalsExperience: safeDivide(current.crystals, current.score),
         kills13: rate13(current.kills, current.totalTimeMs),
         kills: positive(current.kills),
         deaths: positive(current.deaths),
@@ -759,12 +764,13 @@
     }
     var period = calculatePeriodFor(player, state.leaderboardPeriod);
     if (!period) {
-      return { efficiency: NaN, score: NaN, crystals: NaN, kills13: NaN, kills: NaN, deaths: NaN, kd: NaN, golds: NaN, time: NaN };
+      return { efficiency: NaN, score: NaN, crystals: NaN, crystalsExperience: NaN, kills13: NaN, kills: NaN, deaths: NaN, kd: NaN, golds: NaN, time: NaN };
     }
     return {
       efficiency: period.delta.efficiency,
       score: period.delta.score,
       crystals: period.delta.crystals,
+      crystalsExperience: safeDivide(period.delta.crystals, period.delta.score),
       kills13: rate13(period.delta.kills, period.delta.time),
       kills: period.delta.kills,
       deaths: period.delta.deaths,
@@ -839,9 +845,10 @@
       metricRow("Efficiency", players, function (p) { return positive(p.current.efficiency); }, formatInteger),
       metricRow("K/D", players, function (p) { return safeDivide(p.current.kills, p.current.deaths); }, formatRate),
       metricRow("Kills / 13 min", players, function (p) { return rate13(p.current.kills, p.current.totalTimeMs); }, formatRate),
-      metricRow("Hours Played", players, function (p) { return positive(p.current.totalTimeMs); }, formatHoursPlayed),
-      metricRow("Score", players, function (p) { return positive(p.current.score); }, formatInteger),
+      metricRow("Time played", players, function (p) { return positive(p.current.totalTimeMs); }, formatTimePlayed),
+      metricRow("Experience", players, function (p) { return positive(p.current.score); }, formatInteger),
       metricRow("Crystals", players, function (p) { return positive(p.current.crystals); }, formatInteger),
+      metricRow("Crystals / Experience", players, function (p) { return safeDivide(p.current.crystals, p.current.score); }, formatRate),
       textRow("Favorite hull", players, function (p) { var item = favoriteItem((p.current.equipment || {}).hulls); return item ? item.name : "—"; }),
       textRow("Favorite turret", players, function (p) { var item = favoriteItem((p.current.equipment || {}).turrets); return item ? item.name : "—"; }),
       textRow("Favorite mode", players, function (p) { var item = favoriteItem((p.current.equipment || {}).modes); return item ? item.name : "—"; })
@@ -1032,9 +1039,9 @@
   function exportProfileCsv() {
     var player = getCurrentPlayer();
     if (!player) return;
-    var rows = [["timestamp", "kills", "deaths", "crystals", "score", "golds", "efficiency", "rank", "battle_time_ms"]];
+    var rows = [["timestamp", "kills", "deaths", "crystals", "experience", "crystals_per_experience", "golds", "efficiency", "rank", "battle_time_ms"]];
     periodPoints(player).forEach(function (point) {
-      rows.push([point.at, point.k, point.d, point.c, point.s, point.g, point.e, point.r, point.t]);
+      rows.push([point.at, point.k, point.d, point.c, point.s, safeDivide(point.c, point.s), point.g, point.e, point.r, point.t]);
     });
     var csv = rows.map(function (row) { return row.map(csvCell).join(","); }).join("\r\n");
     downloadBlob(csv, player.current.name.toLowerCase() + "-history-" + fileDate(new Date()) + ".csv", "text/csv;charset=utf-8");
@@ -1215,7 +1222,7 @@
     elements["period-range-label"].textContent = formatProfileRangeLabel(range);
     elements["period-range-coverage"].textContent = periodCoverageNote(period, range);
     elements["rating-reset-note"].textContent = "04:00 " + ratingZoneLabel() + " boundaries · closest hourly snapshots";
-    elements["activity-zone-note"].textContent = "Hours played by rating day in " + ratingZoneLabel() + ", resetting at 04:00.";
+    elements["activity-zone-note"].textContent = "Time played by rating day in " + ratingZoneLabel() + ", resetting at 04:00.";
     syncProfilePeriodControls();
     syncProfilePeriodNavigation(player, range);
   }
@@ -1352,18 +1359,20 @@
   function readTimeUnit() {
     try {
       var saved = window.localStorage.getItem("tanki-time-unit");
-      return ["exact", "hours", "days"].indexOf(saved) >= 0 ? saved : "exact";
+      return saved === "hours" ? "hours" : "days";
     } catch (_) {
-      return "exact";
+      return "days";
     }
   }
 
   function setTimeUnit(unit) {
-    if (["exact", "hours", "days"].indexOf(unit) < 0) return;
+    if (["hours", "days"].indexOf(unit) < 0) return;
     state.timeUnit = unit;
     try { window.localStorage.setItem("tanki-time-unit", unit); } catch (_) { /* preference remains tab-local */ }
     syncTimeUnitControls();
     renderProfile();
+    renderLeaderboard();
+    renderComparison();
   }
 
   function syncTimeUnitControls() {
@@ -1456,12 +1465,14 @@
   function formatDurationDisplay(ms) {
     ms = positive(ms);
     if (state.timeUnit === "hours") return decimal.format(ms / 3600000) + " hours";
-    if (state.timeUnit === "days") return decimal.format(ms / DAY_MS) + " days";
     return formatDurationWords(ms);
   }
 
-  function formatHoursPlayed(ms) {
-    return Number.isFinite(Number(ms)) ? decimal.format(Math.max(0, Number(ms)) / 3600000) + " h" : "—";
+  function formatTimePlayed(ms) {
+    if (!Number.isFinite(Number(ms))) return "—";
+    return state.timeUnit === "hours"
+      ? decimal.format(Math.max(0, Number(ms)) / 3600000) + " h"
+      : formatDurationWords(ms);
   }
 
   function formatDurationWords(ms) {

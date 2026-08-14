@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-14T06:45:47Z",
+  "generatedAt": "2026-08-14T08:39:15Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "abyss": {
@@ -5392,6 +5392,240 @@
       ],
       "previousNames": []
     },
+    "neet": {
+      "current": {
+        "at": "2026-08-14T08:39:15Z",
+        "name": "neet",
+        "rank": 12,
+        "score": 89000,
+        "scoreBase": 76000,
+        "scoreNext": 98000,
+        "kills": 2558,
+        "deaths": 145,
+        "crystals": 72085,
+        "golds": 1,
+        "efficiency": 3497799,
+        "efficiencyPosition": 2075134,
+        "totalTimeMs": 35278684,
+        "gearScore": 2750,
+        "premium": true,
+        "equipment": {
+          "hulls": [
+            {
+              "name": "Crusader",
+              "timeMs": 33568193,
+              "score": 59485
+            },
+            {
+              "name": "Paladin",
+              "timeMs": 1249697,
+              "score": 2135
+            },
+            {
+              "name": "Hopper",
+              "timeMs": 460794,
+              "score": 2160
+            },
+            {
+              "name": "Ares",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Dictator",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Hornet",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Hunter",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Mammoth",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Titan",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Viking",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Wasp",
+              "timeMs": 0,
+              "score": 0
+            }
+          ],
+          "turrets": [
+            {
+              "name": "Tsunami",
+              "timeMs": 29512409,
+              "score": 49420
+            },
+            {
+              "name": "Smoky",
+              "timeMs": 3297735,
+              "score": 7640
+            },
+            {
+              "name": "Gauss",
+              "timeMs": 2468540,
+              "score": 6720
+            },
+            {
+              "name": "Firebird",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Freeze",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Hammer",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Isida",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Magnum",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Railgun",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Ricochet",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Scorpion",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Shaft",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Striker",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Tesla",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Thunder",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Twins",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Vulcan",
+              "timeMs": 0,
+              "score": 0
+            }
+          ],
+          "drones": [
+            {
+              "name": "Oracle",
+              "timeMs": 33535122,
+              "score": 63780
+            }
+          ],
+          "modules": [],
+          "modes": [
+            {
+              "name": "Team Deathmatch",
+              "timeMs": 10237055,
+              "score": 18025
+            },
+            {
+              "name": "Capture The Flag",
+              "timeMs": 8789576,
+              "score": 14365
+            },
+            {
+              "name": "Juggernaut",
+              "timeMs": 6430226,
+              "score": 10755
+            },
+            {
+              "name": "Control Points",
+              "timeMs": 2970841,
+              "score": 7735
+            },
+            {
+              "name": "Deathmatch",
+              "timeMs": 2860664,
+              "score": 4760
+            },
+            {
+              "name": "Siege",
+              "timeMs": 2690185,
+              "score": 5195
+            },
+            {
+              "name": "Rugby",
+              "timeMs": 1245813,
+              "score": 2945
+            },
+            {
+              "name": "Assault",
+              "timeMs": 0,
+              "score": 0
+            },
+            {
+              "name": "Solo Juggernaut",
+              "timeMs": 0,
+              "score": 0
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "at": "2026-08-14T08:39:15Z",
+          "k": 2558,
+          "d": 145,
+          "c": 72085,
+          "s": 89000,
+          "g": 1,
+          "e": 3497799,
+          "r": 12,
+          "t": 35278684
+        }
+      ],
+      "previousNames": []
+    },
     "opex-rah": {
       "current": {
         "at": "2026-08-14T06:45:47Z",
@@ -7796,11 +8030,12 @@
     "integer",
     "kaspersky",
     "mantish",
+    "neet",
     "opex-rah",
     "tesl4",
     "vortec",
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-14T06:45:47Z"
+  "lastAttemptAt": "2026-08-14T08:39:15Z"
 }

@@ -1,5 +1,5 @@
 /* Hallmark · macrostructure: Stat-Led · tone: minimal dark technical · anchor hue: cool cyan 210° */
-/* Hallmark · component: unified period toolbar + lifetime summary + equipment modules · genre: atmospheric · theme: Midnight
+/* Hallmark · component: interactive equipment share chart · genre: atmospheric · theme: Midnight
  * states: default · hover · focus · active · disabled · loading · error · success
  * contrast: pass (40–41)
  * pre-emit critique: P5 H5 E5 S5 R5 V4
@@ -1147,10 +1147,24 @@ button,
 .usage-pie {
   width: min(12rem, 58vw);
   aspect-ratio: 1;
-  border: var(--rule-thin) solid var(--color-rule-2);
   border-radius: 50%;
-  background: var(--pie-background, var(--color-paper-3));
+  overflow: visible;
   transform-origin: center;
+}
+
+.usage-pie-slice {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  opacity: 1;
+  transition: opacity var(--dur-micro) var(--ease-out);
+}
+
+.usage-pie-slice:focus-visible {
+  outline-color: var(--color-focus);
+}
+
+.usage-pie-layout.has-highlight .usage-pie-slice:not(.is-highlighted) {
+  opacity: 0.22;
 }
 
 .usage-pie.is-unfolding {
@@ -1218,6 +1232,25 @@ button,
   display: flex;
   align-items: center;
   gap: var(--space-xs);
+  opacity: 1;
+  transition: color var(--dur-micro) var(--ease-out), opacity var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+
+.usage-legend-identity .equipment-item-icon {
+  transition: opacity var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+
+.usage-pie-layout.has-highlight .usage-legend-item:not(.is-highlighted) .usage-legend-identity {
+  opacity: 0.38;
+}
+
+.usage-legend-item.is-highlighted .usage-legend-identity {
+  color: var(--color-accent);
+  transform: translateX(var(--space-2xs));
+}
+
+.usage-legend-item.is-highlighted .equipment-item-icon {
+  transform: scale(1.16);
 }
 
 .usage-legend-copy {
@@ -1255,6 +1288,12 @@ button,
   color: var(--color-neutral);
   font-size: var(--text-xs);
   text-align: end;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .usage-pie-slice {
+    cursor: pointer;
+  }
 }
 
 .activity-chart {

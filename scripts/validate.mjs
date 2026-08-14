@@ -20,6 +20,8 @@ const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow,
 
 const failures = [];
 const check = (condition, message) => { if (!condition) failures.push(message); };
+const miscIconFiles = ["crystal.svg", "deaths.svg", "gearscore.svg", "golds.svg", "iconExperience.svg", "iconTime.svg", "premiumicon.svg"];
+const miscIcons = await Promise.all(miscIconFiles.map((name) => read(`assets/icons/misc/${name}`)));
 
 check(html.includes('name="viewport"'), "viewport metadata is missing");
 check(html.includes("viewport-fit=cover"), "safe-area viewport support is missing");
@@ -42,7 +44,7 @@ check(html.includes('id="rating-date"') && html.includes('id="custom-date-start"
 check(/class="period-mode-toolbar"[\s\S]*?id="period-control"[\s\S]*?id="period-date-fields"/.test(html) && css.includes(".period-mode-toolbar"), "period modes and reference dates must share one compact toolbar");
 check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"') && html.includes('id="stat-time-day"'), "profile K/D, hourly, or time-per-day headline metrics are missing");
 check(html.includes('id="overview-crystals-experience"') && html.includes('id="period-crystals-experience"') && app.includes("safeDivide(period.delta.crystals, period.delta.score)"), "Crystals / Experience is missing from lifetime or period statistics");
-check(["crystals", "score", "ratio", "time", "kills", "deaths", "golds", "efficiency", "kd"].every((icon) => html.includes(`data-period-icon="${icon}"`)) && css.includes(".period-metric-icon"), "future period metric icon hooks are incomplete");
+check(["crystals", "score", "ratio", "time", "kills", "deaths", "golds", "kd"].every((icon) => html.includes(`data-metric-icon="${icon}"`)) && html.includes('class="metric-icon__slash">/</span>') && css.includes(".metric-icon__part--kills") && css.includes(".metric-icon__part--deaths") && css.includes('url("./icons/modes/deathmatch.svg")') && app.includes("metricIconMarkup") && miscIcons.every((icon) => icon.includes("<svg")), "shared metric artwork, composite K/D icon, or account-detail icon mapping is incomplete");
 check(!html.includes(">Score<") && !html.includes(">Score /") && app.includes('{ key: "score", label: "Experience" }') && app.includes('metricRow("Experience"'), "the player score metric must be labelled Experience everywhere in the interface");
 check(app.includes('state.period === "month"') && app.includes('state.period === "year"') && app.includes('state.period === "custom"') && app.includes("shiftMonthDateKey") && app.includes("shiftYearDateKey"), "calendar month, year, or custom range calculations are missing");
 check(!/href="\//.test(html) && !/src="\//.test(html), "root-absolute assets break project GitHub Pages sites");
@@ -77,7 +79,7 @@ const opexDroneNames = tracker.players?.["opex-rah"]?.current?.equipment?.drones
 check(["Hyperion", "Mechanic", "Defender", "Crisis", "Trickster", "Booster", "Brutus", "Hyperion XT", "Default", "Crisis XT", "Saboteur"].every((name) => opexDroneNames.includes(name)), "Opex-Rah's complete drone list is missing from tracker data");
 check(html.includes("equipment-share-panel") && /\.equipment-share-panel \.equipment-tabs\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)/.test(css) && /\.equipment-share-panel \.usage-legend\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/.test(css), "equipment category rail, two-column list, or right-side chart layout is missing");
 check(/class="toast-region"[\s\S]*?id="data-notice"/.test(html) && app.includes("showDataNoticeToast") && app.includes("hideDataNoticeToast"), "profile data notice must render as an auto-hiding toast");
-check(app.includes('class="usage-pie-slice"') && app.includes('data-highlight-key="') && app.includes("setEquipmentPieHighlight") && css.includes(".usage-pie-layout.has-highlight") && css.includes(".usage-legend-item.is-highlighted"), "interactive equipment pie-to-legend highlighting is missing");
+check(app.includes('class="usage-pie-slice"') && app.includes("equipmentPieSlicePath") && app.includes('class="usage-legend-item" role="listitem" tabindex="0"') && app.includes(".usage-legend-item[data-highlight-key]") && app.includes("setEquipmentPieHighlight") && css.includes(".usage-pie-layout.has-highlight") && css.includes(".usage-legend-item.is-highlighted"), "bidirectional equipment pie-to-legend highlighting or proper pie wedges are missing");
 check(app.includes('state.equipment === "modules" ? ""') && app.includes("Most used module · "), "module usage must show percentages without misleading hour totals");
 check(css.includes("@keyframes pie-unfold") && css.includes(".usage-pie.is-unfolding"), "animated equipment pie rendering is missing");
 check(!app.includes('class="usage-bar"'), "equipment usage bars must be replaced by the pie breakdown");

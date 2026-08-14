@@ -95,31 +95,31 @@
 
           <section class="stat-strip stat-strip--overview" aria-label="Overall account statistics">
             <article>
-              <span class="metric-label">Time played</span>
+              <span class="metric-label"><span class="metric-icon" data-metric-icon="time" aria-hidden="true"></span>Time played</span>
               <strong id="overview-time">—</strong>
             </article>
             <article>
-              <span class="metric-label">Kills</span>
+              <span class="metric-label"><span class="metric-icon" data-metric-icon="kills" aria-hidden="true"></span>Kills</span>
               <strong id="overview-kills">—</strong>
             </article>
             <article>
-              <span class="metric-label">Deaths</span>
+              <span class="metric-label"><span class="metric-icon" data-metric-icon="deaths" aria-hidden="true"></span>Deaths</span>
               <strong id="overview-deaths">—</strong>
             </article>
             <article>
-              <span class="metric-label">K/D</span>
+              <span class="metric-label"><span class="metric-icon metric-icon--kd" data-metric-icon="kd" aria-hidden="true"><span class="metric-icon__part metric-icon__part--kills"></span><span class="metric-icon__slash">/</span><span class="metric-icon__part metric-icon__part--deaths"></span></span>K/D</span>
               <strong id="overview-kd">—</strong>
             </article>
             <article>
-              <span class="metric-label">Experience</span>
+              <span class="metric-label"><span class="metric-icon" data-metric-icon="score" aria-hidden="true"></span>Experience</span>
               <strong id="overview-score">—</strong>
             </article>
             <article>
-              <span class="metric-label">Crystals</span>
+              <span class="metric-label"><span class="metric-icon" data-metric-icon="crystals" aria-hidden="true"></span>Crystals</span>
               <strong id="overview-crystals">—</strong>
             </article>
             <article>
-              <span class="metric-label">Crystals / Experience</span>
+              <span class="metric-label"><span class="metric-icon" data-metric-icon="ratio" aria-hidden="true"></span>Crystals / Experience</span>
               <strong id="overview-crystals-experience">—</strong>
             </article>
           </section>
@@ -216,27 +216,27 @@
 
             <div class="period-highlight-grid" aria-label="Period headline statistics">
               <article class="period-highlight period-highlight--primary">
-                <span class="period-metric-label" id="range-kd-label"><span class="period-metric-icon" data-period-icon="kd" aria-hidden="true"></span>K/D</span>
+                <span class="period-metric-label" id="range-kd-label"><span class="metric-icon metric-icon--kd" data-metric-icon="kd" aria-hidden="true"><span class="metric-icon__part metric-icon__part--kills"></span><span class="metric-icon__slash">/</span><span class="metric-icon__part metric-icon__part--deaths"></span></span>K/D</span>
                 <strong id="stat-range-kd">—</strong>
                 <small id="range-kd-detail">Kills and deaths in range</small>
               </article>
               <article class="period-highlight">
-                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills / hour</span>
+                <span class="period-metric-label"><span class="metric-icon" data-metric-icon="kills" aria-hidden="true"></span>Kills / hour</span>
                 <strong id="stat-kills-hour">—</strong>
                 <small id="kills-hour-detail">Selected range</small>
               </article>
               <article class="period-highlight">
-                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals / hour</span>
+                <span class="period-metric-label"><span class="metric-icon" data-metric-icon="crystals" aria-hidden="true"></span>Crystals / hour</span>
                 <strong id="stat-crystals-hour">—</strong>
                 <small id="crystals-hour-detail">Selected range</small>
               </article>
               <article class="period-highlight">
-                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Experience / hour</span>
+                <span class="period-metric-label"><span class="metric-icon" data-metric-icon="score" aria-hidden="true"></span>Experience / hour</span>
                 <strong id="stat-score-hour">—</strong>
                 <small id="score-hour-detail">Selected range</small>
               </article>
               <article class="period-highlight">
-                <span class="period-metric-label" id="time-day-label"><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span>
+                <span class="period-metric-label" id="time-day-label"><span class="metric-icon" data-metric-icon="time" aria-hidden="true"></span>Time / day</span>
                 <strong id="stat-time-day">—</strong>
                 <small id="time-day-detail">Across displayed dates</small>
               </article>
@@ -246,28 +246,28 @@
               <section class="period-detail-column" aria-labelledby="period-totals-title">
                 <h3 id="period-totals-title">Totals</h3>
                 <div class="period-metric-list" role="list">
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals</span><strong id="period-crystals">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Experience</span><strong id="period-score">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time played</span><strong id="period-time">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills</span><strong id="delta-kills">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="deaths" aria-hidden="true"></span>Deaths</span><strong id="period-deaths">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="golds" aria-hidden="true"></span>Golds</span><strong id="period-golds">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span id="period-efficiency-label"><span class="period-metric-icon" data-period-icon="efficiency" aria-hidden="true"></span>Efficiency gained</span><strong id="period-efficiency">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="crystals" aria-hidden="true"></span>Crystals</span><strong id="period-crystals">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="score" aria-hidden="true"></span>Experience</span><strong id="period-score">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="time" aria-hidden="true"></span>Time played</span><strong id="period-time">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="kills" aria-hidden="true"></span>Kills</span><strong id="delta-kills">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="deaths" aria-hidden="true"></span>Deaths</span><strong id="period-deaths">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="golds" aria-hidden="true"></span>Golds</span><strong id="period-golds">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span id="period-efficiency-label">Efficiency gained</span><strong id="period-efficiency">—</strong></div>
                 </div>
               </section>
 
               <section class="period-detail-column" aria-labelledby="period-rates-title">
                 <h3 id="period-rates-title">Rates</h3>
                 <div class="period-metric-list" role="list">
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kd" aria-hidden="true"></span>K/D</span><strong id="period-kd">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="ratio" aria-hidden="true"></span>Crystals / Experience</span><strong id="period-crystals-experience">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills / 13 min</span><strong id="period-k13">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals / 13 min</span><strong id="period-c13">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Experience / 13 min</span><strong id="period-s13">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills / hour</span><strong id="period-detail-kills-hour">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals / hour</span><strong id="period-detail-crystals-hour">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Experience / hour</span><strong id="period-detail-score-hour">—</strong></div>
-                  <div class="period-metric-row" id="period-detail-time-day-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span><strong id="period-detail-time-day">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon metric-icon--kd" data-metric-icon="kd" aria-hidden="true"><span class="metric-icon__part metric-icon__part--kills"></span><span class="metric-icon__slash">/</span><span class="metric-icon__part metric-icon__part--deaths"></span></span>K/D</span><strong id="period-kd">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="ratio" aria-hidden="true"></span>Crystals / Experience</span><strong id="period-crystals-experience">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="kills" aria-hidden="true"></span>Kills / 13 min</span><strong id="period-k13">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="crystals" aria-hidden="true"></span>Crystals / 13 min</span><strong id="period-c13">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="score" aria-hidden="true"></span>Experience / 13 min</span><strong id="period-s13">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="kills" aria-hidden="true"></span>Kills / hour</span><strong id="period-detail-kills-hour">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="crystals" aria-hidden="true"></span>Crystals / hour</span><strong id="period-detail-crystals-hour">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span><span class="metric-icon" data-metric-icon="score" aria-hidden="true"></span>Experience / hour</span><strong id="period-detail-score-hour">—</strong></div>
+                  <div class="period-metric-row" id="period-detail-time-day-row" role="listitem"><span><span class="metric-icon" data-metric-icon="time" aria-hidden="true"></span>Time / day</span><strong id="period-detail-time-day">—</strong></div>
                 </div>
               </section>
             </div>

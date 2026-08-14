@@ -172,10 +172,10 @@
       renderEquipmentList(getCurrentPlayer());
     });
 
-    elements["equipment-list"].addEventListener("pointerover", handleEquipmentPieEnter);
-    elements["equipment-list"].addEventListener("pointerout", handleEquipmentPieLeave);
-    elements["equipment-list"].addEventListener("focusin", handleEquipmentPieEnter);
-    elements["equipment-list"].addEventListener("focusout", handleEquipmentPieLeave);
+    elements["equipment-list"].addEventListener("pointerover", handleEquipmentHighlightEnter);
+    elements["equipment-list"].addEventListener("pointerout", handleEquipmentHighlightLeave);
+    elements["equipment-list"].addEventListener("focusin", handleEquipmentHighlightEnter);
+    elements["equipment-list"].addEventListener("focusout", handleEquipmentHighlightLeave);
 
     document.querySelectorAll("[data-time-unit]").forEach(function (button) {
       button.addEventListener("click", function () { setTimeUnit(button.dataset.timeUnit); });
@@ -597,10 +597,9 @@
       slice.color = slice.others ? "var(--color-data-other)" : PIE_COLORS[index % PIE_COLORS.length];
       slice.highlightKey = slice.others ? "others" : equipmentIconSlug(slice.name);
       if (!slice.others) chartColors[slice.name] = slice.color;
-      return '<circle class="usage-pie-slice" cx="50" cy="50" r="25" pathLength="100" fill="none" stroke="' + slice.color + '" stroke-width="50" ' +
-        'stroke-dasharray="' + slice.percent.toFixed(4) + ' ' + (100 - slice.percent).toFixed(4) + '" stroke-dashoffset="' + (-start).toFixed(4) + '" ' +
-        'transform="rotate(-90 50 50)" tabindex="0" role="img" data-highlight-key="' + escapeAttr(slice.highlightKey) + '" ' +
-        'aria-label="' + escapeAttr(slice.name + ", " + formatRate(slice.percent) + "%") + '"></circle>';
+      return '<path class="usage-pie-slice" d="' + equipmentPieSlicePath(start, cursor) + '" fill="' + slice.color + '" ' +
+        'tabindex="0" role="img" data-highlight-key="' + escapeAttr(slice.highlightKey) + '" ' +
+        'aria-label="' + escapeAttr(slice.name + ", " + formatRate(slice.percent) + "%") + '"></path>';
     }).join("");
     var categoryLabel = equipmentCategoryLabel(state.equipment);
     var description = chartSlices.length ? chartSlices.map(function (slice) { return slice.name + " " + formatRate(slice.percent) + "%"; }).join(", ") : "no recorded usage";
@@ -617,7 +616,7 @@
       var note = zeroTime ? "No recorded usage" : "";
       var title = item.name + " · " + (state.equipment === "modules" ? "" : formatExactDuration(item.timeMs) + " · ") + formatRate(percent) + "%" + (zeroTime ? " · no recorded usage" : "");
       var secondaryValue = state.equipment === "modules" ? "" : '<small>' + escapeHtml(formatDurationDisplay(item.timeMs)) + '</small>';
-      return '<div class="usage-legend-item" role="listitem" data-highlight-key="' + escapeAttr(highlightKey) + '" title="' + escapeAttr(title) + '">' +
+      return '<div class="usage-legend-item" role="listitem" tabindex="0" data-highlight-key="' + escapeAttr(highlightKey) + '" title="' + escapeAttr(title) + '">' +
         '<span class="usage-swatch" style="--swatch-color:' + color + '" aria-hidden="true"></span>' +
         '<span class="usage-legend-copy"><span class="usage-legend-identity">' + icon + '<span class="usage-name">' + escapeHtml(item.name) + '</span></span>' +
         (note ? '<small class="usage-group-note">' + note + '</small>' : '') + '</span>' +
@@ -631,22 +630,40 @@
     elements["equipment-list"].innerHTML = '<div class="usage-pie-layout">' +
       '<div class="usage-legend" role="list" aria-label="' + escapeAttr(categoryLabel + " usage details") + '">' + legend + '</div>' +
       '<div class="usage-pie-figure"><svg class="usage-pie" data-animation-key="' + escapeAttr(animationKey) + '" viewBox="0 0 100 100" role="group" aria-label="' + escapeAttr(categoryLabel + " usage: " + description + ".") + '">' +
-      '<circle class="usage-pie-base" cx="50" cy="50" r="25" fill="none" stroke="var(--color-paper-3)" stroke-width="50" aria-hidden="true"></circle>' + sliceMarkup + '</svg>' +
+      '<circle class="usage-pie-base" cx="50" cy="50" r="48" fill="var(--color-paper-3)" aria-hidden="true"></circle>' + sliceMarkup + '</svg>' +
       '<p>' + figureSummary + '</p></div></div>';
     animateEquipmentPie(animationKey);
   }
 
-  function handleEquipmentPieEnter(event) {
-    var slice = event.target.closest && event.target.closest(".usage-pie-slice[data-highlight-key]");
-    if (!slice || !elements["equipment-list"].contains(slice)) return;
-    setEquipmentPieHighlight(slice.dataset.highlightKey);
+  function equipmentPieSlicePath(startPercent, endPercent) {
+    var span = endPercent - startPercent;
+    if (span >= 99.9999) return "M 50 50 L 50 2 A 48 48 0 1 1 50 98 A 48 48 0 1 1 50 2 Z";
+    var start = equipmentPiePoint(startPercent);
+    var end = equipmentPiePoint(endPercent);
+    return "M 50 50 L " + start[0] + " " + start[1] + " A 48 48 0 " + (span > 50 ? 1 : 0) + " 1 " + end[0] + " " + end[1] + " Z";
   }
 
-  function handleEquipmentPieLeave(event) {
-    var slice = event.target.closest && event.target.closest(".usage-pie-slice[data-highlight-key]");
-    if (!slice || !elements["equipment-list"].contains(slice)) return;
-    if (event.relatedTarget && slice.contains(event.relatedTarget)) return;
+  function equipmentPiePoint(percent) {
+    var angle = (percent * 3.6 - 90) * Math.PI / 180;
+    return [(50 + 48 * Math.cos(angle)).toFixed(4), (50 + 48 * Math.sin(angle)).toFixed(4)];
+  }
+
+  function handleEquipmentHighlightEnter(event) {
+    var target = equipmentHighlightTarget(event.target);
+    if (!target) return;
+    setEquipmentPieHighlight(target.dataset.highlightKey);
+  }
+
+  function handleEquipmentHighlightLeave(event) {
+    var target = equipmentHighlightTarget(event.target);
+    if (!target) return;
+    if (event.relatedTarget && target.contains(event.relatedTarget)) return;
     setEquipmentPieHighlight("");
+  }
+
+  function equipmentHighlightTarget(target) {
+    var highlighted = target.closest && target.closest(".usage-pie-slice[data-highlight-key], .usage-legend-item[data-highlight-key]");
+    return highlighted && elements["equipment-list"].contains(highlighted) ? highlighted : null;
   }
 
   function setEquipmentPieHighlight(key) {
@@ -751,16 +768,22 @@
     var current = player.current;
     var rank = rankInfo(current.score);
     var details = [
-      ["Rank", rank.name],
-      ["EXP progress", formatRate(rank.progressPercent) + "% · " + formatInteger(rank.progressScore) + " / " + formatInteger(rank.span)],
-      ["Gear score", formatInteger(current.gearScore)],
-      ["Gold boxes", formatInteger(current.golds)],
-      ["Premium", current.premium ? "Active" : "Inactive"],
-      ["Snapshots", formatInteger((player.history || []).length)]
+      ["Rank", rank.name, ""],
+      ["EXP progress", formatRate(rank.progressPercent) + "% · " + formatInteger(rank.progressScore) + " / " + formatInteger(rank.span), "score"],
+      ["Gear score", formatInteger(current.gearScore), "gearscore"],
+      ["Gold boxes", formatInteger(current.golds), "golds"],
+      ["Premium", current.premium ? "Active" : "Inactive", "premium"],
+      ["Snapshots", formatInteger((player.history || []).length), ""]
     ];
     elements["account-details"].innerHTML = details.map(function (detail) {
-      return '<div><dt>' + escapeHtml(detail[0]) + '</dt><dd>' + escapeHtml(String(detail[1])) + '</dd></div>';
+      return '<div><dt>' + metricIconMarkup(detail[2]) + '<span>' + escapeHtml(detail[0]) + '</span></dt><dd>' + escapeHtml(String(detail[1])) + '</dd></div>';
     }).join("");
+  }
+
+  function metricIconMarkup(name) {
+    if (!name) return "";
+    if (name === "premium") return '<img class="metric-icon metric-icon--art" src="./assets/icons/misc/premiumicon.svg" alt="" width="20" height="20">';
+    return '<span class="metric-icon" data-metric-icon="' + escapeAttr(name) + '" aria-hidden="true"></span>';
   }
 
   function renderLeaderboard() {

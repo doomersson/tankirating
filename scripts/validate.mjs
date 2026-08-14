@@ -31,7 +31,7 @@ check(html.includes('id="leaderboard-period-control"') && html.includes('data-le
 check(/data-leaderboard-period="7" class="is-active" aria-pressed="true"/.test(html) && app.includes('leaderboardPeriod: 7'), "Week must be the default leaderboard period");
 check(/id="tools-dialog"[\s\S]*?data-time-unit="hours"[\s\S]*?data-time-unit="days"/.test(html) && !html.includes('data-time-unit="exact"'), "sitewide Hours and exact Days display controls are missing or the retired Exact option remains");
 check(html.includes('id="compare-search"') && html.includes('id="compare-picker-status"'), "compare search elements required by app.js are missing");
-check(html.includes('data-equipment="hulls"') && html.includes('data-equipment="turrets"'), "profile equipment tabs are missing");
+check(["hulls", "turrets", "drones", "modules", "modes"].every((category) => html.includes(`data-equipment="${category}"`)), "profile equipment tabs are missing");
 check(html.includes('id="profile-overview"') && html.includes('id="profile-period-summary"') && html.includes('data-profile-section="overview"') && html.includes('data-profile-section="period"'), "profile Overview or Period summary switch is missing");
 check(/id="profile-overview"[\s\S]*?id="equipment-summary"[\s\S]*?id="overview-kills"[\s\S]*?id="overview-deaths"[\s\S]*?id="overview-kd"/.test(html), "profile Overview must lead with loadout and overall account statistics");
 check(!html.includes("Favorite item in each category") && !/<span>Lifetime<\/span>/.test(html), "profile overview still includes redundant explanatory copy");
@@ -39,6 +39,7 @@ check(/id="profile-period-summary"[\s\S]*?class="period-console period-summary-b
 check(["day", "week", "month", "year", "all", "custom"].every((period) => html.includes(`data-period="${period}"`)), "Day, Week, Month, Year, All Time, or Custom period controls are missing");
 check(["first", "previous", "next", "latest"].every((direction) => html.includes(`data-period-nav="${direction}"`)) && app.includes("navigateProfilePeriod"), "period first, previous, next, or latest navigation is missing");
 check(html.includes('id="rating-date"') && html.includes('id="custom-date-start"') && html.includes('id="custom-date-end"') && app.includes("ensureCustomDates"), "reference-date or custom-range inputs are missing");
+check(/class="period-mode-toolbar"[\s\S]*?id="period-control"[\s\S]*?id="period-date-fields"/.test(html) && css.includes(".period-mode-toolbar"), "period modes and reference dates must share one compact toolbar");
 check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"') && html.includes('id="stat-time-day"'), "profile K/D, hourly, or time-per-day headline metrics are missing");
 check(html.includes('id="overview-crystals-experience"') && html.includes('id="period-crystals-experience"') && app.includes("safeDivide(period.delta.crystals, period.delta.score)"), "Crystals / Experience is missing from lifetime or period statistics");
 check(["crystals", "score", "ratio", "time", "kills", "deaths", "golds", "efficiency", "kd"].every((icon) => html.includes(`data-period-icon="${icon}"`)) && css.includes(".period-metric-icon"), "future period metric icon hooks are incomplete");
@@ -68,7 +69,8 @@ check(app.includes('{ key: "time", label: "Time played"') && !app.includes('{ ke
 const leaderboardStart = app.indexOf("function leaderboardColumns");
 const leaderboardOrder = ["efficiency", "score", "crystals", "crystalsExperience", "kills13", "kills", "deaths", "kd", "golds", "time"].map((key) => app.indexOf(`{ key: "${key}"`, leaderboardStart));
 check(leaderboardOrder.every((position, index) => position >= 0 && (index === 0 || position > leaderboardOrder[index - 1])), "leaderboard columns are out of the requested order");
-check(app.includes('"./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg"'), "profile equipment names are not mapped to their matching SVG filenames");
+check(app.includes("function equipmentIconSource") && app.includes('return "./assets/icons/modes/juggernaut.svg"') && app.includes("function moduleIconSlug"), "Juggernaut overrides or module equipment icon mapping is missing");
+check(css.includes(".equipment-icon--modules") && css.includes('url("./icons/turrets/all.svg")'), "Modules category icon is missing");
 check(app.includes("itemTime / total >= 0.05") && app.includes('name: "Others"'), "equipment below 5% must be grouped into Others on the chart");
 check(app.includes("var legend = items.map") && app.includes("grouped into Others on chart") && app.includes('zeroTime ? "No recorded usage"') && !app.includes("positive(item.timeMs) > 0"), "the equipment legend must retain zero-time API items and identify chart-only grouping");
 const opexDroneNames = tracker.players?.["opex-rah"]?.current?.equipment?.drones?.map((item) => item.name) || [];
@@ -85,10 +87,12 @@ check(app.includes("resolvedOptions().timeZone") && app.includes("ratingBoundary
 check(html.includes('id="activity-zone-note"') && !html.includes("Stockholm time"), "Recent activity must identify the viewer timezone instead of hard-coding Stockholm");
 check(css.includes(".analysis-grid > *") && css.includes("grid-template-columns: repeat(2, minmax(0, 1fr))") && css.includes("@media (max-width: 30rem)"), "mobile profile containment or equipment reflow is missing");
 check(app.includes("rateHour(period.delta.kills") && app.includes("rateHour(period.delta.crystals") && app.includes("rateHour(period.delta.score"), "selected-period hourly rates are missing");
+check(app.includes('state.period === "all") return calculateLifetimePeriod(player)') && app.includes("function calculateLifetimePeriod") && app.includes("lifetime account totals"), "All Time must render lifetime account totals instead of tracked snapshot deltas");
 check(app.includes('timeUnit: "days"') && app.includes('return saved === "hours" ? "hours" : "days"') && app.includes("formatTimePlayed") && !app.includes('["exact", "hours", "days"]'), "sitewide Hours/Days preference or legacy Exact migration is incomplete");
 check(app.includes('"experience", "crystals_per_experience"'), "profile CSV must expose Experience and the Crystals / Experience ratio");
 check(trackWorkflow.includes('cron: "17 * * * *"'), "collector must run every hour");
 check(trackScript.includes('ZoneInfo("Europe/Stockholm")') && trackScript.includes("rating_boundary_due"), "collector must retain Stockholm rating-boundary snapshots");
+check(trackScript.includes('"modules": modules') && trackScript.includes('"resistanceModules"') && trackScript.includes("first_usage_list") && trackScript.includes('"RAILGUN_RESISTANCE": "railgun"') && trackScript.includes('module["icon"]'), "collector must retain protection-module usage and local icon keys from the ratings API");
 check(app.includes("issues/new?title=") && requestWorkflow.includes("issues:"), "GitHub player request flow is missing");
 check(trackWorkflow.includes("actions/checkout@v5") && trackWorkflow.includes("actions/setup-python@v6"), "collector actions must use Node 24-compatible releases");
 check(rankGuide.includes("31.png") && rankGuide.includes("Legend"), "rank icon upload guide is missing");

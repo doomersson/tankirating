@@ -163,6 +163,65 @@ def aggregate_usage(items: Any) -> list[dict[str, Any]]:
     return sorted(grouped.values(), key=lambda item: (-item["timeMs"], item["name"].casefold()))
 
 
+def first_usage_list(profile: dict[str, Any], *keys: str) -> list[Any]:
+    """Return the first populated usage list exposed by the ratings API."""
+    empty_list: list[Any] = []
+    for key in keys:
+        value = profile.get(key)
+        if isinstance(value, list):
+            if value:
+                return value
+            empty_list = value
+    return empty_list
+
+
+MODULE_ICON_BY_PROPERTY = {
+    "ALL_RESISTANCE": "all",
+    "ARTILLERY_RESISTANCE": "magnum",
+    "CRITICAL_RESISTANCE": "crit",
+    "FIREBIRD_RESISTANCE": "firebird",
+    "FREEZE_RESISTANCE": "freeze",
+    "GAUSS_RESISTANCE": "gauss",
+    "ISIS_RESISTANCE": "isida",
+    "MACHINE_GUN_RESISTANCE": "vulcan",
+    "MINE_RESISTANCE": "mine",
+    "RAILGUN_RESISTANCE": "railgun",
+    "RICOCHET_RESISTANCE": "ricochet",
+    "ROCKET_LAUNCHER_RESISTANCE": "striker",
+    "SCORPIO_RESISTANCE": "scorpion",
+    "SHAFT_RESISTANCE": "shaft",
+    "SHOTGUN_RESISTANCE": "hammer",
+    "SMOKY_RESISTANCE": "smoky",
+    "TESLA_RESISTANCE": "tesla",
+    "THUNDER_RESISTANCE": "thunder",
+    "TSUNAMI_RESISTANCE": "tsunami",
+    "TWINS_RESISTANCE": "twins",
+}
+
+
+def aggregate_modules(items: Any) -> list[dict[str, Any]]:
+    modules = aggregate_usage(items)
+    icons: dict[str, str] = {}
+    if isinstance(items, list):
+        for raw in items:
+            if not isinstance(raw, dict):
+                continue
+            name = str(raw.get("name") or "Unknown").strip() or "Unknown"
+            properties = raw.get("properties") if isinstance(raw.get("properties"), list) else []
+            icon = next(
+                (
+                    MODULE_ICON_BY_PROPERTY[str(value)]
+                    for value in properties
+                    if str(value) in MODULE_ICON_BY_PROPERTY
+                ),
+                None,
+            )
+            icons[name.casefold()] = icon or "all"
+    for module in modules:
+        module["icon"] = icons.get(module["name"].casefold(), "all")
+    return modules
+
+
 def strip_legacy_images(value: Any) -> None:
     """Remove equipment image fields left by earlier tracker versions in place."""
     if isinstance(value, dict):
@@ -179,6 +238,15 @@ def normalize_profile(profile: dict[str, Any], collected_at: str) -> dict[str, A
     hulls = aggregate_usage(profile.get("hullsPlayed"))
     turrets = aggregate_usage(profile.get("turretsPlayed"))
     drones = aggregate_usage(profile.get("dronesPlayed"))
+    modules = aggregate_modules(first_usage_list(
+        profile,
+        "modulesPlayed",
+        "protectionModulesPlayed",
+        "resistanceModulesPlayed",
+        "resistancesPlayed",
+        "resistanceModules",
+        "modules",
+    ))
 
     candidates = [
         sum(item["timeMs"] for item in modes),
@@ -209,6 +277,7 @@ def normalize_profile(profile: dict[str, Any], collected_at: str) -> dict[str, A
             "hulls": hulls,
             "turrets": turrets,
             "drones": drones,
+            "modules": modules,
             "modes": modes,
         },
     }

@@ -100,8 +100,10 @@
       "profile-title", "player-meta", "hero-efficiency", "hero-position",
       "overview-time", "overview-kills", "overview-deaths", "overview-kd", "overview-score", "overview-crystals", "overview-crystals-experience",
       "period-time", "activity-state", "delta-kills", "period-deaths", "period-golds", "period-efficiency",
+      "period-efficiency-label", "time-day-label",
       "period-kd", "period-crystals-experience", "period-k13", "period-c13", "period-s13", "period-crystals", "period-score",
       "period-detail-kills-hour", "period-detail-crystals-hour", "period-detail-score-hour", "period-detail-time-day",
+      "period-detail-time-day-row",
       "rating-date", "rating-date-field", "custom-date-start", "custom-date-end", "custom-date-start-field", "custom-date-end-field",
       "custom-date-message", "period-date-fields", "rating-reset-note", "period-range-kicker", "period-range-label", "period-range-coverage",
       "period-range-navigator", "period-summary-board", "period-summary-status", "range-kd-label", "stat-range-kd", "range-kd-detail",
@@ -370,16 +372,38 @@
   }
 
   function calculatePeriod(player) {
-    if (state.period === "all") return calculatePeriodFor(player, "all");
+    if (state.period === "all") return calculateLifetimePeriod(player);
     var range = profilePeriodRange(player);
     if (!range) return null;
     return calculatePeriodBetween(player, ratingBoundaryMs(range.startKey), ratingBoundaryMs(range.endKey));
   }
 
+  function calculateLifetimePeriod(player) {
+    if (!player || !player.current) return null;
+    var points = allPlayerPoints(player);
+    var current = player.current;
+    var currentPoint = pointFromCurrent(current);
+    return {
+      first: points[0] || currentPoint,
+      last: points[points.length - 1] || currentPoint,
+      lifetime: true,
+      delta: {
+        efficiency: positive(current.efficiency),
+        kills: positive(current.kills),
+        deaths: positive(current.deaths),
+        crystals: positive(current.crystals),
+        score: positive(current.score),
+        golds: positive(current.golds),
+        time: positive(current.totalTimeMs)
+      }
+    };
+  }
+
   function renderPeriodSummary(period, periodName, range) {
     var hasTime = period && period.delta.time > 0;
+    var lifetime = Boolean(period && period.lifetime);
     var rateDetail = period ? formatDurationDisplay(period.delta.time) + " played" : "No complete snapshot range";
-    elements["range-kd-label"].textContent = periodName + " K/D";
+    elements["range-kd-label"].lastChild.textContent = periodName + " K/D";
     elements["stat-range-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) : "—";
     elements["range-kd-detail"].textContent = period ? formatInteger(period.delta.kills) + " K · " + formatInteger(period.delta.deaths) + " D" : rateDetail;
     elements["stat-kills-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.kills, period.delta.time)) : "—";
@@ -388,21 +412,24 @@
     elements["crystals-hour-detail"].textContent = rateDetail;
     elements["stat-score-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.score, period.delta.time)) : "—";
     elements["score-hour-detail"].textContent = rateDetail;
-    var dayCount = period
+    var dayCount = period && !lifetime
       ? dateKeySpanDays(ratingDateKeyForInstant(period.first.at), ratingDateKeyForInstant(period.last.at))
       : (range ? range.spanDays : 0);
-    var timePerDay = period && dayCount > 0 ? positive(period.delta.time) / dayCount : NaN;
-    elements["stat-time-day"].textContent = Number.isFinite(timePerDay) ? formatDurationDisplay(timePerDay) : "—";
-    elements["time-day-detail"].textContent = dayCount > 0 ? formatInteger(dayCount) + " " + plural(dayCount, "rating day") : "Displayed dates";
+    var timePerDay = period && !lifetime && dayCount > 0 ? positive(period.delta.time) / dayCount : NaN;
+    elements["time-day-label"].lastChild.textContent = lifetime ? "Time played" : "Time / day";
+    elements["stat-time-day"].textContent = lifetime ? formatDurationDisplay(period.delta.time) : (Number.isFinite(timePerDay) ? formatDurationDisplay(timePerDay) : "—");
+    elements["time-day-detail"].textContent = lifetime ? "Lifetime total" : (dayCount > 0 ? formatInteger(dayCount) + " " + plural(dayCount, "rating day") : "Displayed dates");
 
-    elements["period-crystals"].textContent = period ? signed(period.delta.crystals) : "—";
-    elements["period-score"].textContent = period ? signed(period.delta.score) : "—";
+    var totalValue = function (value) { return lifetime ? formatInteger(value) : signed(value); };
+    elements["period-crystals"].textContent = period ? totalValue(period.delta.crystals) : "—";
+    elements["period-score"].textContent = period ? totalValue(period.delta.score) : "—";
     elements["period-time"].textContent = period ? formatDurationDisplay(period.delta.time) : "—";
     elements["period-time"].title = period ? formatExactDuration(period.delta.time) : "";
-    elements["delta-kills"].textContent = period ? signed(period.delta.kills) : "—";
-    elements["period-deaths"].textContent = period ? signed(period.delta.deaths) : "—";
-    elements["period-golds"].textContent = period ? signed(period.delta.golds) : "—";
-    elements["period-efficiency"].textContent = period ? signed(period.delta.efficiency) : "—";
+    elements["delta-kills"].textContent = period ? totalValue(period.delta.kills) : "—";
+    elements["period-deaths"].textContent = period ? totalValue(period.delta.deaths) : "—";
+    elements["period-golds"].textContent = period ? totalValue(period.delta.golds) : "—";
+    elements["period-efficiency-label"].lastChild.textContent = lifetime ? "Efficiency" : "Efficiency gained";
+    elements["period-efficiency"].textContent = period ? totalValue(period.delta.efficiency) : "—";
     elements["period-kd"].textContent = period ? formatRate(safeDivide(period.delta.kills, period.delta.deaths)) : "—";
     elements["period-crystals-experience"].textContent = period ? formatRate(safeDivide(period.delta.crystals, period.delta.score)) : "—";
     elements["period-k13"].textContent = hasTime ? formatRate(rate13(period.delta.kills, period.delta.time)) : "—";
@@ -412,7 +439,8 @@
     elements["period-detail-crystals-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.crystals, period.delta.time)) : "—";
     elements["period-detail-score-hour"].textContent = hasTime ? formatRate(rateHour(period.delta.score, period.delta.time)) : "—";
     elements["period-detail-time-day"].textContent = Number.isFinite(timePerDay) ? formatDurationDisplay(timePerDay) : "—";
-    elements["period-summary-status"].textContent = period ? periodName + " · " + rateDetail : "This window needs snapshots close to both boundaries.";
+    elements["period-detail-time-day-row"].hidden = lifetime;
+    elements["period-summary-status"].textContent = period ? (lifetime ? "All Time · lifetime account totals" : periodName + " · " + rateDetail) : "This window needs snapshots close to both boundaries.";
     elements["period-summary-board"].dataset.state = period ? "ready" : "empty";
   }
 
@@ -575,7 +603,7 @@
       var grouped = !zeroTime && percent < 5;
       var color = grouped ? "var(--color-data-other)" : chartColors[item.name];
       if (zeroTime) color = "var(--color-data-other)";
-      var icon = equipmentIconMarkup(state.equipment, item.name);
+      var icon = equipmentIconMarkup(state.equipment, item.name, "", 20, item.icon);
       var note = grouped ? "In Others slice" : (zeroTime ? "No recorded usage" : "");
       var title = item.name + " · " + formatExactDuration(item.timeMs) + " · " + formatRate(percent) + "%" + (grouped ? " · grouped into Others on chart" : (zeroTime ? " · no recorded usage" : ""));
       return '<div class="usage-legend-item" role="listitem" title="' + escapeAttr(title) + '">' +
@@ -593,7 +621,7 @@
   }
 
   function equipmentCategoryLabel(category) {
-    return { hulls: "Hull", turrets: "Turret", drones: "Drone", modes: "Mode" }[category] || "Equipment";
+    return { hulls: "Hull", turrets: "Turret", drones: "Drone", modules: "Module", modes: "Mode" }[category] || "Equipment";
   }
 
   function animateEquipmentPie(animationKey) {
@@ -606,16 +634,16 @@
     });
   }
 
-  function equipmentIconMarkup(category, itemName, modifierClass, size) {
+  function equipmentIconMarkup(category, itemName, modifierClass, size, iconSlug) {
     if (!itemName) return "";
     if (category === "drones") {
       if (modifierClass !== "favorite-artwork") return "";
       var droneDimension = size || 20;
       return '<img class="equipment-item-icon favorite-artwork" src="./assets/icons/drone.svg" alt="" width="' + droneDimension + '" height="' + droneDimension + '">';
     }
-    var fallback = { hulls: "hull", turrets: "turret", modes: "mode" }[category];
+    var fallback = { hulls: "hull", turrets: "turret", modules: "turret", modes: "mode" }[category];
     if (!fallback) return "";
-    var source = "./assets/icons/" + category + "/" + equipmentIconSlug(itemName) + ".svg";
+    var source = equipmentIconSource(category, itemName, iconSlug);
     var className = "equipment-item-icon" + (modifierClass ? " " + modifierClass : "");
     var dimension = size || 20;
     return '<img class="' + className + '" src="' + escapeAttr(source) + '" data-fallback-icon="./assets/icons/' + fallback + '.svg" alt="" width="' + dimension + '" height="' + dimension + '">';
@@ -623,6 +651,23 @@
 
   function equipmentIconSlug(name) {
     return String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+
+  function equipmentIconSource(category, itemName, iconSlug) {
+    var slug = equipmentIconSlug(itemName);
+    if ((category === "hulls" && slug === "juggernaut") || (category === "turrets" && slug === "terminator")) {
+      return "./assets/icons/modes/juggernaut.svg";
+    }
+    if (category === "modules") return "./assets/icons/turrets/" + moduleIconSlug(iconSlug || slug) + ".svg";
+    return "./assets/icons/" + category + "/" + slug + ".svg";
+  }
+
+  function moduleIconSlug(slug) {
+    if (/(^|-)(crit|critical)(-|$)/.test(slug)) return "crit";
+    if (/(^|-)mine(-|$)/.test(slug)) return "mine";
+    if (/(^|-)(all|universal|armadillo)(-|$)/.test(slug)) return "all";
+    var turretSlugs = ["firebird", "freeze", "gauss", "hammer", "isida", "magnum", "railgun", "ricochet", "scorpion", "shaft", "smoky", "striker", "tesla", "thunder", "tsunami", "twins", "vulcan"];
+    return turretSlugs.find(function (turret) { return slug === turret || slug.indexOf(turret + "-") === 0 || slug.indexOf("-" + turret) >= 0; }) || "all";
   }
 
   function renderActivity(player) {
@@ -1198,6 +1243,7 @@
     elements["custom-date-end-field"].hidden = state.period !== "custom";
     elements["custom-date-message"].hidden = state.period !== "custom";
     elements["period-date-fields"].hidden = state.period === "all";
+    elements["period-date-fields"].dataset.mode = state.period;
 
     elements["custom-date-start"].min = minimum;
     elements["custom-date-start"].max = maximum;

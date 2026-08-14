@@ -18,16 +18,16 @@ The API does not currently send the browser CORS header needed for direct collec
 - Score, earned crystals, gold boxes, gear score, efficiency value, and official efficiency position.
 - Score and crystals per 13 minutes.
 - Rank and EXP progress, including unlimited Legend levels every 200,000 EXP.
-- Most-played hull, turret, drone, and battle mode.
+- Most-played hull, turret, drone, protection module, and battle mode.
 - Changed snapshots, trend charts, and a recent activity view labelled by date.
 - A sortable all-player leaderboard with Day, Week, and All time statistics.
 - Leaderboard columns for efficiency, score, crystals, kills per 13 minutes, kills, deaths, K/D, golds, and hours played.
 - A searchable, vertically expanding picker for up-to-four-player comparisons.
 - Full JSON backup import/export and per-profile CSV export.
 
-Equipment entries keep only `name`, `timeMs`, and `score`. Remote equipment image URLs are not stored.
+Equipment entries keep only `name`, `timeMs`, and `score`; protection modules also keep a local `icon` slug derived from their resistance property. Remote equipment image URLs are not stored.
 
-Profile equipment names use matching lowercase SVG filenames from `assets/icons/hulls` and `assets/icons/turrets`; for example, `Mammoth` uses `mammoth.svg` and `Railgun` uses `railgun.svg`. Keep those filenames when replacing the artwork.
+Profile equipment names use matching lowercase SVG filenames from `assets/icons/hulls`, `assets/icons/turrets`, and `assets/icons/modes`; for example, `Mammoth` uses `mammoth.svg` and `Railgun` uses `railgun.svg`. Protection modules reuse their matching turret icons plus `all.svg`, `crit.svg`, and `mine.svg`. Juggernaut hulls and Terminator turrets intentionally share `modes/juggernaut.svg`.
 
 ## First deployment
 

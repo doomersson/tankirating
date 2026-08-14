@@ -1,5 +1,5 @@
 /* Hallmark · macrostructure: Stat-Led · tone: minimal dark technical · anchor hue: cool cyan 210° */
-/* Hallmark · component: compact period workbench + global time preference · genre: atmospheric · theme: Midnight
+/* Hallmark · component: unified period toolbar + lifetime summary + equipment modules · genre: atmospheric · theme: Midnight
  * states: default · hover · focus · active · disabled · loading · error · success
  * contrast: pass (40–41)
  * pre-emit critique: P5 H5 E5 S5 R5 V4
@@ -507,9 +507,8 @@ button,
 }
 
 .period-console-heading,
-.period-mode-control,
+.period-mode-toolbar,
 .period-range-navigator,
-.period-date-fields,
 .period-summary-meta {
   border-block-end: var(--rule-thin) solid var(--color-rule);
 }
@@ -528,6 +527,11 @@ button,
   color: var(--color-neutral);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
+}
+
+.period-mode-toolbar {
+  min-width: 0;
+  display: grid;
 }
 
 .period-mode-control {
@@ -656,7 +660,8 @@ button,
 }
 
 .period-date-fields {
-  padding: var(--space-md);
+  min-width: 0;
+  padding: 0 var(--space-md) var(--space-sm);
   display: grid;
   gap: var(--space-sm);
 }
@@ -672,7 +677,7 @@ button,
 }
 
 #rating-date-field {
-  max-width: 18rem;
+  max-width: 15rem;
 }
 
 .period-date-field input {
@@ -1091,6 +1096,11 @@ button,
 .equipment-icon--drones {
   -webkit-mask-image: url("./icons/drone.svg");
   mask-image: url("./icons/drone.svg");
+}
+
+.equipment-icon--modules {
+  -webkit-mask-image: url("./icons/turrets/all.svg");
+  mask-image: url("./icons/turrets/all.svg");
 }
 
 .equipment-icon--modes {
@@ -2190,6 +2200,25 @@ dialog {
     justify-content: flex-end;
   }
 
+  .period-mode-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .period-date-fields {
+    padding: var(--space-xs) var(--space-md) var(--space-xs) 0;
+    grid-template-columns: minmax(9rem, 12rem);
+    align-items: end;
+  }
+
+  .period-date-fields[data-mode="custom"] {
+    grid-template-columns: repeat(2, minmax(9rem, 12rem));
+  }
+
+  .period-mode-toolbar .period-field-message {
+    grid-column: 1 / -1;
+  }
+
   .period-range-navigator {
     grid-template-columns: auto minmax(0, 1fr) auto;
   }
@@ -2209,14 +2238,6 @@ dialog {
 
   .period-nav-group--later {
     grid-column: 3;
-  }
-
-  .period-date-fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .period-field-message {
-    grid-column: 1 / -1;
   }
 
   .period-highlight-grid {

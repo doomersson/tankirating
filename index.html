@@ -136,6 +136,7 @@
                 <button type="button" role="tab" aria-selected="true" data-equipment="hulls"><span class="equipment-icon equipment-icon--hulls" aria-hidden="true"></span><span>Hulls</span></button>
                 <button type="button" role="tab" aria-selected="false" data-equipment="turrets"><span class="equipment-icon equipment-icon--turrets" aria-hidden="true"></span><span>Turrets</span></button>
                 <button type="button" role="tab" aria-selected="false" data-equipment="drones"><span class="equipment-icon equipment-icon--drones" aria-hidden="true"></span><span>Drones</span></button>
+                <button type="button" role="tab" aria-selected="false" data-equipment="modules"><span class="equipment-icon equipment-icon--modules" aria-hidden="true"></span><span>Modules</span></button>
                 <button type="button" role="tab" aria-selected="false" data-equipment="modes"><span class="equipment-icon equipment-icon--modes" aria-hidden="true"></span><span>Modes</span></button>
               </div>
               <div id="equipment-list" class="usage-list" role="tabpanel"></div>
@@ -166,13 +167,31 @@
               </div>
             </div>
 
-            <div class="segmented-control period-mode-control" id="period-control" role="group" aria-label="Statistics period">
-              <button type="button" data-period="day" class="is-active" aria-pressed="true">Day</button>
-              <button type="button" data-period="week" aria-pressed="false">Week</button>
-              <button type="button" data-period="month" aria-pressed="false">Month</button>
-              <button type="button" data-period="year" aria-pressed="false">Year</button>
-              <button type="button" data-period="all" aria-pressed="false">All Time</button>
-              <button type="button" data-period="custom" aria-pressed="false">Custom</button>
+            <div class="period-mode-toolbar">
+              <div class="segmented-control period-mode-control" id="period-control" role="group" aria-label="Statistics period">
+                <button type="button" data-period="day" class="is-active" aria-pressed="true">Day</button>
+                <button type="button" data-period="week" aria-pressed="false">Week</button>
+                <button type="button" data-period="month" aria-pressed="false">Month</button>
+                <button type="button" data-period="year" aria-pressed="false">Year</button>
+                <button type="button" data-period="all" aria-pressed="false">All Time</button>
+                <button type="button" data-period="custom" aria-pressed="false">Custom</button>
+              </div>
+
+              <div class="period-date-fields" id="period-date-fields">
+                <label class="period-date-field" id="rating-date-field" for="rating-date">
+                  <span>Reference date</span>
+                  <input id="rating-date" type="date" aria-describedby="rating-reset-note period-range-coverage" />
+                </label>
+                <label class="period-date-field" id="custom-date-start-field" for="custom-date-start" hidden>
+                  <span>From</span>
+                  <input id="custom-date-start" type="date" aria-describedby="custom-date-message" />
+                </label>
+                <label class="period-date-field" id="custom-date-end-field" for="custom-date-end" hidden>
+                  <span>To</span>
+                  <input id="custom-date-end" type="date" aria-describedby="custom-date-message" />
+                </label>
+                <p class="period-field-message" id="custom-date-message" data-state="success" hidden>Both dates are inclusive.</p>
+              </div>
             </div>
 
             <div class="period-range-navigator" id="period-range-navigator" aria-label="Browse rating periods">
@@ -189,22 +208,6 @@
                 <button class="period-nav-button" type="button" data-period-nav="next" aria-label="Go to next period" title="Next period"><span aria-hidden="true">→</span></button>
                 <button class="period-nav-button" type="button" data-period-nav="latest" aria-label="Go to latest tracked period" title="Latest tracked period"><span aria-hidden="true">⇥</span></button>
               </div>
-            </div>
-
-            <div class="period-date-fields" id="period-date-fields">
-              <label class="period-date-field" id="rating-date-field" for="rating-date">
-                <span>Reference date</span>
-                <input id="rating-date" type="date" aria-describedby="rating-reset-note period-range-coverage" />
-              </label>
-              <label class="period-date-field" id="custom-date-start-field" for="custom-date-start" hidden>
-                <span>From</span>
-                <input id="custom-date-start" type="date" aria-describedby="custom-date-message" />
-              </label>
-              <label class="period-date-field" id="custom-date-end-field" for="custom-date-end" hidden>
-                <span>To</span>
-                <input id="custom-date-end" type="date" aria-describedby="custom-date-message" />
-              </label>
-              <p class="period-field-message" id="custom-date-message" data-state="success" hidden>Both dates are inclusive.</p>
             </div>
 
             <div class="period-summary-meta" role="status" aria-live="polite">
@@ -233,7 +236,7 @@
                 <small id="score-hour-detail">Selected range</small>
               </article>
               <article class="period-highlight">
-                <span class="period-metric-label"><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span>
+                <span class="period-metric-label" id="time-day-label"><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span>
                 <strong id="stat-time-day">—</strong>
                 <small id="time-day-detail">Across displayed dates</small>
               </article>
@@ -249,7 +252,7 @@
                   <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills</span><strong id="delta-kills">—</strong></div>
                   <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="deaths" aria-hidden="true"></span>Deaths</span><strong id="period-deaths">—</strong></div>
                   <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="golds" aria-hidden="true"></span>Golds</span><strong id="period-golds">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="efficiency" aria-hidden="true"></span>Efficiency gained</span><strong id="period-efficiency">—</strong></div>
+                  <div class="period-metric-row" role="listitem"><span id="period-efficiency-label"><span class="period-metric-icon" data-period-icon="efficiency" aria-hidden="true"></span>Efficiency gained</span><strong id="period-efficiency">—</strong></div>
                 </div>
               </section>
 
@@ -264,7 +267,7 @@
                   <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="kills" aria-hidden="true"></span>Kills / hour</span><strong id="period-detail-kills-hour">—</strong></div>
                   <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="crystals" aria-hidden="true"></span>Crystals / hour</span><strong id="period-detail-crystals-hour">—</strong></div>
                   <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="score" aria-hidden="true"></span>Experience / hour</span><strong id="period-detail-score-hour">—</strong></div>
-                  <div class="period-metric-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span><strong id="period-detail-time-day">—</strong></div>
+                  <div class="period-metric-row" id="period-detail-time-day-row" role="listitem"><span><span class="period-metric-icon" data-period-icon="time" aria-hidden="true"></span>Time / day</span><strong id="period-detail-time-day">—</strong></div>
                 </div>
               </section>
             </div>

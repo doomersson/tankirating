@@ -14,12 +14,16 @@ from track import (
     SCHEMA_VERSION,
     TRACKER_PATH,
     ProfileNotFoundError,
+    USERNAME_PATTERN,
+    clear_player_errors,
+    config_payload,
     fetch_profile,
     iso_time,
     load_json,
-    merge_player,
     normalize_profile,
     number_value,
+    resolve_player_record,
+    store_tracked_player,
     strip_legacy_images,
     validate_config,
     write_json_atomic,
@@ -28,7 +32,6 @@ from track import (
 
 MESSAGE_PATH = Path(__file__).resolve().parents[1] / "request-message.txt"
 TITLE_PATTERN = re.compile(r"^\[(Track|Refresh) player\]\s+(.+?)\s*$", re.IGNORECASE)
-USERNAME_PATTERN = re.compile(r"^[A-Za-z0-9_.-]{3,64}$")
 
 
 def finish(message: str, code: int) -> int:
@@ -66,16 +69,16 @@ def main() -> int:
     except ValueError as error:
         return finish(f"Tracker configuration error: {error}", 2)
 
-    configured_key_map = {name.casefold(): name for name in config["players"]}
-    requested_key = requested_name.casefold()
-    if action == "refresh" and requested_key not in configured_key_map:
+    player_record = resolve_player_record(config, requested_name)
+    if action == "refresh" and not player_record:
         return finish(
             f"Refresh rejected: **{requested_name}** is not tracked. Search for the account and submit a Track request first.",
             2,
         )
 
+    lookup_name = player_record["currentName"] if player_record else requested_name
     try:
-        profile = fetch_profile(requested_name, config["region"], config["language"])
+        profile = fetch_profile(lookup_name, config["region"], config["language"])
     except ProfileNotFoundError:
         return finish(
             f"Request rejected: Tanki Ratings returned `NOT_FOUND` for **{requested_name}**. The account is private or does not exist.",
@@ -87,11 +90,16 @@ def main() -> int:
     canonical_name = str(profile.get("name") or requested_name).strip()
     if not USERNAME_PATTERN.fullmatch(canonical_name):
         return finish("Request rejected: Tanki Ratings returned an invalid canonical username.", 1)
-    canonical_key = canonical_name.casefold()
-    if action == "track" and canonical_key not in configured_key_map:
+    added_player = False
+    if not player_record:
         if len(config["players"]) >= 100:
             return finish("Request rejected: this tracker already has its 100-player limit.", 1)
         config["players"].append(canonical_name)
+        config = validate_config(config_payload(config))
+        player_record = resolve_player_record(config, canonical_name)
+        added_player = True
+    if not player_record:
+        return finish("Request rejected: the player could not be resolved after validation.", 2)
 
     collected_at = iso_time()
     tracker = load_json(TRACKER_PATH, tracker_template(config["region"]))
@@ -100,35 +108,22 @@ def main() -> int:
 
     tracker_players = tracker.get("players") if isinstance(tracker.get("players"), dict) else {}
     current = normalize_profile(profile, collected_at)
-    existing = tracker_players.get(canonical_key) or tracker_players.get(requested_key)
-    tracker_players[canonical_key] = merge_player(existing, current, config["retentionDays"])
-    if requested_key != canonical_key:
-        tracker_players.pop(requested_key, None)
+    store_tracked_player(tracker_players, player_record, current, config["retentionDays"])
 
     errors = tracker.get("errors") if isinstance(tracker.get("errors"), dict) else {}
-    errors.pop(requested_key, None)
-    errors.pop(canonical_key, None)
+    clear_player_errors(errors, player_record)
     tracker["schemaVersion"] = SCHEMA_VERSION
     tracker["generatedAt"] = collected_at
     tracker["lastAttemptAt"] = collected_at
     tracker["source"] = f"https://ratings.tankionline.com/api/{config['region']}/profile/"
     tracker["players"] = dict(sorted(tracker_players.items(), key=lambda entry: entry[0]))
     tracker["errors"] = errors
-    tracker["configuredPlayers"] = sorted(name.casefold() for name in config["players"])
+    tracker["configuredPlayers"] = sorted(record["id"] for record in config["playerRecords"])
     strip_legacy_images(tracker)
 
     write_json_atomic(TRACKER_PATH, tracker)
-    if action == "track":
-        write_json_atomic(
-            CONFIG_PATH,
-            {
-                "players": config["players"],
-                "region": config["region"],
-                "language": config["language"],
-                "concurrency": config["concurrency"],
-                "retentionDays": config["retentionDays"],
-            },
-        )
+    if added_player:
+        write_json_atomic(CONFIG_PATH, config_payload(config))
         return finish(f"**{canonical_name}** was verified, added, and collected successfully. The updated site will deploy shortly.", 0)
 
     return finish(f"A fresh snapshot for **{canonical_name}** was collected successfully. The updated site will deploy shortly.", 0)

@@ -13,10 +13,10 @@ The API does not currently send the browser CORS header needed for direct collec
 
 ## What is tracked
 
-- Accumulated hours played, with Exact, Hours, and Days profile display modes.
+- Accumulated time played, with Hours and exact Days display modes.
 - Kills, deaths, lifetime and period K/D, and kills per 13 minutes.
-- Score, earned crystals, gold boxes, gear score, efficiency value, and official efficiency position.
-- Score and crystals per 13 minutes.
+- Experience, earned crystals, gold boxes, gear score, efficiency value, and official efficiency position.
+- Experience and crystals per 13 minutes.
 - Rank and EXP progress, including unlimited Legend levels every 200,000 EXP.
 - Most-played hull, turret, drone, protection module, and battle mode.
 - Changed snapshots, trend charts, and a recent activity view labelled by date.
@@ -53,6 +53,16 @@ If Tanki returns `{"response":null,"responseType":"NOT_FOUND"}`, the request is 
 
 GitHub sign-in and GitHub’s own abuse controls are the free anti-bot gate. A CAPTCHA cannot safely write to a repository from a browser-only GitHub Pages site: its secret must live on a server. If fully anonymous in-page requests are needed later, the small free option is a Cloudflare Worker with Turnstile that validates the CAPTCHA and dispatches the workflow.
 
+## Update a changed username
+
+Username changes keep the original configured name as the stable player ID, so historical snapshots and old profile links continue to work. Only the repository owner can run the migration:
+
+1. Open **Actions → Update player username → Run workflow**.
+2. Enter any current or previous tracked username in **Current or previous tracked username**.
+3. Enter the player’s new Tanki username in **New Tanki username**, then run the workflow.
+
+The workflow verifies the new public profile, updates the next tracking lookup, preserves every previous username, immediately collects a snapshot, and redeploys the site. Previous names appear in the dropdown beside the current profile name; long histories scroll instead of expanding the page. The workflow job is gated by `github.actor == github.repository_owner`, so visitors and collaborators cannot use it to rewrite identity history.
+
 ## Add or remove accounts manually
 
 Edit `data/players.json`:
@@ -67,11 +77,17 @@ Edit `data/players.json`:
   "region": "eu",
   "language": "en",
   "concurrency": 4,
-  "retentionDays": 730
+  "retentionDays": 730,
+  "usernameChanges": {
+    "SecondFriend": {
+      "current": "SecondFriendNew",
+      "previous": ["SecondFriend"]
+    }
+  }
 }
 ```
 
-Commit the edit, then run **Track players** once. The script accepts at most 100 unique accounts. Removing a name stops new collection but intentionally keeps its history in `tracker.json` so an accidental edit is recoverable.
+Commit the edit, then run **Track players** once. The `players` entries are stable IDs; use the owner workflow above instead of replacing one after a nickname change. The script accepts at most 100 unique accounts. Removing a name stops new collection but intentionally keeps its history in `tracker.json` so an accidental edit is recoverable.
 
 ## Add rank icons
 

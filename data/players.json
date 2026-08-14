@@ -15,11 +15,18 @@
     "Kaspersky",
     "VORTEC",
     "Opex-Rah",
-    "Abyss",
-    "Hikki"
+    "Abyss"
   ],
   "region": "eu",
   "language": "en",
   "concurrency": 4,
-  "retentionDays": 730
+  "retentionDays": 730,
+  "usernameChanges": {
+    "duturu667": {
+      "current": "NHK",
+      "previous": [
+        "duturu667"
+      ]
+    }
+  }
 }

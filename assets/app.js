@@ -7,6 +7,7 @@
   var RATING_TIME_ZONE = viewerTimeZone();
   var RATING_RESET_HOUR = 4;
   var DATA_URL = "./data/tracker.json";
+  var CONFIG_URL = "./data/players.json";
   var REPOSITORY = "doomersson/tankirating";
   var DB_NAME = "tanki-tracker-backups";
   var STORE_NAME = "imports";
@@ -97,7 +98,8 @@
     var ids = [
       "data-notice", "data-notice-text", "use-site-data", "rank-token", "profile-context",
       "rank-fallback", "rank-icon", "rank-progress-text", "rank-progress-percent", "rank-progress-bar",
-      "profile-title", "player-meta", "hero-efficiency", "hero-position",
+      "profile-title", "username-history-trigger", "username-history-count", "username-history-menu",
+      "username-history-total", "username-history-list", "player-meta", "hero-efficiency", "hero-position",
       "overview-time", "overview-kills", "overview-deaths", "overview-kd", "overview-score", "overview-crystals", "overview-crystals-experience",
       "period-time", "activity-state", "delta-kills", "period-deaths", "period-golds", "period-efficiency",
       "period-efficiency-label", "time-day-label",
@@ -238,6 +240,12 @@
       if (!event.currentTarget.contains(event.relatedTarget)) scheduleDataNoticeToastHide();
     });
 
+    elements["username-history-menu"].addEventListener("toggle", function (event) {
+      if (event.newState === "open") positionUsernameHistoryMenu();
+    });
+    window.addEventListener("resize", positionOpenUsernameHistoryMenu);
+    window.addEventListener("scroll", positionOpenUsernameHistoryMenu, { passive: true });
+
     document.querySelectorAll("[data-close-dialog]").forEach(function (button) {
       button.addEventListener("click", function () { closeDialog(button.closest("dialog")); });
     });
@@ -258,12 +266,32 @@
   }
 
   function fetchSiteData() {
-    return fetch(DATA_URL, { cache: "no-store" })
-      .then(function (response) {
+    return Promise.all([
+      fetch(DATA_URL, { cache: "no-store" }).then(function (response) {
         if (!response.ok) throw new Error("The tracker data file could not be loaded.");
         return response.json();
-      })
-      .then(validateTracker);
+      }),
+      fetch(CONFIG_URL, { cache: "no-store" }).then(function (response) {
+        return response.ok ? response.json() : {};
+      }).catch(function () { return {}; })
+    ]).then(function (results) {
+      return applyUsernameConfig(validateTracker(results[0]), results[1]);
+    });
+  }
+
+  function applyUsernameConfig(data, config) {
+    var changes = config && config.usernameChanges && typeof config.usernameChanges === "object" ? config.usernameChanges : {};
+    Object.keys(changes).forEach(function (stableName) {
+      var id = Object.keys(data.players).find(function (candidate) { return candidate.toLowerCase() === stableName.toLowerCase(); });
+      var player = id && data.players[id];
+      var change = changes[stableName];
+      if (!player || !player.current || !change || typeof change !== "object") return;
+      var currentName = String(change.current || player.current.name || stableName).trim();
+      var names = uniquePlayerNames([].concat(player.previousNames || [], change.previous || [], [stableName]));
+      player.previousNames = names.filter(function (name) { return name.toLowerCase() !== currentName.toLowerCase(); });
+      player.current.name = currentName;
+    });
+    return data;
   }
 
   function validateTracker(data) {
@@ -350,6 +378,7 @@
     elements["rank-icon"].src = rankIconUrl(rank.iconNumber);
     elements["profile-context"].textContent = rank.name;
     elements["profile-title"].textContent = current.name || state.currentPlayerId;
+    renderUsernameHistory(player);
     elements["player-meta"].textContent = "Tracked since " + formatDate(player.history && player.history[0] && player.history[0].at) + " · last snapshot " + formatRelativeTime(current.at);
     elements["rank-progress-text"].textContent = formatInteger(rank.progressScore) + " / " + formatInteger(rank.span) + " EXP";
     elements["rank-progress-percent"].textContent = formatRate(rank.progressPercent) + "%";
@@ -374,6 +403,73 @@
     renderActivity(player);
     renderAccountDetails(player);
     syncProfileSectionControls();
+  }
+
+  function renderUsernameHistory(player) {
+    var currentName = String(player.current.name || state.currentPlayerId);
+    var previousNames = uniquePlayerNames(player.previousNames || []).filter(function (name) {
+      return name.toLowerCase() !== currentName.toLowerCase();
+    }).reverse();
+    var trigger = elements["username-history-trigger"];
+    var menu = elements["username-history-menu"];
+    trigger.hidden = !previousNames.length;
+    if (!previousNames.length) {
+      if (typeof menu.hidePopover === "function" && menu.matches(":popover-open")) menu.hidePopover();
+      elements["username-history-list"].innerHTML = "";
+      return;
+    }
+    var label = previousNames.length === 1 ? "1 previous name" : previousNames.length + " previous names";
+    elements["username-history-count"].textContent = label;
+    elements["username-history-total"].textContent = previousNames.length + " saved";
+    trigger.setAttribute("aria-label", "Show " + label + " for " + currentName);
+    elements["username-history-list"].innerHTML = previousNames.map(function (name) {
+      return '<li><span>' + escapeHtml(name) + '</span></li>';
+    }).join("");
+  }
+
+  function uniquePlayerNames(names) {
+    var seen = {};
+    return names.map(function (name) { return String(name || "").trim(); }).filter(function (name) {
+      var key = name.toLowerCase();
+      if (!name || seen[key]) return false;
+      seen[key] = true;
+      return true;
+    });
+  }
+
+  function playerNames(id) {
+    var player = state.data && state.data.players[id];
+    if (!player || !player.current) return [id];
+    return uniquePlayerNames([id, player.current.name].concat(player.previousNames || []));
+  }
+
+  function playerMatchesName(id, name, exact) {
+    var query = String(name || "").toLowerCase();
+    return playerNames(id).some(function (candidate) {
+      var normalized = candidate.toLowerCase();
+      return exact ? normalized === query : normalized.indexOf(query) >= 0;
+    });
+  }
+
+  function positionOpenUsernameHistoryMenu() {
+    var menu = elements["username-history-menu"];
+    if (menu && menu.matches(":popover-open")) positionUsernameHistoryMenu();
+  }
+
+  function positionUsernameHistoryMenu() {
+    var trigger = elements["username-history-trigger"];
+    var menu = elements["username-history-menu"];
+    if (!trigger || !menu || trigger.hidden) return;
+    var rect = trigger.getBoundingClientRect();
+    var viewportInset = 16;
+    var width = Math.min(288, window.innerWidth - viewportInset * 2);
+    var left = Math.max(viewportInset, Math.min(rect.right - width, window.innerWidth - width - viewportInset));
+    var availableBelow = window.innerHeight - rect.bottom - viewportInset;
+    var estimatedHeight = Math.min(352, menu.scrollHeight || 352);
+    var openAbove = availableBelow < estimatedHeight && rect.top > availableBelow;
+    var top = openAbove ? Math.max(viewportInset, rect.top - estimatedHeight - 8) : rect.bottom + 8;
+    menu.style.setProperty("--username-menu-left", left + "px");
+    menu.style.setProperty("--username-menu-top", top + "px");
   }
 
   function calculatePeriod(player) {
@@ -911,8 +1007,7 @@
     var ids = getPlayerIds();
     var visible = ids.filter(function (id) {
       var selected = state.compare.indexOf(id) >= 0;
-      var name = state.data.players[id].current.name.toLowerCase();
-      return selected || !state.compareQuery || name.indexOf(state.compareQuery) >= 0;
+      return selected || !state.compareQuery || playerMatchesName(id, state.compareQuery, false);
     });
     elements["compare-picker-status"].textContent = visible.length + " shown · " + state.compare.length + " selected";
     if (!visible.length) {
@@ -995,7 +1090,7 @@
     if (hash.indexOf("player/") === 0) {
       var name = hash.slice(7).toLowerCase();
       var match = getPlayerIds().find(function (id) {
-        return id.toLowerCase() === name || state.data.players[id].current.name.toLowerCase() === name;
+        return playerMatchesName(id, name, true);
       });
       if (match && match !== state.currentPlayerId) state.profileSection = "overview";
       if (match) state.currentPlayerId = match;
@@ -1047,7 +1142,7 @@
     var rawQuery = (elements["player-search"].value || "").trim();
     var query = rawQuery.toLowerCase();
     var matches = getPlayerIds().filter(function (id) {
-      return state.data.players[id].current.name.toLowerCase().indexOf(query) >= 0;
+      return playerMatchesName(id, query, false);
     }).slice(0, 20);
     state.searchIndex = Math.max(0, Math.min(state.searchIndex, matches.length - 1));
     if (!matches.length) {
@@ -1060,7 +1155,7 @@
       }).join("");
     }
 
-    var exact = getPlayerIds().some(function (id) { return state.data.players[id].current.name.toLowerCase() === query; });
+    var exact = getPlayerIds().some(function (id) { return playerMatchesName(id, query, true); });
     var requestable = /^[A-Za-z0-9_.-]{3,64}$/.test(rawQuery) && !exact;
     elements["search-request-area"].innerHTML = requestable
       ? '<p>GitHub sign-in is the anti-bot gate. NOT_FOUND means the Tanki account is private or does not exist.</p><a class="search-request" href="' + escapeAttr(requestIssueUrl("Track", rawQuery)) + '" target="_blank" rel="noopener"><strong>Request tracking for “' + escapeHtml(rawQuery) + '”</strong></a>'

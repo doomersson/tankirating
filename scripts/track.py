@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -24,6 +25,7 @@ SCHEMA_VERSION = 1
 USER_AGENT = "TankiTrackerPages/1.0 (+GitHub Actions; community statistics)"
 RATING_TIME_ZONE = ZoneInfo("Europe/Stockholm")
 RATING_RESET_HOUR = 4
+USERNAME_PATTERN = re.compile(r"^[A-Za-z0-9_.-]{3,64}$")
 
 
 class ProfileNotFoundError(ValueError):
@@ -90,21 +92,119 @@ def validate_config(config: dict[str, Any]) -> dict[str, Any]:
         key = name.casefold()
         if not name or key in seen:
             continue
-        if len(name) > 64:
-            raise ValueError(f"Player name is too long: {name[:24]}…")
+        if not USERNAME_PATTERN.fullmatch(name):
+            raise ValueError(
+                f"Invalid player name {name!r}; use 3–64 letters, numbers, dots, underscores, or hyphens."
+            )
         seen.add(key)
         names.append(name)
 
     if len(names) > 100:
         raise ValueError("This static tracker intentionally supports at most 100 configured players.")
 
+    configured_names = {name.casefold(): name for name in names}
+    raw_changes = config.get("usernameChanges", {})
+    if not isinstance(raw_changes, dict):
+        raise ValueError("usernameChanges must be an object keyed by the original tracked username.")
+
+    changes: dict[str, dict[str, Any]] = {}
+    for raw_stable_name, raw_change in raw_changes.items():
+        stable_key = str(raw_stable_name).strip().casefold()
+        stable_name = configured_names.get(stable_key)
+        if not stable_name:
+            raise ValueError(f"Username history references untracked player {raw_stable_name!r}.")
+        if not isinstance(raw_change, dict):
+            raise ValueError(f"Username history for {stable_name} must be an object.")
+        changes[stable_key] = raw_change
+
+    normalized_changes: dict[str, dict[str, Any]] = {}
+    records: list[dict[str, Any]] = []
+    alias_owners: dict[str, str] = {}
+    for stable_name in names:
+        stable_key = stable_name.casefold()
+        change = changes.get(stable_key, {})
+        current_name = str(change.get("current") or stable_name).strip()
+        if not USERNAME_PATTERN.fullmatch(current_name):
+            raise ValueError(f"Invalid current username for {stable_name}: {current_name!r}.")
+
+        raw_previous = change.get("previous", [])
+        if not isinstance(raw_previous, list):
+            raise ValueError(f"Previous usernames for {stable_name} must be an array.")
+        previous_names: list[str] = []
+        previous_seen: set[str] = set()
+        for raw_previous_name in raw_previous:
+            previous_name = str(raw_previous_name).strip()
+            previous_key = previous_name.casefold()
+            if not USERNAME_PATTERN.fullmatch(previous_name):
+                raise ValueError(f"Invalid previous username for {stable_name}: {previous_name!r}.")
+            if previous_key == current_name.casefold() or previous_key in previous_seen:
+                continue
+            previous_seen.add(previous_key)
+            previous_names.append(previous_name)
+        if stable_key != current_name.casefold() and stable_key not in previous_seen:
+            previous_names.insert(0, stable_name)
+
+        record = {
+            "id": stable_key,
+            "stableName": stable_name,
+            "currentName": current_name,
+            "previousNames": previous_names,
+        }
+        for alias in player_aliases(record):
+            alias_key = alias.casefold()
+            owner = alias_owners.get(alias_key)
+            if owner and owner != stable_key:
+                raise ValueError(f"Username {alias!r} belongs to more than one tracked player.")
+            alias_owners[alias_key] = stable_key
+        records.append(record)
+        if current_name.casefold() != stable_key or previous_names:
+            normalized_changes[stable_name] = {
+                "current": current_name,
+                "previous": previous_names,
+            }
+
     return {
         "players": names,
+        "playerRecords": records,
+        "usernameChanges": normalized_changes,
         "region": str(config.get("region", "eu")).strip().lower() or "eu",
         "language": str(config.get("language", "en")).strip().lower() or "en",
         "concurrency": max(1, min(6, number_value(config.get("concurrency"), 4))),
         "retentionDays": max(30, min(3650, number_value(config.get("retentionDays"), 730))),
     }
+
+
+def player_aliases(record: dict[str, Any]) -> list[str]:
+    aliases: list[str] = []
+    seen: set[str] = set()
+    for value in [record.get("stableName"), record.get("currentName"), *(record.get("previousNames") or [])]:
+        name = str(value or "").strip()
+        key = name.casefold()
+        if name and key not in seen:
+            seen.add(key)
+            aliases.append(name)
+    return aliases
+
+
+def resolve_player_record(config: dict[str, Any], username: str) -> dict[str, Any] | None:
+    requested_key = username.strip().casefold()
+    for record in config.get("playerRecords", []):
+        if any(alias.casefold() == requested_key for alias in player_aliases(record)):
+            return record
+    return None
+
+
+def config_payload(config: dict[str, Any]) -> dict[str, Any]:
+    payload = {
+        "players": config["players"],
+        "region": config["region"],
+        "language": config["language"],
+        "concurrency": config["concurrency"],
+        "retentionDays": config["retentionDays"],
+    }
+    if config.get("usernameChanges"):
+        payload["usernameChanges"] = config["usernameChanges"]
+    return payload
 
 
 def build_url(username: str, region: str, language: str) -> str:
@@ -325,6 +425,62 @@ def merge_player(existing: Any, current: dict[str, Any], retention_days: int) ->
     }
 
 
+def combine_existing_player_records(
+    tracker_players: dict[str, Any], record: dict[str, Any]
+) -> dict[str, Any] | None:
+    records: list[dict[str, Any]] = []
+    seen_record_ids: set[int] = set()
+    for alias in player_aliases(record):
+        candidate = tracker_players.get(alias.casefold())
+        if isinstance(candidate, dict) and id(candidate) not in seen_record_ids:
+            seen_record_ids.add(id(candidate))
+            records.append(candidate)
+    if not records:
+        return None
+
+    stable_record = tracker_players.get(record["id"])
+    current_record = stable_record if isinstance(stable_record, dict) else records[0]
+    current = current_record.get("current") if isinstance(current_record.get("current"), dict) else None
+    history_by_snapshot: dict[str, dict[str, Any]] = {}
+    for candidate in records:
+        if not current and isinstance(candidate.get("current"), dict):
+            current = candidate["current"]
+        history = candidate.get("history") if isinstance(candidate.get("history"), list) else []
+        for snapshot in history:
+            if not isinstance(snapshot, dict):
+                continue
+            key = json.dumps(snapshot, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+            history_by_snapshot[key] = snapshot
+    history = sorted(
+        history_by_snapshot.values(),
+        key=lambda snapshot: str(snapshot.get("at") or ""),
+    )
+    return {"current": current or {}, "history": history}
+
+
+def store_tracked_player(
+    tracker_players: dict[str, Any],
+    record: dict[str, Any],
+    current: dict[str, Any],
+    retention_days: int,
+) -> dict[str, Any]:
+    existing = combine_existing_player_records(tracker_players, record)
+    merged = merge_player(existing, current, retention_days)
+    merged["previousNames"] = list(record.get("previousNames") or [])
+    stable_key = record["id"]
+    tracker_players[stable_key] = merged
+    for alias in player_aliases(record):
+        alias_key = alias.casefold()
+        if alias_key != stable_key:
+            tracker_players.pop(alias_key, None)
+    return merged
+
+
+def clear_player_errors(errors: dict[str, Any], record: dict[str, Any]) -> None:
+    for alias in player_aliases(record):
+        errors.pop(alias.casefold(), None)
+
+
 def main() -> int:
     try:
         config = validate_config(load_json(CONFIG_PATH, {}))
@@ -351,31 +507,26 @@ def main() -> int:
     collected_at = iso_time()
     successes = 0
 
-    def collect(username: str) -> tuple[str, dict[str, Any]]:
-        profile = fetch_profile(username, config["region"], config["language"])
-        return username, normalize_profile(profile, collected_at)
+    def collect(record: dict[str, Any]) -> dict[str, Any]:
+        profile = fetch_profile(record["currentName"], config["region"], config["language"])
+        return normalize_profile(profile, collected_at)
 
     with ThreadPoolExecutor(max_workers=config["concurrency"]) as pool:
-        futures = {pool.submit(collect, username): username for username in config["players"]}
+        futures = {pool.submit(collect, record): record for record in config["playerRecords"]}
         for future in as_completed(futures):
-            requested_name = futures[future]
-            requested_key = requested_name.casefold()
+            record = futures[future]
+            stable_key = record["id"]
             try:
-                _, current = future.result()
-                canonical_key = current["name"].casefold()
-                existing = tracker_players.get(canonical_key) or tracker_players.get(requested_key)
-                tracker_players[canonical_key] = merge_player(existing, current, config["retentionDays"])
-                if requested_key != canonical_key:
-                    tracker_players.pop(requested_key, None)
-                errors.pop(requested_key, None)
-                errors.pop(canonical_key, None)
+                current = future.result()
+                store_tracked_player(tracker_players, record, current, config["retentionDays"])
+                clear_player_errors(errors, record)
                 successes += 1
                 print(f"Tracked {current['name']}")
             except Exception as error:  # each player failure must not wipe other history
-                errors[requested_key] = {"at": collected_at, "message": str(error)[:240]}
-                print(f"Failed {requested_name}: {error}", file=sys.stderr)
+                errors[stable_key] = {"at": collected_at, "message": str(error)[:240]}
+                print(f"Failed {record['currentName']}: {error}", file=sys.stderr)
 
-    configured_keys = {name.casefold() for name in config["players"]}
+    configured_keys = {record["id"] for record in config["playerRecords"]}
     # Preserve removed accounts in history so accidental config edits are recoverable.
     tracker["schemaVersion"] = SCHEMA_VERSION
     tracker["source"] = f"https://ratings.tankionline.com/api/{config['region']}/profile/"

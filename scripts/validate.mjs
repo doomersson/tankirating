@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const read = (path) => readFile(resolve(root, path), "utf8");
-const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow, rankGuide, droneIcon, trackScript] = await Promise.all([
+const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow, renameWorkflow, deployWorkflow, rankGuide, droneIcon, trackScript, requestScript, renameScript] = await Promise.all([
   read("index.html"),
   read("assets/styles.css"),
   read("tokens.css"),
@@ -13,9 +13,13 @@ const [html, css, tokens, app, tracker, players, trackWorkflow, requestWorkflow,
   read("data/players.json").then(JSON.parse),
   read(".github/workflows/track.yml"),
   read(".github/workflows/request-player.yml"),
+  read(".github/workflows/update-player-name.yml"),
+  read(".github/workflows/deploy-pages.yml"),
   read("assets/ranks/README.md"),
   read("assets/icons/drone.svg"),
   read("scripts/track.py"),
+  read("scripts/request_player.py"),
+  read("scripts/update_player_name.py"),
 ]);
 
 const failures = [];
@@ -44,7 +48,8 @@ check(html.includes('id="rating-date"') && html.includes('id="custom-date-start"
 check(/class="period-mode-toolbar"[\s\S]*?id="period-control"[\s\S]*?id="period-date-fields"/.test(html) && css.includes(".period-mode-toolbar"), "period modes and reference dates must share one compact toolbar");
 check(html.includes('id="stat-range-kd"') && html.includes('id="stat-kills-hour"') && html.includes('id="stat-crystals-hour"') && html.includes('id="stat-score-hour"') && html.includes('id="stat-time-day"'), "profile K/D, hourly, or time-per-day headline metrics are missing");
 check(html.includes('id="overview-crystals-experience"') && html.includes('id="period-crystals-experience"') && app.includes("safeDivide(period.delta.crystals, period.delta.score)"), "Crystals / Experience is missing from lifetime or period statistics");
-check(["crystals", "score", "time", "kills", "deaths", "golds"].every((icon) => html.includes(`data-metric-icon="${icon}"`)) && html.includes('class="metric-icon metric-icon--pair"') && html.includes('data-metric-left="kills" data-metric-right="deaths"') && html.includes('data-metric-left="crystals" data-metric-right="score"') && html.includes('data-metric-right="time"') && !html.includes("metric-icon__slash") && css.includes(".metric-icon__part--left") && css.includes(".metric-icon__part--right") && css.includes("clip-path: polygon") && css.includes('url("./icons/modes/deathmatch.svg")') && app.includes("metricIconMarkup") && miscIcons.every((icon) => icon.includes("<svg")), "shared metric artwork, transparent split ratio marks, or account-detail icon mapping is incomplete");
+check(["crystals", "score", "ratio", "time", "kills", "deaths", "golds", "kd"].every((icon) => html.includes(`data-metric-icon="${icon}"`)) && html.includes('class="metric-icon__slash">/</span>') && css.includes(".metric-icon__part--kills") && css.includes(".metric-icon__part--deaths") && css.includes('url("./icons/modes/deathmatch.svg")') && app.includes("metricIconMarkup") && miscIcons.every((icon) => icon.includes("<svg")), "shared metric artwork, composite K/D icon, or account-detail icon mapping is incomplete");
+check(html.includes('id="username-history-trigger"') && /id="username-history-menu"[^>]*popover/.test(html) && app.includes("renderUsernameHistory") && app.includes("playerMatchesName") && css.includes(".username-history-menu"), "previous-username dropdown, alias routing, or responsive styling is missing");
 check(!html.includes(">Score<") && !html.includes(">Score /") && app.includes('{ key: "score", label: "Experience" }') && app.includes('metricRow("Experience"'), "the player score metric must be labelled Experience everywhere in the interface");
 check(app.includes('state.period === "month"') && app.includes('state.period === "year"') && app.includes('state.period === "custom"') && app.includes("shiftMonthDateKey") && app.includes("shiftYearDateKey"), "calendar month, year, or custom range calculations are missing");
 check(!/href="\//.test(html) && !/src="\//.test(html), "root-absolute assets break project GitHub Pages sites");
@@ -97,6 +102,10 @@ check(app.includes('"experience", "crystals_per_experience"'), "profile CSV must
 check(trackWorkflow.includes('cron: "17 * * * *"'), "collector must run every hour");
 check(trackScript.includes('ZoneInfo("Europe/Stockholm")') && trackScript.includes("rating_boundary_due"), "collector must retain Stockholm rating-boundary snapshots");
 check(trackScript.includes('"modules": modules') && trackScript.includes('"resistanceModules"') && trackScript.includes("first_usage_list") && trackScript.includes('"RAILGUN_RESISTANCE": "railgun"') && trackScript.includes('module["icon"]'), "collector must retain protection-module usage and local icon keys from the ratings API");
+check(trackScript.includes('"playerRecords"') && trackScript.includes("store_tracked_player") && requestScript.includes("resolve_player_record"), "stable player IDs or alias-aware tracking and refresh handling is missing");
+check(players.usernameChanges?.duturu667?.current === "NHK" && players.usernameChanges.duturu667.previous.includes("duturu667"), "duturu667 to NHK username history migration is missing");
+check(renameWorkflow.includes("github.actor == github.repository_owner") && renameWorkflow.includes("workflow_dispatch") && renameScript.includes("NEW_USERNAME") && renameScript.includes("previousNames"), "owner-only username migration workflow is missing");
+check(deployWorkflow.includes('"Update player username"'), "username migrations must trigger a Pages deployment");
 check(app.includes("issues/new?title=") && requestWorkflow.includes("issues:"), "GitHub player request flow is missing");
 check(trackWorkflow.includes("actions/checkout@v5") && trackWorkflow.includes("actions/setup-python@v6"), "collector actions must use Node 24-compatible releases");
 check(rankGuide.includes("31.png") && rankGuide.includes("Legend"), "rank icon upload guide is missing");
@@ -106,6 +115,9 @@ check(Array.isArray(players.players) && players.players.length <= 100, "players.
 
 const syntax = spawnSync(process.execPath, ["--check", resolve(root, "assets/app.js")], { encoding: "utf8" });
 check(syntax.status === 0, syntax.stderr || "app.js syntax check failed");
+
+const pythonSyntax = spawnSync("python3", ["-m", "py_compile", resolve(root, "scripts/track.py"), resolve(root, "scripts/request_player.py"), resolve(root, "scripts/update_player_name.py")], { encoding: "utf8" });
+check(pythonSyntax.status === 0, pythonSyntax.stderr || "Python tracker syntax check failed");
 
 if (failures.length) {
   console.error(failures.map((failure) => `FAIL: ${failure}`).join("\n"));

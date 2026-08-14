@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
   workflow_run:
-    workflows: ["Track players", "Request player"]
+    workflows: ["Track players", "Request player", "Update player username"]
     types: [completed]
   workflow_dispatch:
 

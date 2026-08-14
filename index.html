@@ -306,14 +306,55 @@
             <p>Every registered account in one table. Select a metric heading to sort it; select it again to reverse the order.</p>
           </div>
         </div>
-        <div class="leaderboard-controls">
-          <p>Day and Week show gains between collected snapshots. Efficiency rank remains Tanki’s latest official position.</p>
-          <div class="segmented-control" id="leaderboard-period-control" role="group" aria-label="Leaderboard statistics period">
-            <button type="button" data-leaderboard-period="1" aria-pressed="false">Day</button>
-            <button type="button" data-leaderboard-period="7" class="is-active" aria-pressed="true">Week</button>
-            <button type="button" data-leaderboard-period="all" aria-pressed="false">All time</button>
+        <section class="leaderboard-controls" aria-label="Leaderboard period controls">
+          <div class="leaderboard-controls-heading">
+            <p>Period views show gains between the closest hourly snapshots. Efficiency rank remains Tanki’s latest official position.</p>
+            <span>04:00 <span id="leaderboard-rating-zone">Europe/Stockholm</span> boundaries</span>
           </div>
-        </div>
+
+          <div class="period-mode-toolbar leaderboard-mode-toolbar">
+            <div class="segmented-control period-mode-control" id="leaderboard-period-control" role="group" aria-label="Leaderboard statistics period">
+              <button type="button" data-leaderboard-period="day" aria-pressed="false">Day</button>
+              <button type="button" data-leaderboard-period="week" class="is-active" aria-pressed="true">Week</button>
+              <button type="button" data-leaderboard-period="month" aria-pressed="false">Month</button>
+              <button type="button" data-leaderboard-period="year" aria-pressed="false">Year</button>
+              <button type="button" data-leaderboard-period="all" aria-pressed="false">All Time</button>
+              <button type="button" data-leaderboard-period="custom" aria-pressed="false">Custom</button>
+            </div>
+
+            <div class="period-date-fields leaderboard-date-fields" id="leaderboard-date-fields">
+              <label class="period-date-field" id="leaderboard-rating-date-field" for="leaderboard-rating-date">
+                <span>Reference date</span>
+                <input id="leaderboard-rating-date" type="date" aria-describedby="leaderboard-range-coverage" />
+              </label>
+              <label class="period-date-field" id="leaderboard-custom-date-start-field" for="leaderboard-custom-date-start" hidden>
+                <span>From</span>
+                <input id="leaderboard-custom-date-start" type="date" aria-describedby="leaderboard-custom-date-message" />
+              </label>
+              <label class="period-date-field" id="leaderboard-custom-date-end-field" for="leaderboard-custom-date-end" hidden>
+                <span>To</span>
+                <input id="leaderboard-custom-date-end" type="date" aria-describedby="leaderboard-custom-date-message" />
+              </label>
+              <p class="period-field-message" id="leaderboard-custom-date-message" data-state="success" hidden>Both dates are inclusive.</p>
+            </div>
+          </div>
+
+          <div class="period-range-navigator leaderboard-range-navigator" id="leaderboard-range-navigator" aria-label="Browse leaderboard rating periods">
+            <div class="period-nav-group period-nav-group--earlier">
+              <button class="period-nav-button" type="button" data-leaderboard-period-nav="first" aria-label="Go to first tracked leaderboard period" title="First tracked period"><span aria-hidden="true">⇤</span></button>
+              <button class="period-nav-button" type="button" data-leaderboard-period-nav="previous" aria-label="Go to previous leaderboard period" title="Previous period"><span aria-hidden="true">←</span></button>
+            </div>
+            <div class="period-range-readout">
+              <span id="leaderboard-range-kicker">Week view</span>
+              <strong id="leaderboard-range-label" aria-live="polite">—</strong>
+              <span id="leaderboard-range-coverage">Waiting for snapshots</span>
+            </div>
+            <div class="period-nav-group period-nav-group--later">
+              <button class="period-nav-button" type="button" data-leaderboard-period-nav="next" aria-label="Go to next leaderboard period" title="Next period"><span aria-hidden="true">→</span></button>
+              <button class="period-nav-button" type="button" data-leaderboard-period-nav="latest" aria-label="Go to latest tracked leaderboard period" title="Latest tracked period"><span aria-hidden="true">⇥</span></button>
+            </div>
+          </div>
+        </section>
         <div class="leaderboard-sort-strip" id="leaderboard-sort-strip" aria-label="Sort leaderboard"></div>
         <div class="leaderboard-list" id="leaderboard-list"></div>
       </section>

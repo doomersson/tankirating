@@ -61,7 +61,10 @@
     searchIndex: 0,
     leaderboardSort: "kills13",
     leaderboardDirection: "desc",
-    leaderboardPeriod: 7,
+    leaderboardPeriod: "week",
+    leaderboardSelectedRatingDate: null,
+    leaderboardCustomStartDate: null,
+    leaderboardCustomEndDate: null,
     timeUnit: "days",
     animatedEquipment: {}
   };
@@ -112,7 +115,11 @@
       "stat-kills-hour", "kills-hour-detail", "stat-crystals-hour", "crystals-hour-detail",
       "stat-score-hour", "score-hour-detail", "stat-time-day", "time-day-detail",
       "equipment-summary", "equipment-list", "activity-chart", "activity-zone-note",
-      "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list", "compare-search", "compare-picker-status",
+      "account-details", "leaderboard-count", "leaderboard-sort-strip", "leaderboard-list",
+      "leaderboard-rating-zone", "leaderboard-date-fields", "leaderboard-rating-date", "leaderboard-rating-date-field",
+      "leaderboard-custom-date-start", "leaderboard-custom-date-end", "leaderboard-custom-date-start-field", "leaderboard-custom-date-end-field",
+      "leaderboard-custom-date-message", "leaderboard-range-navigator", "leaderboard-range-kicker", "leaderboard-range-label", "leaderboard-range-coverage",
+      "compare-search", "compare-picker-status",
       "compare-picker", "compare-empty",
       "comparison", "global-empty", "footer-sync", "search-trigger", "mobile-search", "search-dialog",
       "player-search", "search-results", "search-request-area", "tools-trigger", "tools-dialog", "export-data", "import-data",
@@ -159,9 +166,24 @@
     document.getElementById("leaderboard-period-control").addEventListener("click", function (event) {
       var button = event.target.closest("button[data-leaderboard-period]");
       if (!button) return;
-      state.leaderboardPeriod = button.dataset.leaderboardPeriod === "all" ? "all" : Number(button.dataset.leaderboardPeriod);
+      state.leaderboardPeriod = button.dataset.leaderboardPeriod;
+      if (state.leaderboardPeriod === "custom") ensureLeaderboardCustomDates();
       setActiveButton(event.currentTarget, button, ".is-active");
       renderLeaderboard();
+    });
+
+    elements["leaderboard-rating-date"].addEventListener("change", function (event) {
+      if (!validDateKey(event.currentTarget.value)) return;
+      state.leaderboardSelectedRatingDate = event.currentTarget.value;
+      renderLeaderboard();
+    });
+
+    elements["leaderboard-custom-date-start"].addEventListener("change", handleLeaderboardCustomDateChange);
+    elements["leaderboard-custom-date-end"].addEventListener("change", handleLeaderboardCustomDateChange);
+    elements["leaderboard-range-navigator"].addEventListener("click", function (event) {
+      var button = event.target.closest("button[data-leaderboard-period-nav]");
+      if (!button || button.disabled) return;
+      navigateLeaderboardPeriod(button.dataset.leaderboardPeriodNav);
     });
 
     document.getElementById("equipment-tabs").addEventListener("click", function (event) {
@@ -884,6 +906,7 @@
 
   function renderLeaderboard() {
     if (!state.data) return;
+    configureLeaderboardCalendar();
     var sort = state.leaderboardSort;
     var direction = state.leaderboardDirection;
     var players = getPlayerIds().map(function (id) {
@@ -964,7 +987,8 @@
         time: positive(current.totalTimeMs)
       };
     }
-    var period = calculatePeriodFor(player, state.leaderboardPeriod);
+    var range = leaderboardPeriodRange();
+    var period = range ? calculatePeriodBetween(player, ratingBoundaryMs(range.startKey), ratingBoundaryMs(range.endKey)) : null;
     if (!period) {
       return { efficiency: NaN, score: NaN, crystals: NaN, crystalsExperience: NaN, kills13: NaN, kills: NaN, deaths: NaN, kd: NaN, golds: NaN, time: NaN };
     }
@@ -984,7 +1008,9 @@
 
   function leaderboardPeriodLabel() {
     if (state.leaderboardPeriod === "all") return "all time";
-    return state.leaderboardPeriod === 1 ? "the last day" : "the last week";
+    var range = leaderboardPeriodRange();
+    if (!range) return "an invalid custom range";
+    return leaderboardPeriodName().toLowerCase() + " · " + formatProfileRangeLabel(range);
   }
 
   function setLeaderboardSort(sort) {
@@ -1380,6 +1406,178 @@
       button.classList.toggle("is-active", active);
       button.setAttribute("aria-pressed", active ? "true" : "false");
     });
+  }
+
+  function leaderboardCalendarBounds() {
+    var minimum = null;
+    var maximum = null;
+    getPlayerIds().forEach(function (id) {
+      var player = state.data.players[id];
+      var points = allPlayerPoints(player);
+      if (points.length) {
+        var firstKey = ratingDateKeyForInstant(points[0].at);
+        if (validDateKey(firstKey)) minimum = minimum ? minDateKey(minimum, firstKey) : firstKey;
+      }
+      var currentKey = currentRatingDateKey(player);
+      if (validDateKey(currentKey)) maximum = maximum ? maxDateKey(maximum, currentKey) : currentKey;
+    });
+    var fallback = ratingDateKeyForInstant(new Date());
+    return { minimumKey: minimum || fallback, maximumKey: maximum || fallback };
+  }
+
+  function leaderboardPeriodRange() {
+    var bounds = leaderboardCalendarBounds();
+    var currentKey = state.leaderboardSelectedRatingDate || bounds.maximumKey;
+    var startKey;
+    var endKey;
+    if (state.leaderboardPeriod === "day") {
+      startKey = currentKey;
+      endKey = shiftDateKey(startKey, 1);
+    } else if (state.leaderboardPeriod === "week") {
+      startKey = mondayDateKey(currentKey);
+      endKey = shiftDateKey(startKey, 7);
+    } else if (state.leaderboardPeriod === "month") {
+      startKey = monthStartDateKey(currentKey);
+      endKey = shiftMonthDateKey(startKey, 1);
+    } else if (state.leaderboardPeriod === "year") {
+      startKey = yearStartDateKey(currentKey);
+      endKey = shiftYearDateKey(startKey, 1);
+    } else if (state.leaderboardPeriod === "custom") {
+      if (!validDateKey(state.leaderboardCustomStartDate) || !validDateKey(state.leaderboardCustomEndDate) || state.leaderboardCustomStartDate > state.leaderboardCustomEndDate) return null;
+      startKey = state.leaderboardCustomStartDate;
+      endKey = shiftDateKey(state.leaderboardCustomEndDate, 1);
+    } else {
+      startKey = bounds.minimumKey;
+      endKey = shiftDateKey(bounds.maximumKey, 1);
+    }
+    var requestedEndKey = shiftDateKey(endKey, -1);
+    var displayEndKey = minDateKey(requestedEndKey, bounds.maximumKey);
+    return {
+      startKey: startKey,
+      endKey: endKey,
+      displayEndKey: displayEndKey,
+      requestedEndKey: requestedEndKey,
+      minimumKey: bounds.minimumKey,
+      maximumKey: bounds.maximumKey
+    };
+  }
+
+  function ensureLeaderboardCustomDates() {
+    var bounds = leaderboardCalendarBounds();
+    if (!validDateKey(state.leaderboardCustomEndDate) || state.leaderboardCustomEndDate < bounds.minimumKey || state.leaderboardCustomEndDate > bounds.maximumKey) {
+      state.leaderboardCustomEndDate = bounds.maximumKey;
+    }
+    if (!validDateKey(state.leaderboardCustomStartDate) || state.leaderboardCustomStartDate < bounds.minimumKey || state.leaderboardCustomStartDate > bounds.maximumKey) {
+      state.leaderboardCustomStartDate = maxDateKey(bounds.minimumKey, shiftDateKey(state.leaderboardCustomEndDate, -6));
+    }
+  }
+
+  function configureLeaderboardCalendar() {
+    var bounds = leaderboardCalendarBounds();
+    if (!validDateKey(state.leaderboardSelectedRatingDate) || state.leaderboardSelectedRatingDate < bounds.minimumKey || state.leaderboardSelectedRatingDate > bounds.maximumKey) {
+      state.leaderboardSelectedRatingDate = bounds.maximumKey;
+    }
+    ensureLeaderboardCustomDates();
+    elements["leaderboard-rating-zone"].textContent = ratingZoneLabel();
+    elements["leaderboard-rating-date"].min = bounds.minimumKey;
+    elements["leaderboard-rating-date"].max = bounds.maximumKey;
+    elements["leaderboard-rating-date"].value = state.leaderboardSelectedRatingDate;
+    elements["leaderboard-rating-date-field"].hidden = state.leaderboardPeriod === "all" || state.leaderboardPeriod === "custom";
+    elements["leaderboard-custom-date-start-field"].hidden = state.leaderboardPeriod !== "custom";
+    elements["leaderboard-custom-date-end-field"].hidden = state.leaderboardPeriod !== "custom";
+    elements["leaderboard-custom-date-message"].hidden = state.leaderboardPeriod !== "custom";
+    elements["leaderboard-date-fields"].hidden = state.leaderboardPeriod === "all";
+    elements["leaderboard-date-fields"].dataset.mode = state.leaderboardPeriod;
+
+    elements["leaderboard-custom-date-start"].min = bounds.minimumKey;
+    elements["leaderboard-custom-date-start"].max = bounds.maximumKey;
+    elements["leaderboard-custom-date-start"].value = state.leaderboardCustomStartDate;
+    elements["leaderboard-custom-date-end"].min = bounds.minimumKey;
+    elements["leaderboard-custom-date-end"].max = bounds.maximumKey;
+    elements["leaderboard-custom-date-end"].value = state.leaderboardCustomEndDate;
+    var customValid = validDateKey(state.leaderboardCustomStartDate) && validDateKey(state.leaderboardCustomEndDate) && state.leaderboardCustomStartDate <= state.leaderboardCustomEndDate;
+    elements["leaderboard-custom-date-start"].setAttribute("aria-invalid", state.leaderboardPeriod === "custom" && !customValid ? "true" : "false");
+    elements["leaderboard-custom-date-end"].setAttribute("aria-invalid", state.leaderboardPeriod === "custom" && !customValid ? "true" : "false");
+    elements["leaderboard-custom-date-message"].dataset.state = customValid ? "success" : "error";
+    elements["leaderboard-custom-date-message"].textContent = customValid ? "Valid range · both dates are inclusive." : "The From date must be on or before the To date.";
+
+    var range = leaderboardPeriodRange();
+    elements["leaderboard-range-kicker"].textContent = state.leaderboardPeriod === "all" ? "All collected snapshots" : leaderboardPeriodName() + " view";
+    elements["leaderboard-range-label"].textContent = range ? formatProfileRangeLabel(range) : "Choose a valid date range";
+    var total = getPlayerIds().length;
+    var available = range && state.leaderboardPeriod !== "all" ? getPlayerIds().filter(function (id) {
+      return calculatePeriodBetween(state.data.players[id], ratingBoundaryMs(range.startKey), ratingBoundaryMs(range.endKey));
+    }).length : total;
+    elements["leaderboard-range-coverage"].textContent = state.leaderboardPeriod === "all"
+      ? formatInteger(total) + " tracked " + plural(total, "player") + " · lifetime totals"
+      : formatInteger(available) + " of " + formatInteger(total) + " " + plural(total, "player") + " with a snapshot pair";
+    document.querySelectorAll("#leaderboard-period-control button[data-leaderboard-period]").forEach(function (button) {
+      var active = button.dataset.leaderboardPeriod === state.leaderboardPeriod;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    syncLeaderboardPeriodNavigation(range);
+  }
+
+  function handleLeaderboardCustomDateChange() {
+    state.leaderboardCustomStartDate = elements["leaderboard-custom-date-start"].value;
+    state.leaderboardCustomEndDate = elements["leaderboard-custom-date-end"].value;
+    renderLeaderboard();
+  }
+
+  function syncLeaderboardPeriodNavigation(range) {
+    var allTime = state.leaderboardPeriod === "all";
+    var canGoEarlier = !allTime && range && range.startKey > range.minimumKey;
+    var canGoLater = !allTime && range && range.requestedEndKey < range.maximumKey;
+    elements["leaderboard-range-navigator"].querySelectorAll("button[data-leaderboard-period-nav]").forEach(function (button) {
+      var earlier = button.dataset.leaderboardPeriodNav === "first" || button.dataset.leaderboardPeriodNav === "previous";
+      var disabled = earlier ? !canGoEarlier : !canGoLater;
+      button.disabled = disabled;
+      button.setAttribute("aria-disabled", disabled ? "true" : "false");
+      button.dataset.state = disabled ? "disabled" : "default";
+    });
+  }
+
+  function navigateLeaderboardPeriod(direction) {
+    var range = leaderboardPeriodRange();
+    if (!range || state.leaderboardPeriod === "all") return;
+    if (state.leaderboardPeriod === "custom") {
+      var span = Math.max(1, dateKeySpanDays(state.leaderboardCustomStartDate, state.leaderboardCustomEndDate));
+      if (direction === "first") {
+        state.leaderboardCustomStartDate = range.minimumKey;
+        state.leaderboardCustomEndDate = minDateKey(range.maximumKey, shiftDateKey(range.minimumKey, span - 1));
+      } else if (direction === "latest") {
+        state.leaderboardCustomEndDate = range.maximumKey;
+        state.leaderboardCustomStartDate = maxDateKey(range.minimumKey, shiftDateKey(range.maximumKey, -(span - 1)));
+      } else if (direction === "previous") {
+        state.leaderboardCustomStartDate = maxDateKey(range.minimumKey, shiftDateKey(state.leaderboardCustomStartDate, -span));
+        state.leaderboardCustomEndDate = minDateKey(range.maximumKey, shiftDateKey(state.leaderboardCustomStartDate, span - 1));
+      } else if (direction === "next") {
+        state.leaderboardCustomEndDate = minDateKey(range.maximumKey, shiftDateKey(state.leaderboardCustomEndDate, span));
+        state.leaderboardCustomStartDate = maxDateKey(range.minimumKey, shiftDateKey(state.leaderboardCustomEndDate, -(span - 1)));
+      }
+    } else if (direction === "first") {
+      state.leaderboardSelectedRatingDate = range.minimumKey;
+    } else if (direction === "latest") {
+      state.leaderboardSelectedRatingDate = range.maximumKey;
+    } else {
+      var step = direction === "previous" ? -1 : 1;
+      if (state.leaderboardPeriod === "day") state.leaderboardSelectedRatingDate = shiftDateKey(state.leaderboardSelectedRatingDate, step);
+      else if (state.leaderboardPeriod === "week") state.leaderboardSelectedRatingDate = shiftDateKey(state.leaderboardSelectedRatingDate, step * 7);
+      else if (state.leaderboardPeriod === "month") state.leaderboardSelectedRatingDate = shiftMonthDateKey(monthStartDateKey(state.leaderboardSelectedRatingDate), step);
+      else state.leaderboardSelectedRatingDate = shiftYearDateKey(yearStartDateKey(state.leaderboardSelectedRatingDate), step);
+      state.leaderboardSelectedRatingDate = minDateKey(range.maximumKey, maxDateKey(range.minimumKey, state.leaderboardSelectedRatingDate));
+    }
+    renderLeaderboard();
+  }
+
+  function leaderboardPeriodName() {
+    if (state.leaderboardPeriod === "day") return "Day";
+    if (state.leaderboardPeriod === "week") return "Week";
+    if (state.leaderboardPeriod === "month") return "Month";
+    if (state.leaderboardPeriod === "year") return "Year";
+    if (state.leaderboardPeriod === "custom") return "Custom";
+    return "All Time";
   }
 
   function configureRatingCalendar(player) {

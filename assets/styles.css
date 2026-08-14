@@ -945,7 +945,7 @@ button,
   text-transform: uppercase;
 }
 
-/* Shared account-stat artwork; the K/D mark overlaps kills and deaths around a central slash. */
+/* Shared account-stat artwork; K/D keeps each icon legible around a neutral slash. */
 .metric-icon {
   --metric-icon-image: none;
   width: 1rem;
@@ -993,11 +993,12 @@ button,
 }
 
 .metric-icon[data-metric-icon="kd"] {
-  width: 1.8rem;
-  flex-basis: 1.8rem;
+  width: 2.55rem;
+  flex-basis: 2.55rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-3xs);
   background: transparent;
   -webkit-mask-image: none;
   mask-image: none;
@@ -1028,11 +1029,11 @@ button,
 }
 
 .metric-icon__slash {
-  width: 0.4rem;
-  margin-inline: -0.25rem;
+  width: auto;
+  margin-inline: var(--space-3xs);
   position: relative;
   z-index: var(--z-base);
-  color: var(--color-accent);
+  color: var(--color-ink);
   font-family: var(--font-body);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -1646,12 +1647,32 @@ button,
 }
 
 .leaderboard-controls {
-  padding-block: var(--space-md);
+  margin-block: var(--space-lg) var(--space-md);
+  border: var(--rule-thin) solid var(--color-rule);
+  background: var(--color-paper-2);
+  display: grid;
+}
+
+.leaderboard-controls-heading {
+  padding: var(--space-md);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
+  border-block-end: var(--rule-thin) solid var(--color-rule);
+}
+
+.leaderboard-controls-heading > span {
+  color: var(--color-neutral);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.leaderboard-controls .period-range-navigator {
+  border-block-end: 0;
 }
 
 .leaderboard-list {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-14T08:39:27Z",
+  "generatedAt": "2026-08-14T10:11:48Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "abyss": {
@@ -5438,27 +5438,27 @@
     },
     "neet": {
       "current": {
-        "at": "2026-08-14T08:39:27Z",
+        "at": "2026-08-14T10:11:48Z",
         "name": "neet",
-        "rank": 12,
-        "score": 89000,
-        "scoreBase": 76000,
-        "scoreNext": 98000,
-        "kills": 2558,
-        "deaths": 145,
-        "crystals": 72085,
+        "rank": 13,
+        "score": 100930,
+        "scoreBase": 98000,
+        "scoreNext": 125000,
+        "kills": 2869,
+        "deaths": 156,
+        "crystals": 90419,
         "golds": 1,
-        "efficiency": 3497799,
-        "efficiencyPosition": 2075134,
-        "totalTimeMs": 35278684,
-        "gearScore": 2750,
+        "efficiency": 3813768,
+        "efficiencyPosition": 1734857,
+        "totalTimeMs": 39365021,
+        "gearScore": 3320,
         "premium": true,
         "equipment": {
           "hulls": [
             {
               "name": "Crusader",
-              "timeMs": 33568193,
-              "score": 59485
+              "timeMs": 37654530,
+              "score": 69415
             },
             {
               "name": "Paladin",
@@ -5518,14 +5518,14 @@
               "score": 49420
             },
             {
+              "name": "Gauss",
+              "timeMs": 6554877,
+              "score": 16650
+            },
+            {
               "name": "Smoky",
               "timeMs": 3297735,
               "score": 7640
-            },
-            {
-              "name": "Gauss",
-              "timeMs": 2468540,
-              "score": 6720
             },
             {
               "name": "Firebird",
@@ -5601,31 +5601,31 @@
           "drones": [
             {
               "name": "Oracle",
-              "timeMs": 33535122,
-              "score": 63780
+              "timeMs": 37621459,
+              "score": 73710
             }
           ],
           "modules": [],
           "modes": [
             {
               "name": "Team Deathmatch",
-              "timeMs": 10237055,
-              "score": 18025
+              "timeMs": 10628372,
+              "score": 18730
             },
             {
               "name": "Capture The Flag",
-              "timeMs": 8789576,
-              "score": 14365
+              "timeMs": 8958824,
+              "score": 14800
             },
             {
               "name": "Juggernaut",
-              "timeMs": 6430226,
-              "score": 10755
+              "timeMs": 8450415,
+              "score": 15585
             },
             {
               "name": "Control Points",
-              "timeMs": 2970841,
-              "score": 7735
+              "timeMs": 3103747,
+              "score": 7915
             },
             {
               "name": "Deathmatch",
@@ -5639,8 +5639,8 @@
             },
             {
               "name": "Rugby",
-              "timeMs": 1245813,
-              "score": 2945
+              "timeMs": 2618490,
+              "score": 6725
             },
             {
               "name": "Assault",
@@ -5666,6 +5666,17 @@
           "e": 3497799,
           "r": 12,
           "t": 35278684
+        },
+        {
+          "at": "2026-08-14T10:11:48Z",
+          "k": 2869,
+          "d": 156,
+          "c": 90419,
+          "s": 100930,
+          "g": 1,
+          "e": 3813768,
+          "r": 13,
+          "t": 39365021
         }
       ],
       "previousNames": []
@@ -8092,5 +8103,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-08-14T08:39:27Z"
+  "lastAttemptAt": "2026-08-14T10:11:48Z"
 }

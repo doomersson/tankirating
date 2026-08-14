@@ -1,5 +1,5 @@
 /* Hallmark · macrostructure: Stat-Led · tone: minimal dark technical · anchor hue: cool cyan 210° */
-/* Hallmark · component: interactive equipment share chart · genre: atmospheric · theme: Midnight
+/* Hallmark · component: split metric icon system + interactive equipment share chart · genre: atmospheric · theme: Midnight
  * states: default · hover · focus · active · disabled · loading · error · success
  * contrast: pass (40–41)
  * pre-emit critique: P5 H5 E5 S5 R5 V4
@@ -811,7 +811,7 @@ button,
   text-transform: uppercase;
 }
 
-/* Shared account-stat artwork; the K/D mark overlaps kills and deaths around a central slash. */
+/* Shared account-stat artwork; ratio marks split two symbols with a transparent slash. */
 .metric-icon {
   --metric-icon-image: none;
   width: 1rem;
@@ -845,8 +845,7 @@ button,
   --metric-icon-image: url("./icons/misc/iconExperience.svg");
 }
 
-.metric-icon[data-metric-icon="crystals"],
-.metric-icon[data-metric-icon="ratio"] {
+.metric-icon[data-metric-icon="crystals"] {
   --metric-icon-image: url("./icons/misc/crystal.svg");
 }
 
@@ -858,52 +857,73 @@ button,
   --metric-icon-image: url("./icons/misc/gearscore.svg");
 }
 
-.metric-icon[data-metric-icon="kd"] {
-  width: 1.8rem;
-  flex-basis: 1.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.metric-icon--pair {
+  --metric-left-image: none;
+  --metric-right-image: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-basis: 1.25rem;
+  position: relative;
   background: transparent;
+  border: var(--rule-thin) solid currentColor;
+  border-radius: 50%;
+  overflow: hidden;
   -webkit-mask-image: none;
   mask-image: none;
 }
 
-.metric-icon__part {
-  --metric-icon-image: none;
-  width: 0.95rem;
-  height: 0.95rem;
-  flex: 0 0 0.95rem;
+.metric-icon--pair[data-metric-left="kills"] {
+  --metric-left-image: url("./icons/modes/deathmatch.svg");
+}
+
+.metric-icon--pair[data-metric-left="crystals"] {
+  --metric-left-image: url("./icons/misc/crystal.svg");
+}
+
+.metric-icon--pair[data-metric-left="score"] {
+  --metric-left-image: url("./icons/misc/iconExperience.svg");
+}
+
+.metric-icon--pair[data-metric-left="time"] {
+  --metric-left-image: url("./icons/misc/iconTime.svg");
+}
+
+.metric-icon--pair[data-metric-right="deaths"] {
+  --metric-right-image: url("./icons/misc/deaths.svg");
+}
+
+.metric-icon--pair[data-metric-right="score"] {
+  --metric-right-image: url("./icons/misc/iconExperience.svg");
+}
+
+.metric-icon--pair[data-metric-right="time"] {
+  --metric-right-image: url("./icons/misc/iconTime.svg");
+}
+
+.metric-icon--pair .metric-icon__part {
+  position: absolute;
+  inset: var(--space-3xs);
   background: currentColor;
-  -webkit-mask-image: var(--metric-icon-image);
-  mask-image: var(--metric-icon-image);
-  -webkit-mask-position: center;
-  mask-position: center;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-size: contain;
+  -webkit-mask-size: 70%;
+  mask-size: 70%;
 }
 
-.metric-icon__part--kills {
-  --metric-icon-image: url("./icons/modes/deathmatch.svg");
+.metric-icon__part--left {
+  -webkit-mask-image: var(--metric-left-image);
+  mask-image: var(--metric-left-image);
+  -webkit-mask-position: 18% center;
+  mask-position: 18% center;
+  clip-path: polygon(0 0, 58% 0, 44% 100%, 0 100%);
 }
 
-.metric-icon__part--deaths {
-  --metric-icon-image: url("./icons/misc/deaths.svg");
-}
-
-.metric-icon__slash {
-  width: 0.4rem;
-  margin-inline: -0.25rem;
-  position: relative;
-  z-index: var(--z-base);
-  color: var(--color-accent);
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  line-height: 1;
-  text-align: center;
+.metric-icon__part--right {
+  -webkit-mask-image: var(--metric-right-image);
+  mask-image: var(--metric-right-image);
+  -webkit-mask-position: 82% center;
+  mask-position: 82% center;
+  clip-path: polygon(65% 0, 100% 0, 100% 100%, 51% 100%);
 }
 
 .metric-icon--art {

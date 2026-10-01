@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-01T19:35:21Z",
+  "generatedAt": "2026-10-01T23:55:46Z",
   "source": "https://ratings.tankionline.com/api/eu/profile/",
   "players": {
     "abyss": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Abyss",
         "rank": 290,
         "score": 53441498,
@@ -16,7 +16,7 @@
         "crystals": 69897864,
         "golds": 3897,
         "efficiency": 9119655,
-        "efficiencyPosition": 5518,
+        "efficiencyPosition": 5519,
         "totalTimeMs": 15805754801,
         "gearScore": 9999,
         "premium": true,
@@ -2275,7 +2275,7 @@
     },
     "akame": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Akame",
         "rank": 177,
         "score": 30871033,
@@ -2286,7 +2286,7 @@
         "crystals": 33921698,
         "golds": 1355,
         "efficiency": 8876468,
-        "efficiencyPosition": 49139,
+        "efficiencyPosition": 49138,
         "totalTimeMs": 16539317903,
         "gearScore": 9999,
         "premium": false,
@@ -3825,27 +3825,27 @@
     },
     "alone": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Alone",
         "rank": 167,
-        "score": 28896912,
+        "score": 28899122,
         "scoreBase": 28800000,
         "scoreNext": 29000000,
-        "kills": 401938,
-        "deaths": 172839,
-        "crystals": 35670960,
+        "kills": 402022,
+        "deaths": 172869,
+        "crystals": 35674514,
         "golds": 2643,
-        "efficiency": 9026673,
-        "efficiencyPosition": 17090,
-        "totalTimeMs": 8241393285,
+        "efficiency": 9026694,
+        "efficiencyPosition": 17085,
+        "totalTimeMs": 8243459898,
         "gearScore": 9999,
         "premium": false,
         "equipment": {
           "hulls": [
             {
               "name": "Crusader",
-              "timeMs": 5651357223,
-              "score": 18948987
+              "timeMs": 5652184969,
+              "score": 18949757
             },
             {
               "name": "Paladin",
@@ -3874,8 +3874,8 @@
             },
             {
               "name": "Ares",
-              "timeMs": 193798708,
-              "score": 496973
+              "timeMs": 195037575,
+              "score": 498413
             },
             {
               "name": "Hunter",
@@ -3906,8 +3906,8 @@
             },
             {
               "name": "Vulcan",
-              "timeMs": 956553216,
-              "score": 2481344
+              "timeMs": 958347281,
+              "score": 2483324
             },
             {
               "name": "Freeze",
@@ -3926,8 +3926,8 @@
             },
             {
               "name": "Tesla",
-              "timeMs": 365011432,
-              "score": 1204686
+              "timeMs": 365198059,
+              "score": 1204866
             },
             {
               "name": "Firebird",
@@ -3971,8 +3971,8 @@
             },
             {
               "name": "Scorpion",
-              "timeMs": 84398127,
-              "score": 157601
+              "timeMs": 84484048,
+              "score": 157651
             },
             {
               "name": "Tsunami",
@@ -3988,8 +3988,8 @@
           "drones": [
             {
               "name": "Defender",
-              "timeMs": 2933631489,
-              "score": 10197720
+              "timeMs": 2935612181,
+              "score": 10199880
             },
             {
               "name": "Booster",
@@ -4013,8 +4013,8 @@
             },
             {
               "name": "Crisis",
-              "timeMs": 471149743,
-              "score": 1121176
+              "timeMs": 471235664,
+              "score": 1121226
             },
             {
               "name": "Mechanic",
@@ -4030,8 +4030,8 @@
           "modules": [
             {
               "name": "Armadillo",
-              "timeMs": 4434206824,
-              "score": 11932333,
+              "timeMs": 4436273437,
+              "score": 11934543,
               "icon": "crit"
             },
             {
@@ -4048,8 +4048,8 @@
             },
             {
               "name": "Vulture",
-              "timeMs": 2854987386,
-              "score": 8112893,
+              "timeMs": 2856491862,
+              "score": 8114583,
               "icon": "scorpion"
             },
             {
@@ -4072,26 +4072,26 @@
             },
             {
               "name": "Eagle",
-              "timeMs": 1654823990,
-              "score": 5919694,
+              "timeMs": 1655472048,
+              "score": 5920264,
               "icon": "shaft"
             },
             {
               "name": "Dolphin",
-              "timeMs": 1288223312,
-              "score": 3309974,
+              "timeMs": 1288785449,
+              "score": 3310494,
               "icon": "smoky"
             },
             {
               "name": "Owl",
-              "timeMs": 1235038116,
-              "score": 2702966,
+              "timeMs": 1235303725,
+              "score": 2703216,
               "icon": "gauss"
             },
             {
               "name": "Panther",
-              "timeMs": 1034653819,
-              "score": 2691592,
+              "timeMs": 1035215956,
+              "score": 2692112,
               "icon": "twins"
             },
             {
@@ -4102,8 +4102,8 @@
             },
             {
               "name": "Lion",
-              "timeMs": 902689889,
-              "score": 3221599,
+              "timeMs": 903842835,
+              "score": 3222989,
               "icon": "ricochet"
             },
             {
@@ -4126,8 +4126,8 @@
             },
             {
               "name": "Raven",
-              "timeMs": 246740360,
-              "score": 463157,
+              "timeMs": 248244836,
+              "score": 464847,
               "icon": "tsunami"
             },
             {
@@ -4146,13 +4146,13 @@
           "modes": [
             {
               "name": "Capture The Flag",
-              "timeMs": 2202228076,
-              "score": 6008229
+              "timeMs": 2202282486,
+              "score": 6008259
             },
             {
               "name": "Juggernaut",
-              "timeMs": 1056020314,
-              "score": 2725072
+              "timeMs": 1056268017,
+              "score": 2725632
             },
             {
               "name": "Control Points",
@@ -4166,23 +4166,23 @@
             },
             {
               "name": "Rugby",
-              "timeMs": 831503388,
-              "score": 2665575
+              "timeMs": 832270973,
+              "score": 2666425
             },
             {
               "name": "Assault",
-              "timeMs": 634100982,
-              "score": 1864461
+              "timeMs": 634620314,
+              "score": 1864801
             },
             {
               "name": "Siege",
-              "timeMs": 633211014,
+              "timeMs": 633236361,
               "score": 1731701
             },
             {
               "name": "Team Deathmatch",
-              "timeMs": 609052150,
-              "score": 1587291
+              "timeMs": 609504386,
+              "score": 1587721
             },
             {
               "name": "Solo Juggernaut",
@@ -5908,13 +5908,24 @@
           "e": 9026673,
           "r": 167,
           "t": 8241393285
+        },
+        {
+          "at": "2026-10-01T23:55:46Z",
+          "k": 402022,
+          "d": 172869,
+          "c": 35674514,
+          "s": 28899122,
+          "g": 2643,
+          "e": 9026694,
+          "r": 167,
+          "t": 8243459898
         }
       ],
       "previousNames": []
     },
     "arkoanl": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "ARKOANL",
         "rank": 27,
         "score": 1068895,
@@ -5925,7 +5936,7 @@
         "crystals": 715223,
         "golds": 101,
         "efficiency": 7481764,
-        "efficiencyPosition": 272345,
+        "efficiencyPosition": 272352,
         "totalTimeMs": 379960684,
         "gearScore": 5861,
         "premium": false,
@@ -7095,7 +7106,7 @@
     },
     "borz": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Borz",
         "rank": 31,
         "score": 1605845,
@@ -7975,27 +7986,27 @@
     },
     "dlli": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "dlli",
         "rank": 98,
-        "score": 15077705,
+        "score": 15079615,
         "scoreBase": 15000000,
         "scoreNext": 15200000,
-        "kills": 254607,
-        "deaths": 146026,
-        "crystals": 13839596,
+        "kills": 254664,
+        "deaths": 146056,
+        "crystals": 13841364,
         "golds": 967,
-        "efficiency": 8722454,
-        "efficiencyPosition": 83770,
-        "totalTimeMs": 6969447940,
+        "efficiency": 8722496,
+        "efficiencyPosition": 83757,
+        "totalTimeMs": 6970564660,
         "gearScore": 9999,
         "premium": false,
         "equipment": {
           "hulls": [
             {
               "name": "Hunter",
-              "timeMs": 2375482841,
-              "score": 4084211
+              "timeMs": 2376599561,
+              "score": 4085171
             },
             {
               "name": "Paladin",
@@ -8051,8 +8062,8 @@
           "turrets": [
             {
               "name": "Striker",
-              "timeMs": 2671524559,
-              "score": 5025405
+              "timeMs": 2672641279,
+              "score": 5026365
             },
             {
               "name": "Shaft",
@@ -8138,8 +8149,8 @@
           "drones": [
             {
               "name": "Brutus",
-              "timeMs": 1888807454,
-              "score": 3578298
+              "timeMs": 1889924174,
+              "score": 3579258
             },
             {
               "name": "Hyperion",
@@ -8175,14 +8186,14 @@
           "modules": [
             {
               "name": "Armadillo",
-              "timeMs": 5502212912,
-              "score": 10709366,
+              "timeMs": 5503329632,
+              "score": 10710326,
               "icon": "crit"
             },
             {
               "name": "Orka",
-              "timeMs": 2377127859,
-              "score": 4965941,
+              "timeMs": 2378244579,
+              "score": 4966901,
               "icon": "striker"
             },
             {
@@ -8247,14 +8258,14 @@
             },
             {
               "name": "Raven",
-              "timeMs": 451915155,
-              "score": 513348,
+              "timeMs": 453031875,
+              "score": 514308,
               "icon": "tsunami"
             },
             {
               "name": "Shark",
-              "timeMs": 224269853,
-              "score": 309615,
+              "timeMs": 225386573,
+              "score": 310575,
               "icon": "vulcan"
             },
             {
@@ -8301,13 +8312,13 @@
             },
             {
               "name": "Juggernaut",
-              "timeMs": 965861493,
-              "score": 2006082
+              "timeMs": 966271664,
+              "score": 2006372
             },
             {
               "name": "Control Points",
-              "timeMs": 664750556,
-              "score": 1531056
+              "timeMs": 665008038,
+              "score": 1531316
             },
             {
               "name": "Rugby",
@@ -8316,8 +8327,8 @@
             },
             {
               "name": "Assault",
-              "timeMs": 425729111,
-              "score": 906577
+              "timeMs": 426178178,
+              "score": 906987
             },
             {
               "name": "Deathmatch",
@@ -9789,32 +9800,43 @@
           "e": 8722454,
           "r": 98,
           "t": 6969447940
+        },
+        {
+          "at": "2026-10-01T23:55:46Z",
+          "k": 254664,
+          "d": 146056,
+          "c": 13841364,
+          "s": 15079615,
+          "g": 967,
+          "e": 8722496,
+          "r": 98,
+          "t": 6970564660
         }
       ],
       "previousNames": []
     },
     "duturu667": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "NHK",
         "rank": 110,
         "score": 17401359,
         "scoreBase": 17400000,
         "scoreNext": 17600000,
-        "kills": 320315,
-        "deaths": 154674,
+        "kills": 320325,
+        "deaths": 154681,
         "crystals": 42738199,
         "golds": 573,
-        "efficiency": 9428691,
+        "efficiency": 9428689,
         "efficiencyPosition": 30,
-        "totalTimeMs": 9005204610,
+        "totalTimeMs": 9006178641,
         "gearScore": 9999,
         "premium": true,
         "equipment": {
           "hulls": [
             {
               "name": "Hopper",
-              "timeMs": 2042795021,
+              "timeMs": 2043473899,
               "score": 1961908
             },
             {
@@ -9824,7 +9846,7 @@
             },
             {
               "name": "Crusader",
-              "timeMs": 1213822728,
+              "timeMs": 1214117881,
               "score": 2894500
             },
             {
@@ -9886,12 +9908,12 @@
             },
             {
               "name": "Twins",
-              "timeMs": 817477280,
+              "timeMs": 817678774,
               "score": 2254364
             },
             {
               "name": "Hammer",
-              "timeMs": 756164230,
+              "timeMs": 756843108,
               "score": 256833
             },
             {
@@ -9921,7 +9943,7 @@
             },
             {
               "name": "Vulcan",
-              "timeMs": 204403331,
+              "timeMs": 204496990,
               "score": 580109
             },
             {
@@ -9958,7 +9980,7 @@
           "drones": [
             {
               "name": "Defender",
-              "timeMs": 2154695263,
+              "timeMs": 2155669294,
               "score": 3649171
             },
             {
@@ -10005,7 +10027,7 @@
           "modules": [
             {
               "name": "Armadillo",
-              "timeMs": 5865176782,
+              "timeMs": 5866150813,
               "score": 8701372,
               "icon": "crit"
             },
@@ -10017,13 +10039,13 @@
             },
             {
               "name": "Wolf",
-              "timeMs": 3646951415,
+              "timeMs": 3647269901,
               "score": 7707603,
               "icon": "hammer"
             },
             {
               "name": "Orka",
-              "timeMs": 2375845422,
+              "timeMs": 2376819453,
               "score": 2513454,
               "icon": "striker"
             },
@@ -10035,19 +10057,19 @@
             },
             {
               "name": "Owl",
-              "timeMs": 1686020500,
+              "timeMs": 1686137492,
               "score": 1893131,
               "icon": "gauss"
             },
             {
               "name": "Vulture",
-              "timeMs": 1612185366,
+              "timeMs": 1612747252,
               "score": 2237752,
               "icon": "scorpion"
             },
             {
               "name": "Eagle",
-              "timeMs": 1598052082,
+              "timeMs": 1598613968,
               "score": 2209529,
               "icon": "shaft"
             },
@@ -10077,7 +10099,7 @@
             },
             {
               "name": "Grizzly",
-              "timeMs": 924000702,
+              "timeMs": 924094361,
               "score": 1165153,
               "icon": "thunder"
             },
@@ -10107,7 +10129,7 @@
             },
             {
               "name": "Raven",
-              "timeMs": 363555031,
+              "timeMs": 363850184,
               "score": 610168,
               "icon": "tsunami"
             },
@@ -10121,7 +10143,7 @@
           "modes": [
             {
               "name": "Capture The Flag",
-              "timeMs": 3412828447,
+              "timeMs": 3413450768,
               "score": 3718535
             },
             {
@@ -10146,7 +10168,7 @@
             },
             {
               "name": "Team Deathmatch",
-              "timeMs": 811419433,
+              "timeMs": 811771143,
               "score": 1054879
             },
             {
@@ -11916,6 +11938,17 @@
           "e": 9428691,
           "r": 110,
           "t": 9005204610
+        },
+        {
+          "at": "2026-10-01T23:55:46Z",
+          "k": 320325,
+          "d": 154681,
+          "c": 42738199,
+          "s": 17401359,
+          "g": 573,
+          "e": 9428689,
+          "r": 110,
+          "t": 9006178641
         }
       ],
       "previousNames": [
@@ -11924,7 +11957,7 @@
     },
     "game": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Game",
         "rank": 65,
         "score": 8412516,
@@ -14952,7 +14985,7 @@
     },
     "integer": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "integer",
         "rank": 54,
         "score": 6260536,
@@ -16781,19 +16814,19 @@
     },
     "kaspersky": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Kaspersky",
         "rank": 85,
-        "score": 12579887,
+        "score": 12581330,
         "scoreBase": 12400000,
         "scoreNext": 12600000,
-        "kills": 187425,
-        "deaths": 103068,
-        "crystals": 11854355,
+        "kills": 187473,
+        "deaths": 103099,
+        "crystals": 11857176,
         "golds": 459,
-        "efficiency": 8749011,
-        "efficiencyPosition": 78148,
-        "totalTimeMs": 5490393972,
+        "efficiency": 8749124,
+        "efficiencyPosition": 78118,
+        "totalTimeMs": 5491882590,
         "gearScore": 9999,
         "premium": false,
         "equipment": {
@@ -16805,8 +16838,8 @@
             },
             {
               "name": "Crusader",
-              "timeMs": 1496752806,
-              "score": 2885862
+              "timeMs": 1498241424,
+              "score": 2887305
             },
             {
               "name": "Paladin",
@@ -16867,8 +16900,8 @@
             },
             {
               "name": "Smoky",
-              "timeMs": 498319989,
-              "score": 1144952
+              "timeMs": 499797882,
+              "score": 1146395
             },
             {
               "name": "Striker",
@@ -16887,7 +16920,7 @@
             },
             {
               "name": "Isida",
-              "timeMs": 167976147,
+              "timeMs": 167986872,
               "score": 318276
             },
             {
@@ -16959,8 +16992,8 @@
             },
             {
               "name": "Hyperion",
-              "timeMs": 1025927054,
-              "score": 1710224
+              "timeMs": 1027415672,
+              "score": 1711667
             },
             {
               "name": "Booster",
@@ -16986,8 +17019,8 @@
           "modules": [
             {
               "name": "Armadillo",
-              "timeMs": 3460667654,
-              "score": 7642385,
+              "timeMs": 3462156272,
+              "score": 7643828,
               "icon": "crit"
             },
             {
@@ -17034,14 +17067,14 @@
             },
             {
               "name": "Falcon",
-              "timeMs": 886024128,
-              "score": 1404605,
+              "timeMs": 887512746,
+              "score": 1406048,
               "icon": "railgun"
             },
             {
               "name": "Owl",
-              "timeMs": 240353757,
-              "score": 427489,
+              "timeMs": 241842375,
+              "score": 428932,
               "icon": "gauss"
             },
             {
@@ -17052,8 +17085,8 @@
             },
             {
               "name": "Raven",
-              "timeMs": 104942948,
-              "score": 130995,
+              "timeMs": 106431566,
+              "score": 132438,
               "icon": "tsunami"
             },
             {
@@ -17102,8 +17135,8 @@
           "modes": [
             {
               "name": "Capture The Flag",
-              "timeMs": 1344808983,
-              "score": 2760554
+              "timeMs": 1345792299,
+              "score": 2761286
             },
             {
               "name": "Juggernaut",
@@ -17117,8 +17150,8 @@
             },
             {
               "name": "Team Deathmatch",
-              "timeMs": 781751322,
-              "score": 1356928
+              "timeMs": 782256624,
+              "score": 1357639
             },
             {
               "name": "Control Points",
@@ -18666,13 +18699,24 @@
           "e": 8749011,
           "r": 85,
           "t": 5490393972
+        },
+        {
+          "at": "2026-10-01T23:55:46Z",
+          "k": 187473,
+          "d": 103099,
+          "c": 11857176,
+          "s": 12581330,
+          "g": 459,
+          "e": 8749124,
+          "r": 85,
+          "t": 5491882590
         }
       ],
       "previousNames": []
     },
     "mantish": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Mantish",
         "rank": 84,
         "score": 12283973,
@@ -19991,7 +20035,7 @@
     },
     "neet": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "neet",
         "rank": 18,
         "score": 288150,
@@ -20002,7 +20046,7 @@
         "crystals": 433161,
         "golds": 1,
         "efficiency": 5425207,
-        "efficiencyPosition": 751288,
+        "efficiencyPosition": 751292,
         "totalTimeMs": 100334738,
         "gearScore": 5522,
         "premium": false,
@@ -21264,7 +21308,7 @@
     },
     "opex-rah": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Opex-Rah",
         "rank": 62,
         "score": 7830232,
@@ -21275,7 +21319,7 @@
         "crystals": 8498948,
         "golds": 71,
         "efficiency": 8873859,
-        "efficiencyPosition": 49740,
+        "efficiencyPosition": 49739,
         "totalTimeMs": 2214630148,
         "gearScore": 9999,
         "premium": true,
@@ -22267,7 +22311,7 @@
     },
     "tesl4": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "TESL4",
         "rank": 11,
         "score": 71915,
@@ -22278,7 +22322,7 @@
         "crystals": 28161,
         "golds": 0,
         "efficiency": 3099807,
-        "efficiencyPosition": 2693134,
+        "efficiencyPosition": 2693139,
         "totalTimeMs": 15023325,
         "gearScore": 4134,
         "premium": false,
@@ -24073,7 +24117,7 @@
     },
     "vortec": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "VORTEC",
         "rank": 130,
         "score": 21429306,
@@ -24084,7 +24128,7 @@
         "crystals": 27010364,
         "golds": 328,
         "efficiency": 8958714,
-        "efficiencyPosition": 30322,
+        "efficiencyPosition": 30323,
         "totalTimeMs": 12269306054,
         "gearScore": 9999,
         "premium": false,
@@ -26789,7 +26833,7 @@
     },
     "what": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "What",
         "rank": 58,
         "score": 7049659,
@@ -28713,7 +28757,7 @@
     },
     "ziam": {
       "current": {
-        "at": "2026-10-01T19:35:21Z",
+        "at": "2026-10-01T23:55:46Z",
         "name": "Ziam",
         "rank": 127,
         "score": 20902495,
@@ -30804,5 +30848,5 @@
     "what",
     "ziam"
   ],
-  "lastAttemptAt": "2026-10-01T19:35:21Z"
+  "lastAttemptAt": "2026-10-01T23:55:46Z"
 }
